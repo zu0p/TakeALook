@@ -13,9 +13,12 @@
             v-model="state.searchValue">
           </el-input>
         </div>
-        <div class="button-wrapper">
-          <el-button>회원가입</el-button>
+        <div class="button-wrapper" v-if="!isLogin">
+          <el-button @click="clickSignup">회원가입<i class="el-icon-circle-plus-outline"></i></el-button>
           <el-button type="primary" @click="clickLogin">로그인</el-button>
+        </div>
+        <div class="button-wrapper" v-if="isLogin">
+          <el-button type="primary" @click="clickLogout">로그아웃</el-button>
         </div>
       </div>
 
@@ -26,10 +29,14 @@
       <div class="menu-icon-wrapper"><i class="el-icon-search"></i></div>
       <div class="mobile-sidebar-wrapper" v-if="!state.isCollapse">
         <div class="mobile-sidebar">
-          <div class="mobile-sidebar-tool-wrapper">
+          <div class="mobile-sidebar-tool-wrapper"  v-if="!isLogin">
             <div class="logo-wrapper"><div class="ic ic-logo"/></div>
             <el-button type="primary" class="mobile-sidebar-btn login-btn" @click="clickLogin">로그인</el-button>
-            <el-button class="mobile-sidebar-btn register-btn">회원가입</el-button>
+            <el-button class="mobile-sidebar-btn register-btn" @click="clickSignup">회원가입<i class="el-icon-circle-plus-outline"></i></el-button>
+          </div>
+          <div class="mobile-sidebar-tool-wrapper"  v-if="isLogin">
+            <div class="logo-wrapper"><div class="ic ic-logo"/></div>
+            <el-button type="primary" class="mobile-sidebar-btn login-btn" @click="clickLogout">로그아웃</el-button>
           </div>
           <el-menu
             :default-active="String(state.activeIndex)"
@@ -48,7 +55,7 @@
   </el-row>
 </template>
 <script>
-import { reactive, computed } from 'vue'
+import { reactive, computed, onUpdated } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
@@ -59,10 +66,14 @@ export default {
     height: {
       type: String,
       default: '70px'
+    },
+    isLogin:{
+      type: Boolean
     }
   },
 
   setup(props, { emit }) {
+    console.log(props)
     const store = useStore()
     const router = useRouter()
     const state = reactive({
@@ -80,7 +91,7 @@ export default {
         }
         return menuArray
       }),
-      activeIndex: computed(() => store.getters['root/getActiveMenuIndex'])
+      activeIndex: computed(() => store.getters['root/getActiveMenuIndex']),
     })
 
     if (state.activeIndex === -1) {
@@ -110,11 +121,19 @@ export default {
       emit('openLoginDialog')
     }
 
+    const clickSignup = () =>{
+      emit('openSignupDialog')
+    }
     const changeCollapse = () => {
       state.isCollapse = !state.isCollapse
     }
 
-    return { state, menuSelect, clickLogo, clickLogin, changeCollapse }
+    const clickLogout = () =>{
+      localStorage.removeItem('accessToken')
+      window.location="/"
+    }
+
+    return { state, menuSelect, clickLogo, clickLogin, clickSignup, clickLogout, changeCollapse }
   }
 }
 </script>
@@ -129,7 +148,7 @@ export default {
     position: relative;
     top: 14px;
   }
-  
+
   .main-header .hide-on-big .logo-wrapper {
     display: inline-block;
     margin: 0 calc(50% - 51px)

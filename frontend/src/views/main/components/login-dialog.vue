@@ -15,39 +15,7 @@
     </template>
   </el-dialog>
 </template>
-<style>
-.login-dialog {
-  width: 400px !important;
-  height: 300px;
-}
-.login-dialog .el-dialog__headerbtn {
-  float: right;
-}
-.login-dialog .el-form-item__content {
-  margin-left: 0 !important;
-  float: right;
-  width: 200px;
-  display: inline-block;
-}
-.login-dialog .el-form-item {
-  margin-bottom: 20px;
-}
-.login-dialog .el-form-item__error {
-  font-size: 12px;
-  color: red;
-}
-.login-dialog .el-input__suffix {
-  display: none;
-}
-.login-dialog .el-dialog__footer {
-  margin: 0 calc(50% - 80px);
-  padding-top: 0;
-  display: inline-block;
-}
-.login-dialog .dialog-footer .el-button {
-  width: 120px;
-}
-</style>
+
 <script>
 import { reactive, computed, ref, onMounted } from 'vue'
 import { useStore } from 'vuex'
@@ -100,12 +68,18 @@ export default {
         if (valid) {
           console.log('submit')
           store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
-          .then(function (result) {
-            alert('accessToken: ' + result.data.accessToken)
-          })
-          .catch(function (err) {
-            alert(err)
-          })
+            .then(res=>{
+              //console.log(res.data)
+              if(res.data.statusCode==200){
+                localStorage.setItem("accessToken", res.data.accessToken)
+                store.commit('root/SET_ACCESSTOKEN', res.data.accessToken)
+                window.location="/"
+              }
+            })
+            .catch(err=>{
+              alert("아이디 또는 비밀번호가 틀렸습니다!")
+              console.log(err)
+            })
         } else {
           alert('Validate error!')
         }
@@ -122,3 +96,37 @@ export default {
   }
 }
 </script>
+
+<style>
+.login-dialog {
+  width: 400px !important;
+  height: 300px;
+}
+.login-dialog .el-dialog__headerbtn {
+  float: right;
+}
+.login-dialog .el-form-item__content {
+  margin-left: 0 !important;
+  float: right;
+  width: 200px;
+  display: inline-block;
+}
+.login-dialog .el-form-item {
+  margin-bottom: 20px;
+}
+.login-dialog .el-form-item__error {
+  font-size: 12px;
+  color: red;
+}
+.login-dialog .el-input__suffix {
+  display: none;
+}
+.login-dialog .el-dialog__footer {
+  margin: 0 calc(50% - 80px);
+  padding-top: 0;
+  display: inline-block;
+}
+.login-dialog .dialog-footer .el-button {
+  width: 120px;
+}
+</style>

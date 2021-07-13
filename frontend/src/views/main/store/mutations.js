@@ -11,3 +11,11 @@ export function setMenuActive (state, index) {
 export function setMenuActiveMenuName (state, menuName) {
 	state.activeMenu = menuName
 }
+
+export function SET_USER_INFO(state, userId){
+  state.userId = userId
+}
+
+export function SET_ACCESSTOKEN(state, token){
+  state.accessToken = token
+}
