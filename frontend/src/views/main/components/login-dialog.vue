@@ -48,10 +48,29 @@ export default {
       },
       rules: {
         id: [
-          { required: true, message: 'Please input ID', trigger: 'blur' }
+          { required: true, message: '필수 입력 항목입니다.', trigger: 'blur' },
+          { max: 16, message: '최대 16자까지 입력 가능합니다.'}
         ],
         password: [
-          { required: true, message: 'Please input password', trigger: 'blur' }
+          { required: true, message: '필수 입력 항목입니다.', trigger: 'blur' },
+          {
+            validator(rule, value, callback){
+              if(!value)
+                callback(new Error('필수 입력 항목입니다.'))
+              if(value.length>16) //max
+                callback(new Error('최대 16글자까지 입력 가능합니다.'))
+
+              if(value.length<9)  //min
+                callback(new Error('최소 9글자를 입력해야 합니다.'))
+
+              if(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{9,}$/.test(value)){
+                callback()
+              }
+              else{
+                callback(new Error('비밀번호는 영문, 숫자, 특수문자가 조합되어야 합니다.'))
+              }
+            }
+          },
         ]
       },
       dialogVisible: computed(() => props.open),
