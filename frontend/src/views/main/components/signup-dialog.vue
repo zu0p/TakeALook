@@ -12,6 +12,7 @@
       </el-form-item>
       <el-form-item prop="id" label="아이디" :label-width="state.formLabelWidth">
         <el-input v-model="state.form.id" autocomplete="off"></el-input>
+        <el-button @click="clickCheckDupl">중복 확인</el-button>
       </el-form-item>
       <el-form-item prop="password" label="비밀번호" :label-width="state.formLabelWidth">
         <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
@@ -131,12 +132,36 @@ export default {
       // console.log(signupForm.value)
     })
 
+    const clickCheckDupl = function(){
+      console.log("duplication check!!")
+      store.dispatch('root/requestCheckDupl', {id: state.form.id})
+        .then(res=>{
+          //console.log(res)
+          if(res.data.statusCode == 409){
+            alert(res.data.message)
+            state.form.id = ''
+          }
+          else{
+            alert("사용 가능한 아이디 입니다.")
+          }
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+    }
 
     const clickSignup = function () {
-      // 로그인 클릭 시 validate 체크 후 그 결과 값에 따라, 로그인 API 호출 또는 경고창 표시
+      // 가입하기 클릭 시 validate 체크 후 그 결과 값에 따라, 회원가입 API 호출 또는 경고창 표시
       signupForm.value.validate((valid) => {
         if (valid) {
           //console.log('submit')
+          const body={
+            id:state.form.id,
+            password:state.form.password,
+            name:state.form.name,
+            department:state.form.department,
+            position:state.form.position
+          }
           store.dispatch('root/requestSignup', { id: state.form.id, password: state.form.password })
             .then(res=>{
               //console.log(res.data)
@@ -165,7 +190,7 @@ export default {
       emit('closeSignupDialog')
     }
 
-    return { signupForm, state, clickSignup, handleClose }
+    return { signupForm, state, clickSignup, clickCheckDupl, handleClose }
   }
 }
 </script>
