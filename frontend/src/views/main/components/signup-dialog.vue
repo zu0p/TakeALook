@@ -198,11 +198,12 @@ export default {
           }
           store.dispatch('root/requestSignup', body)
             .then(res=>{
-              //console.log(res.data)
-              if(res.data.statusCode==200){
+              console.log(res)
+              console.log(res.data)
+              if(res.data.statusCode==201){
                 alert('회원 가입이 완료되었습니다.')
-                emit('closeSignupDialog')
-                //window.location="/"
+                //emit('closeSignupDialog')
+                window.location="/"
               }
             })
             .then(()=>{
@@ -214,6 +215,7 @@ export default {
               console.log(err)
             })
         } else if(!valid){
+          state.loading = false
           alert('필수 항목을 입력하세요.')
         } else if(!state.idValicate){
           state.loading = false
