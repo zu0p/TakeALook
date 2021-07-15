@@ -24,7 +24,7 @@
         <el-input v-model="state.form.chk_password" autocomplete="off" show-password></el-input>
       </el-form-item>
     </el-form>
-    <template #footer>
+    <template #footer  v-if="!state.loading" >
       <span class="dialog-footer">
         <el-button
           type="primary"
