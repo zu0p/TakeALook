@@ -44,8 +44,8 @@
             class="el-menu-vertical-demo"
             @select="menuSelect">
             <el-menu-item v-for="(item, index) in state.menuItems" :key="index" :index="index.toString()">
-              <i v-if="item.icon" :class="['ic', item.icon]"/>
-              <span>{{ item.title }}</span>
+              <i v-if="item.show&&item.icon" :class="['ic', item.icon]"/>
+              <span v-if="item.show">{{ item.title }}</span>
             </el-menu-item>
           </el-menu>
         </div>
@@ -87,6 +87,17 @@ export default {
           let menuObject = {}
           menuObject.icon = MenuItems[keys[i]].icon
           menuObject.title = MenuItems[keys[i]].name
+
+          const token = localStorage.getItem('accessToken')
+          if(MenuItems[keys[i]].show=="user"){ //로그인 유저에게만 보여지는 메뉴이면
+            if(token!=null) //로그인되어있다면
+              menuObject.show = true //보여줌
+            else
+              menuObject.show = false //로그인되어있지 않으면 보여주지 않음
+          }
+          else{
+            menuObject.show = true
+          }
           menuArray.push(menuObject)
         }
         return menuArray
