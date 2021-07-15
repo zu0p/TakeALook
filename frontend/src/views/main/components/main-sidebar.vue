@@ -10,32 +10,13 @@
         class="el-menu-vertical-demo"
         @select="menuSelect">
         <el-menu-item v-for="(item, index) in state.menuItems" :key="index" :index="index.toString()">
-          <i v-if="item.icon" :class="['ic', item.icon]"/>
-          <span>{{ item.title }}</span>
+          <i v-if="item.show&&item.icon" :class="['ic', item.icon]"/>
+          <span v-if="item.show">{{ item.title }}</span>
         </el-menu-item>
       </el-menu>
     </div>
   </el-row>
 </template>
-<style>
-.main-sidebar .el-menu {
-  margin-top: 0;
-  padding-left: 0;
-}
-.main-sidebar .hide-on-small {
-  height: 100%;
-}
-.main-sidebar .hide-on-small .el-menu {
-  height: 100%;
-}
-.main-sidebar .el-menu .el-menu-item {
-  cursor: pointer;
-  border-right: none;
-}
-.main-sidebar .el-menu .el-menu-item .ic {
-  margin-right: 5px;
-}
-</style>
 <script>
 import { reactive, computed } from 'vue'
 import { useStore } from 'vuex'
@@ -64,6 +45,17 @@ export default {
           let menuObject = {}
           menuObject.icon = MenuItems[keys[i]].icon
           menuObject.title = MenuItems[keys[i]].name
+
+          const token = localStorage.getItem('accessToken')
+          if(MenuItems[keys[i]].show=="user"){ //로그인 유저에게만 보여지는 메뉴이면
+            if(token!=null) //로그인되어있다면
+              menuObject.show = true //보여줌
+            else
+              menuObject.show = false //로그인되어있지 않으면 보여주지 않음
+          }
+          else{
+            menuObject.show = true
+          }
           menuArray.push(menuObject)
         }
         return menuArray
@@ -89,3 +81,23 @@ export default {
   }
 }
 </script>
+
+<style>
+.main-sidebar .el-menu {
+  margin-top: 0;
+  padding-left: 0;
+}
+.main-sidebar .hide-on-small {
+  height: 100%;
+}
+.main-sidebar .hide-on-small .el-menu {
+  height: 100%;
+}
+.main-sidebar .el-menu .el-menu-item {
+  cursor: pointer;
+  border-right: none;
+}
+.main-sidebar .el-menu .el-menu-item .ic {
+  margin-right: 5px;
+}
+</style>
