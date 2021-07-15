@@ -1,6 +1,5 @@
 package com.ssafy.db.entity;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-public class Conference {
+public class Conference extends BaseEntity{
     int ownerId;
     int conferenceCategory;
     Date callStartTime;
