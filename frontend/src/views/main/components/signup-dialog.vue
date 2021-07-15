@@ -11,7 +11,7 @@
         <el-input v-model="state.form.name" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item prop="id" label="아이디" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.id" autocomplete="off"></el-input>
+        <el-input v-model="state.form.id" autocomplete="off" @change="changeId"></el-input>
         <el-button @click="clickCheckDupl">중복 확인</el-button>
       </el-form-item>
       <el-form-item prop="password" label="비밀번호" :label-width="state.formLabelWidth">
@@ -23,14 +23,14 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickSignup">가입하기</el-button>
+        <el-button type="primary" @click="clickSignup" :disabled="false">가입하기</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script>
-import { reactive, computed, ref, onMounted } from 'vue'
+import { reactive, computed, ref, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
@@ -61,7 +61,7 @@ export default {
         id: '',
         password: '',
         chk_password:'',
-        align: 'left'
+        align: 'left',
       },
       rules: {
         department:[
@@ -122,18 +122,39 @@ export default {
               }
             }
           },
-        ]
+        ],
       },
       dialogVisible: computed(() => props.open),
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      idValicate: false,
+      disableButton: true,
+    })
+
+    watch(()=>{
+      // console.log(state.form.id)
+      // console.log(signupForm.value)
+      console.log(state.disableButton+" // "+state.idValicate)
     })
 
     onMounted(() => {
       // console.log(signupForm.value)
     })
 
+    const changeId = function(){
+      state.idValicate = false
+    }
+
+    const changeForm = function(){
+      signupForm.value.validate(v=>{
+      console.log(v)
+        if(v && state.idValicate){
+          state.disableButton = false
+          console.log(state.disableButton)
+        }
+      })
+    }
     const clickCheckDupl = function(){
-      console.log("duplication check!!")
+      //console.log("duplication check!!")
       store.dispatch('root/requestCheckDupl', {id: state.form.id})
         .then(res=>{
           //console.log(res)
@@ -143,6 +164,7 @@ export default {
           }
           else{
             alert("사용 가능한 아이디 입니다.")
+            state.idValicate = true
           }
         })
         .catch(err=>{
@@ -153,16 +175,16 @@ export default {
     const clickSignup = function () {
       // 가입하기 클릭 시 validate 체크 후 그 결과 값에 따라, 회원가입 API 호출 또는 경고창 표시
       signupForm.value.validate((valid) => {
-        if (valid) {
+        if (valid && state.idValicate) {
           //console.log('submit')
           const body={
-            id:state.form.id,
+            user_id:state.form.id,
             password:state.form.password,
             name:state.form.name,
             department:state.form.department,
             position:state.form.position
           }
-          store.dispatch('root/requestSignup', { id: state.form.id, password: state.form.password })
+          store.dispatch('root/requestSignup', body)
             .then(res=>{
               //console.log(res.data)
               if(res.data.statusCode==200){
@@ -174,8 +196,10 @@ export default {
               alert("회원 가입에 실패하였습니다.")
               console.log(err)
             })
-        } else {
-          alert('Validate error!')
+        } else if(!valid){
+          alert('필수 항목을 입력하세요.')
+        } else if(!state.idValicate){
+          alert('아이디 중복확인이 필요합니다.')
         }
       });
     }
@@ -190,7 +214,7 @@ export default {
       emit('closeSignupDialog')
     }
 
-    return { signupForm, state, clickSignup, clickCheckDupl, handleClose }
+    return { signupForm, state, clickSignup, changeId, changeForm, clickCheckDupl, handleClose }
   }
 }
 </script>
