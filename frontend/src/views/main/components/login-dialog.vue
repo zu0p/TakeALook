@@ -1,6 +1,8 @@
 <template>
   <el-dialog custom-class="login-dialog" title="로그인" v-model="state.dialogVisible" @close="handleClose">
-    <el-form :model="state.form" :rules="state.rules" ref="loginForm" :label-position="state.form.align">
+    <img v-if="state.loading" src="https://i.imgur.com/JfPpwOA.gif">
+
+    <el-form v-if="!state.loading" :model="state.form" :rules="state.rules" ref="loginForm" :label-position="state.form.align">
       <el-form-item prop="id" label="아이디" :label-width="state.formLabelWidth" >
         <el-input v-model="state.form.id" autocomplete="off"></el-input>
       </el-form-item>
@@ -8,7 +10,7 @@
         <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
       </el-form-item>
     </el-form>
-    <template #footer>
+    <template #footer v-if="!state.loading">
       <span class="dialog-footer">
         <el-button type="primary" @click="clickLogin">로그인</el-button>
       </span>
@@ -74,7 +76,8 @@ export default {
         ]
       },
       dialogVisible: computed(() => props.open),
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      loading: false
     })
 
     onMounted(() => {
@@ -82,6 +85,7 @@ export default {
     })
 
     const clickLogin = function () {
+      state.loading = true
       // 로그인 클릭 시 validate 체크 후 그 결과 값에 따라, 로그인 API 호출 또는 경고창 표시
       loginForm.value.validate((valid) => {
         if (valid) {
@@ -92,8 +96,11 @@ export default {
               if(res.data.statusCode==200){
                 localStorage.setItem("accessToken", res.data.accessToken)
                 store.commit('root/SET_ACCESSTOKEN', res.data.accessToken)
+                //emit('closeLoginDialog')
                 window.location="/"
               }
+            }).then(()=>{
+              state.loading = false
             })
             .catch(err=>{
               alert("아이디 또는 비밀번호가 틀렸습니다!")
