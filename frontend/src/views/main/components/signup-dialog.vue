@@ -1,6 +1,9 @@
 <template>
   <el-dialog custom-class="signup-dialog" title="회원 가입" v-model="state.dialogVisible" @close="handleClose">
-    <el-form :model="state.form" :rules="state.rules" ref="signupForm" :label-position="state.form.align">
+
+    <img v-if="state.loading" src="https://i.imgur.com/JfPpwOA.gif">
+
+    <el-form v-if="!state.loading" :model="state.form" :rules="state.rules" ref="signupForm" :label-position="state.form.align">
       <el-form-item prop="department" label="소속" :label-width="state.formLabelWidth" >
         <el-input v-model="state.form.department" autocomplete="off"></el-input>
       </el-form-item>
@@ -23,7 +26,13 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="clickSignup" :disabled="false">가입하기</el-button>
+        <el-button
+          type="primary"
+          @click="clickSignup"
+          :disabled="false"
+          >
+          가입하기
+        </el-button>
       </span>
     </template>
   </el-dialog>
@@ -128,6 +137,7 @@ export default {
       formLabelWidth: '120px',
       idValicate: false,
       disableButton: true,
+      loading: false
     })
 
     watch(()=>{
@@ -173,6 +183,7 @@ export default {
     }
 
     const clickSignup = function () {
+      state.loading = true
       // 가입하기 클릭 시 validate 체크 후 그 결과 값에 따라, 회원가입 API 호출 또는 경고창 표시
       signupForm.value.validate((valid) => {
         if (valid && state.idValicate) {
@@ -189,10 +200,15 @@ export default {
               //console.log(res.data)
               if(res.data.statusCode==200){
                 alert('회원 가입이 완료되었습니다.')
-                window.location="/"
+                emit('closeSignupDialog')
+                //window.location="/"
               }
             })
+            .then(()=>{
+              state.loading = false
+            })
             .catch(err=>{
+              state.loading = false
               alert("회원 가입에 실패하였습니다.")
               console.log(err)
             })
