@@ -103,10 +103,12 @@ export default {
               state.loading = false
             })
             .catch(err=>{
-              alert("아이디 또는 비밀번호가 틀렸습니다!")
+              state.loading = false
               console.log(err)
+              alert("아이디 또는 비밀번호가 틀렸습니다!")
             })
         } else {
+          state.loading = false
           alert('Validate error!')
         }
       });

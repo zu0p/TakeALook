@@ -216,6 +216,7 @@ export default {
         } else if(!valid){
           alert('필수 항목을 입력하세요.')
         } else if(!state.idValicate){
+          state.loading = false
           alert('아이디 중복확인이 필요합니다.')
         }
       });
