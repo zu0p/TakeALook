@@ -14,11 +14,20 @@
           </el-input>
         </div>
         <div class="button-wrapper" v-if="!isLogin">
-          <el-button @click="clickSignup">회원가입<i class="el-icon-circle-plus-outline"></i></el-button>
-          <el-button type="primary" @click="clickLogin">로그인</el-button>
+          <el-button @click="clickSignup">
+            <i class="el-icon-circle-plus-outline"/>
+            <span>회원가입</span>
+          </el-button>
+          <el-button type="primary" @click="clickLogin">
+            <i class="el-icon-key"/>
+            <span>로그인</span>
+          </el-button>
         </div>
         <div class="button-wrapper" v-if="isLogin">
-          <el-button type="primary" @click="clickLogout">로그아웃</el-button>
+          <el-button type="primary" @click="clickLogout">
+            <i class="el-icon-switch-button"/>
+            <span>로그아웃</span>
+          </el-button>
         </div>
       </div>
 
@@ -31,12 +40,21 @@
         <div class="mobile-sidebar">
           <div class="mobile-sidebar-tool-wrapper"  v-if="!isLogin">
             <div class="logo-wrapper"><div class="ic ic-logo"/></div>
-            <el-button type="primary" class="mobile-sidebar-btn login-btn" @click="clickLogin">로그인</el-button>
-            <el-button class="mobile-sidebar-btn register-btn" @click="clickSignup">회원가입<i class="el-icon-circle-plus-outline"></i></el-button>
+            <el-button type="primary" class="mobile-sidebar-btn login-btn" @click="clickLogin">
+              <i class="el-icon-key"/>
+              <span>로그인</span>
+            </el-button>
+            <el-button class="mobile-sidebar-btn register-btn" @click="clickSignup">
+              <i class="el-icon-circle-plus-outline"/>
+              <span>회원가입</span>
+            </el-button>
           </div>
           <div class="mobile-sidebar-tool-wrapper"  v-if="isLogin">
             <div class="logo-wrapper"><div class="ic ic-logo"/></div>
-            <el-button type="primary" class="mobile-sidebar-btn login-btn" @click="clickLogout">로그아웃</el-button>
+            <el-button type="primary" class="mobile-sidebar-btn login-btn" @click="clickLogout">
+              <i class="el-icon-switch-button"/>
+              <span>로그아웃</span>
+            </el-button>
           </div>
           <el-menu
             :default-active="String(state.activeIndex)"

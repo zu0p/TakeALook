@@ -9,4 +9,7 @@ const DEFAULT_ACCEPT_TYPE = 'application/json'
 axios.defaults.baseURL = BASE_URL
 axios.defaults.headers['Content-Type'] = DEFAULT_ACCEPT_TYPE
 
+if(localStorage.getItem('accessToken'))
+  axios.defaults.headers['Authorization'] = localStorage.getItem('accessToken')
+
 export default { VueAxios, axios }
