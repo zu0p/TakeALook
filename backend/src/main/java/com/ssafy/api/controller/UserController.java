@@ -78,10 +78,18 @@ public class UserController {
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<? extends BaseResponseBody> modifyUserInfo(@PathVariable @ApiParam(value="아이디 정보", required = true) String user_id,
-																	 @RequestBody @ApiParam(value = "수정할 정보", required = true) UserModifyPatchReq modifyInfo){
-		User user = userService.modifyUser(user_id, modifyInfo);
-		System.out.println(user.getDepartment());
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+																	 @RequestBody @ApiParam(value = "수정할 정보", required = true) UserModifyPatchReq modifyInfo,
+																	 @ApiIgnore Authentication authentication){
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
+		if(userId == null)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "권한 없음"));
+		if(userId==user_id) {
+			User user = userService.modifyUser(userId, modifyInfo);
+			System.out.println(user.getDepartment());
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "err 발생"));
 	}
 
 	@DeleteMapping("/{user_id}")
@@ -92,9 +100,16 @@ public class UserController {
 			@ApiResponse(code = 404, message = "사용자 없음"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<? extends BaseResponseBody> deleteUser(@PathVariable @ApiParam(value="아이디 정보", required = true) String user_id){
-		userService.deleteUser(user_id);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(204, "Success"));
+	public ResponseEntity<? extends BaseResponseBody> deleteUser(@PathVariable @ApiParam(value="아이디 정보", required = true) String user_id, @ApiIgnore Authentication authentication){
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		String userId = userDetails.getUsername();
+		if(userId == null)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "권한 없음"));
+		if(userId==user_id) {
+			userService.deleteUser(user_id);
+			return ResponseEntity.status(200).body(BaseResponseBody.of(204, "Success"));
+		}
+		return ResponseEntity.status(200).body(BaseResponseBody.of(401, "err 발생"));
 	}
 	@GetMapping("/me")
 	@ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.") 
