@@ -33,11 +33,10 @@ export function requestCheckDupl({state}, payload){
 
 export function requestUserInfo({commit}, payload){
   const url = BASE_URL+'/users/me'
-  instanceWithAuth.get(url)
-    .then(res=>{
-      commit("SET_USER_INFO", res.data.userId)
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
+  return instanceWithAuth.get(url)
+}
+
+export function requestModifyUserInfo({state}, payload){
+  //const url = BASE_URL+'/users/me'
+  //return instanceWithAuth.get(url, payload)
 }

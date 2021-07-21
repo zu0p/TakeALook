@@ -7,12 +7,12 @@
     "children" : [],
     "show": "all"
   },
-  "history" : {
-    "name" : "지난 회의 이력",
-    "hidden" : false,
-    "path" : "/history",
-    "icon" : "el-icon-s-order",
-    "children" : [],
-    "show": "user"
+  "user-info":{
+    "name": "회원 정보 수정",
+    "hidden": false,
+    "path": "/userInfo",
+    "icon": "el-icon-user",
+    "children": [],
+    "show": "all"
   }
 }
