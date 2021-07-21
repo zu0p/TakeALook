@@ -1,6 +1,8 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.request.UserModifyPatchReq;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ssafy.api.request.UserUpdatePatchReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,51 +32,43 @@ public class UserServiceImpl implements UserService {
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
 		User user = new User();
 		user.setUserId(userRegisterInfo.getId());
-		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
-		user.setName(userRegisterInfo.getName());
 		user.setDepartment(userRegisterInfo.getDepartment());
+		user.setName(userRegisterInfo.getName());
 		user.setPosition(userRegisterInfo.getPosition());
 		user.setUserId(userRegisterInfo.getUser_id());
+		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
+		System.out.println(passwordEncoder.encode(userRegisterInfo.getPassword()));
+		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
 		return userRepository.save(user);
 	}
 
 	@Override
 	public User getUserByUserId(String userId) {
 		// 디비에 유저 정보 조회 (userId 를 통한 조회).
-		User user = null;
-		try {
-			user = userRepositorySupport.findUserByUserId(userId).get();
-		}catch(NoSuchElementException err){
-			System.out.println(err);
+		try{
+			User user = userRepositorySupport.findUserByUserId(userId).get();
+			return user;
+		}catch (NoSuchElementException e){
+			return null;
 		}
-		return user;
 	}
 
 	@Override
-	public User modifyUser(String userId, UserModifyPatchReq userModifyInfo) {
-		User user = null;
-
-		try {
-			user = userRepositorySupport.findUserByUserId(userId).get();
-		}catch(NoSuchElementException err){
-			System.out.println(err);
-		}
-		user.setDepartment(userModifyInfo.getDepartment());
-		user.setPosition(userModifyInfo.getPosition());
-		user.setName(userModifyInfo.getName());
-		return user;
+	public User updateUser(String userId, UserUpdatePatchReq userUpdatePatchReq) {
+		User user = userRepositorySupport.findUserByUserId(userId).get();
+		user.setPosition(userUpdatePatchReq.getPosition());
+		user.setDepartment(userUpdatePatchReq.getDepartment());
+		user.setName(userUpdatePatchReq.getName());
+		user.setUserId(user.getUserId());
+		user.setPassword(user.getPassword());
+		return userRepository.save(user);
 	}
 
 	@Override
 	public void deleteUser(String userId) {
-		User user = null;
-
-		try {
-			user = userRepositorySupport.findUserByUserId(userId).get();
-		}catch(NoSuchElementException err){
-			System.out.println(err);
-		}
+		User user = userRepositorySupport.findUserByUserId(userId).get();
 		userRepository.delete(user);
 	}
+
+
 }

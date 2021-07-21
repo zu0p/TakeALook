@@ -1,28 +1,34 @@
 package com.ssafy.db.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
-import javax.persistence.SecondaryTable;
-import javax.persistence.SecondaryTables;
-import javax.persistence.Table;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.Date;
 
+/**
+ * conference 모델 정의.
+ */
 @Entity
-@Table(name="user_conference")
-@SecondaryTables({
-        @SecondaryTable(name="user_conference"),
-        @SecondaryTable(name="conference_category")
-})
 @Getter
 @Setter
+@ToString
 public class Conference extends BaseEntity{
-    int ownerId;
-    int conferenceCategory;
-    Date callStartTime;
-    Date callEndTime;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    User owner_id;
+
+    Long conference_category;
+    Date call_start_time;
+    Date call_end_time;
+    String thumbnail;
     String title;
     String description;
-    Boolean isActive;
+    Boolean is_active;
 }
