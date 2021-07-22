@@ -14,19 +14,21 @@ import lombok.ToString;
 @ToString
 @ApiModel("UserRegisterPostRequest")
 public class UserRegisterPostReq {
-	@ApiModelProperty(name="유저 userId", example="ssafy")
-	String userId;
+	@ApiModelProperty(name="유저 ID", example="ssafy_web")
+	String id;
 
-	@ApiModelProperty(name="유저 password", example="1234")
-	String password;
+	@ApiModelProperty(name="유저 department", example="your_department")
+	String department;
 
-	@ApiModelProperty(name="유저 name", example="싸피")
+	@ApiModelProperty(name="유저 position", example="your_position")
+	String position;
+
+	@ApiModelProperty(name="유저 name", example="your_name")
 	String name;
 
-	@ApiModelProperty(name="유저 email", example="ssafy@ssafy.com")
-	String email;
+	@ApiModelProperty(name="유저 user_id", example="your_user_id")
+	String user_id;
 
-	@ApiModelProperty(name="유저 address", example="서울")
-	String address;
-
+	@ApiModelProperty(name="유저 Password", example="your_password")
+	String password;
 }
