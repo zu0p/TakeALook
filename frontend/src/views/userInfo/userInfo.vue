@@ -16,7 +16,7 @@
           <el-input v-model="info.form.address"></el-input>
         </el-form-item>
         <el-form-item label="PW">
-          <el-input v-model="info.form.password"></el-input>
+          <el-input v-model="info.form.password" autocomplete="off" show-password></el-input>
         </el-form-item>
 
         <el-button type="primary" @click="modifyUserInfo">수정</el-button>
