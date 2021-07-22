@@ -10,7 +10,16 @@
           <el-input disabled v-model="info.form.id"></el-input>
         </el-form-item>
         <el-form-item label="e-mail">
-          <el-input v-model="info.form.email"></el-input>
+          <el-input v-model="info.form.email" style="width:45%"></el-input>
+          <span style="margin:0 5px 0 5px" >@</span>
+          <el-select v-model="info.form.emailUrl.fix">
+            <el-option
+              v-for="item in info.form.emailUrl.options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="Address">
           <el-input v-model="info.form.address"></el-input>
@@ -44,6 +53,23 @@ export default {
         id:'',
         password:'',
         email:'',
+        emailUrl:{
+          fix:'',
+          options:[
+            {
+              value: 'naver.com',
+              label: 'naver.com',
+            },
+            {
+              value: 'kakao.com',
+              label: 'kakao.com',
+            },
+            {
+              value: 'google.com',
+              label: 'google.com',
+            },
+          ]
+      },
         address:''
       },
       rules:{
@@ -56,11 +82,14 @@ export default {
       // 회원 정보 받아와서 폼의 prop로 보여주기
       store.dispatch('root/requestUserInfo')
         .then(res=>{
-          //console.log(res)
+          console.log(res)
           info.form.id = res.data.userId
           info.form.name = res.data.name
-          info.form.email = res.data.email
           info.form.address = res.data.address
+          // info.form.email = res.data.email
+          let fullEmail = res.data.email.split('@')
+          info.form.email = fullEmail[0]
+          info.form.emailUrl.fix = fullEmail[1]
         })
     })
 
@@ -70,9 +99,10 @@ export default {
       const user = {
         id: info.form.id,
         name: info.form.name,
-        email: info.form.email,
-        address: info.form.address
+        address: info.form.address,
+        email: `${info.form.email}@${info.form.emailUrl.fix}`
       }
+      console.log(user)
       store.dispatch('root/requestModifyUserInfo', user)
         .then(res=>{
           //console.log('success')
