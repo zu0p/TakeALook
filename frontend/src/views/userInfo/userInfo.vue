@@ -14,6 +14,7 @@
         </el-form-item>
 
         <el-button type="primary" @click="modifyUserInfo">수정</el-button>
+        <el-button type="danger" @click="dropoutUser">탈퇴</el-button>
       </el-form>
 
   </div>
@@ -54,6 +55,7 @@ export default {
 
     const modifyUserInfo = function(){
       // 회원 정보 수정
+      console.log('modify user info')
       // const user = {
       //   user_id: info.form.id,
       //   name: info.form.name,
@@ -65,7 +67,13 @@ export default {
       //     window.location = '/'
       //   })
     }
-    return {userInfoForm, info, modifyUserInfo}
+
+    const dropoutUser = function(){
+        // 회원 탈퇴
+        console.log('drop out user')
+    }
+
+    return {userInfoForm, info, modifyUserInfo, dropoutUser}
   }
 }
 </script>
