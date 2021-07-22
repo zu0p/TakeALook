@@ -9,6 +9,12 @@
         <el-form-item label="ID">
           <el-input disabled v-model="info.form.id"></el-input>
         </el-form-item>
+        <el-form-item label="e-mail">
+          <el-input v-model="info.form.email"></el-input>
+        </el-form-item>
+        <el-form-item label="Address">
+          <el-input v-model="info.form.address"></el-input>
+        </el-form-item>
         <el-form-item label="PW">
           <el-input v-model="info.form.password"></el-input>
         </el-form-item>
@@ -35,8 +41,10 @@ export default {
     const info = reactive({
       form:{
         name: '',
-        id:'user1',
+        id:'',
         password:'',
+        email:'',
+        address:''
       },
       rules:{
 
@@ -44,33 +52,47 @@ export default {
     })
 
     onBeforeMount(()=>{
-      console.log('before mount')
+      //console.log('before mount')
       // 회원 정보 받아와서 폼의 prop로 보여주기
-      // store.dispatch('root/requestUserInfo')
-      //   .then(res=>{
-      //     console.log(res)
-      //     //info.form.id = res.data.id
-      //   })
+      store.dispatch('root/requestUserInfo')
+        .then(res=>{
+          //console.log(res)
+          info.form.id = res.data.userId
+          info.form.name = res.data.name
+          info.form.email = res.data.email
+          info.form.address = res.data.address
+        })
     })
 
     const modifyUserInfo = function(){
       // 회원 정보 수정
-      console.log('modify user info')
-      // const user = {
-      //   user_id: info.form.id,
-      //   name: info.form.name,
-      //   password: info.form.password
-      // }
-      // store.dispatch('root/requestModifyUserInfo', user)
-      //   .then(res=>{
-      //     console.log('success')
-      //     window.location = '/'
-      //   })
+      //console.log('modify user info')
+      const user = {
+        id: info.form.id,
+        name: info.form.name,
+        email: info.form.email,
+        address: info.form.address
+      }
+      store.dispatch('root/requestModifyUserInfo', user)
+        .then(res=>{
+          //console.log('success')
+          alert("수정이 완료되었습니다.")
+          window.location = '/userInfo'
+        })
     }
 
     const dropoutUser = function(){
         // 회원 탈퇴
-        console.log('drop out user')
+        let answer = confirm('탈퇴하시겠습니까?')
+        if(answer){
+          store.dispatch('root/requestDropoutUser', {id: info.form.id})
+            .then(res=>{
+              console.log(res)
+              alert('탈퇴되었습니다.')
+              localStorage.removeItem('accessToken')
+              window.location = '/'
+            })
+        }
     }
 
     return {userInfoForm, info, modifyUserInfo, dropoutUser}

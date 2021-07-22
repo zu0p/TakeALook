@@ -13,6 +13,6 @@
     "path": "/userInfo",
     "icon": "el-icon-user",
     "children": [],
-    "show": "all"
+    "show": "user"
   }
 }

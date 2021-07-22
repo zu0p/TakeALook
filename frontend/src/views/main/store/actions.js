@@ -37,6 +37,16 @@ export function requestUserInfo({commit}, payload){
 }
 
 export function requestModifyUserInfo({state}, payload){
-  //const url = BASE_URL+'/users/me'
-  //return instanceWithAuth.get(url, payload)
+  const url = BASE_URL+`/users/${payload.id}`
+  let body = {
+    "address": payload.address,
+    "email": payload.email,
+    "name": payload.name
+  }
+  return instanceWithAuth.patch(url, payload)
+}
+
+export function requestDropoutUser({state}, payload){
+  const url = BASE_URL+`/users/${payload.id}`
+  return instanceWithAuth.delete(url)
 }
