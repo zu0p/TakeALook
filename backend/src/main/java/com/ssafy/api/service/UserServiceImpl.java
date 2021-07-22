@@ -24,20 +24,19 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UserRepositorySupport userRepositorySupport;
-	
+
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
+
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
 		User user = new User();
 		user.setUserId(userRegisterInfo.getUserId());
+		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
+		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
 		user.setName(userRegisterInfo.getName());
 		user.setEmail(userRegisterInfo.getEmail());
 		user.setAddress(userRegisterInfo.getAddress());
-		// 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-		System.out.println(passwordEncoder.encode(userRegisterInfo.getPassword()));
-		user.setPassword(passwordEncoder.encode(userRegisterInfo.getPassword()));
 		return userRepository.save(user);
 	}
 
@@ -53,8 +52,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User updateUser(String userId, UserUpdatePatchReq userUpdatePatchReq) {
-		User user = userRepositorySupport.findUserByUserId(userId).get();
+	public User updateUser(User user, UserUpdatePatchReq userUpdatePatchReq) {
 		user.setName(userUpdatePatchReq.getName());
 		user.setEmail(userUpdatePatchReq.getEmail());
 		user.setAddress(userUpdatePatchReq.getAddress());
