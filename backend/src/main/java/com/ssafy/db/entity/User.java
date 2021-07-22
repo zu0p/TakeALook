@@ -5,9 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 
 /**
@@ -16,12 +14,11 @@ import javax.persistence.Entity;
 @Entity
 @Getter
 @Setter
-@ToString
 public class User extends BaseEntity{
-    String position;
-    String department;
-    String name;
     String userId;
+    String name;
+    String email;
+    String address;
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
