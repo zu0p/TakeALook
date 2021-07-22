@@ -1,8 +1,8 @@
 <template>
-  <div class="user-info">
-
-      <h2>회원 정보 수정</h2>
+  <el-container>
+    <div  class="user-info">
       <el-form class="user-info-form" :model="info.form" :rules="info.rules" ref="userInfoForm" label-width="100px" label-position="left">
+        <h1 class="form-title">회원 정보 수정</h1>
         <el-form-item label="이름">
             <el-input v-model="info.form.name"></el-input>
         </el-form-item>
@@ -31,8 +31,8 @@
         <el-button type="primary" @click="modifyUserInfo">수정</el-button>
         <el-button type="danger" @click="dropoutUser">탈퇴</el-button>
       </el-form>
-
-  </div>
+    </div>
+  </el-container>
 </template>
 
 <script>
@@ -82,11 +82,11 @@ export default {
       // 회원 정보 받아와서 폼의 prop로 보여주기
       store.dispatch('root/requestUserInfo')
         .then(res=>{
-          console.log(res)
+          //console.log(res)
           info.form.id = res.data.userId
           info.form.name = res.data.name
           info.form.address = res.data.address
-          // info.form.email = res.data.email
+
           let fullEmail = res.data.email.split('@')
           info.form.email = fullEmail[0]
           info.form.emailUrl.fix = fullEmail[1]
@@ -132,6 +132,10 @@ export default {
 
 <style>
 .user-info{
-  margin: 10%;
+  margin: 0 25% 0 25%;
+}
+
+.form-title{
+  margin: 50px 0 50px 0;
 }
 </style>
