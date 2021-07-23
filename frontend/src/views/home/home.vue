@@ -15,7 +15,7 @@ export default {
   name: 'Home',
 
   components: {
-    Conference
+    Conference,
   },
 
   setup () {
@@ -39,11 +39,13 @@ export default {
     }
 
     return { state, load, clickConference }
+
+
   }
 }
 </script>
 
-<style>
+<style scoped>
 .infinite-list {
   padding-left: 0;
   max-height: calc(100% - 35px);
@@ -66,5 +68,9 @@ export default {
   max-width: 25%;
   display: inline-block;
   cursor: pointer;
+}
+
+.create-deal {
+  float: right;
 }
 </style>

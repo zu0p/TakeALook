@@ -2,14 +2,19 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/home/home'
 import ConferencesDetail from '@/views/conferences/conference-detail'
 import History from '@/views/history/history'
+import Createdealform from '@/views/create-deal-form/create-deal-form'
 
 const fullMenu = require('@/views/main/menu.json')
+// 리스트 이기 때문에 .map 사용
+// key : menu.json의 key값
 function makeRoutesFromMenu () {
-  let routes = Object.keys(fullMenu).map((key) => { 
+  let routes = Object.keys(fullMenu).map((key) => {
     if (key === 'home') {
       return { path: fullMenu[key].path, name: key, component: Home  }
     } else if (key === 'history') {
       return { path: fullMenu[key].path, name: key, component: History }
+    } else if (key === 'create-deal-form') {
+      return { path: fullMenu[key].path, name: key, component: Createdealform }
     } else { // menu.json 에 들어있는 로그아웃 메뉴
       return null
     }
@@ -20,7 +25,7 @@ function makeRoutesFromMenu () {
   routes.push({
     path: '/conferences/:conferenceId',
     name: 'conference-detail',
-    component: ConferencesDetail
+    component: ConferencesDetail,
   })
   return routes
 }

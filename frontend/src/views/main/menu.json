@@ -8,11 +8,20 @@
     "show": "all"
   },
   "history" : {
-    "name" : "지난 회의 이력",
+    "name" : "나의 구매 목록",
     "hidden" : false,
     "path" : "/history",
     "icon" : "el-icon-s-order",
     "children" : [],
-    "show": "user"
+    "show": "all"
   },
+  "create-deal-form" : {
+    "name" : "거래 생성",
+    "hidden" : false,
+    "path" : "/create-deal-form",
+    "icon" : "el-icon-edit",
+    "children" : [],
+    "show": "all"
+  }
 }
+

@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    지난 회의 이력 페이지
+    나의 구매 목록
   </el-container>
 </template>
 
