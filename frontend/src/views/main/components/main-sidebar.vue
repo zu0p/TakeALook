@@ -40,24 +40,35 @@ export default {
       menuItems: computed(() => {
         const MenuItems = store.getters['root/getMenus']
         let keys = Object.keys(MenuItems)
-        let menuArray = []
-        for (let i = 0; i < keys.length; ++i) {
-          let menuObject = {}
-          menuObject.icon = MenuItems[keys[i]].icon
-          menuObject.title = MenuItems[keys[i]].name
+        // let menuArray = []
+        // for (let i = 0; i < keys.length; ++i) {
+        //   let menuObject = {}
+        //   menuObject.icon = MenuItems[keys[i]].icon
+        //   menuObject.title = MenuItems[keys[i]].name
 
-          const token = localStorage.getItem('accessToken')
-          if(MenuItems[keys[i]].show=="user"){ //로그인 유저에게만 보여지는 메뉴이면
-            if(token!=null) //로그인되어있다면
-              menuObject.show = true //보여줌
-            else
-              menuObject.show = false //로그인되어있지 않으면 보여주지 않음
+        //   const token = localStorage.getItem('accessToken')
+        //   if(MenuItems[keys[i]].show=="user"){ //로그인 유저에게만 보여지는 메뉴이면
+        //     if(token!=null) //로그인되어있다면
+        //       menuObject.show = true //보여줌
+        //     else
+        //       menuObject.show = false //로그인되어있지 않으면 보여주지 않음
+        //   }
+        //   else{
+        //     menuObject.show = true
+        //   }
+        //   menuArray.push(menuObject)
+        // }
+        let menuArray = MenuItems.map(item => {
+          console.log(item)
+          if(item.show == 'user'){
+            const token = localStorage.getItem('accessToken')
+            if(token!=null)
+              return item
           }
-          else{
-            menuObject.show = true
-          }
-          menuArray.push(menuObject)
-        }
+          else if(item.show == 'all')
+            return item
+        })
+        console.log(menuArray)
         return menuArray
       }),
       activeIndex: computed(() => store.getters['root/getActiveMenuIndex'])
