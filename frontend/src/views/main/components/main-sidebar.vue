@@ -40,18 +40,22 @@ export default {
       menuItems: computed(() => {
         const MenuItems = store.getters['root/getMenus']
         let keys = Object.keys(MenuItems)
-
         let menuArray = []
         for (let i = 0; i < keys.length; ++i) {
           let menuObject = {}
+          menuObject.key = keys[i]
           menuObject.icon = MenuItems[keys[i]].icon
           menuObject.title = MenuItems[keys[i]].name
+          menuObject.path = MenuItems[keys[i]].path
+          menuObject.children = MenuItems[keys[i]].children
+          menuObject.hidden = MenuItems[keys[i]].hidden
 
           const token = localStorage.getItem('accessToken')
-          if(MenuItems[keys[i]].show=='user'){ //로그인 유저에게만 보여지는 메뉴이면
+          if(MenuItems[keys[i]].hidden==true){ //로그인 유저에게만 보여지는 메뉴이면
             if(token!=null){ //로그인되어있다면
               menuArray.push(menuObject)
               MenuItems[keys[i]].hidden = false
+              menuObject.hidden = false
             }
           }
           else{
@@ -72,10 +76,13 @@ export default {
 
     const menuSelect = function (param) {
       store.commit('root/setMenuActive', param)
-      const MenuItems = store.getters['root/getMenus']
-      let keys = Object.keys(MenuItems)
+      // const MenuItems = store.getters['root/getMenus']
+      // let keys = Object.keys(MenuItems)
+      // router.push({
+      //   name: keys[param]
+      // })
       router.push({
-        name: keys[param]
+        name: state.menuItems[param].key
       })
     }
 

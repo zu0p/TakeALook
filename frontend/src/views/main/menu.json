@@ -4,23 +4,20 @@
     "hidden" : false,
     "path" : "/",
     "icon" : "el-icon-s-home",
-    "children" : [],
-    "show": "all"
+    "children" : []
   },
   "user-info":{
     "name": "회원 정보 수정",
     "hidden": true,
     "path": "/userInfo",
     "icon": "el-icon-user",
-    "children": [],
-    "show": "user"
+    "children": []
   },
-  "user-aa":{
-    "name": "회원 정보 all",
+  "webRTC":{
+    "name": "webRTC test",
     "hidden": false,
-    "path": "/userInfo",
+    "path": "/webRTC",
     "icon": "el-icon-user",
-    "children": [],
-    "show": "all"
+    "children": []
   }
 }

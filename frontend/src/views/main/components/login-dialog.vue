@@ -90,7 +90,7 @@ export default {
       loginForm.value.validate((valid) => {
         if (valid) {
           console.log('submit')
-          store.dispatch('root/requestLogin', { userId: state.form.id, password: state.form.password })
+          store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
             .then(res=>{
               //console.log(res.data)
               if(res.data.statusCode==200){

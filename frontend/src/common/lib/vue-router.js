@@ -9,18 +9,16 @@ const fullMenu = require('@/views/main/menu.json')
 function makeRoutesFromMenu () {
 
   let routes = Object.keys(fullMenu).map((key) => {
-    if(!fullMenu[key].hidden){
-      if (key === 'home') {
-        return { path: fullMenu[key].path, name: key, component: Home  }
-      } else if (key === 'history') {
-        return { path: fullMenu[key].path, name: key, component: History }
-      } else if (key == 'user-info'){
-        return { path: fullMenu[key].path, name: key, component: UserInfo}
-      } else if(key=='webRTC'){
-        return { path: fullMenu[key].path, name: key, component: WebRTC}
-      } else {// menu.json 에 들어있는 로그아웃 메뉴
-        return null
-      }
+    if (key === 'home') {
+      return { path: fullMenu[key].path, name: key, component: Home  }
+    } else if (key === 'history') {
+      return { path: fullMenu[key].path, name: key, component: History }
+    } else if (key === 'user-info'){
+      return { path: fullMenu[key].path, name: key, component: UserInfo}
+    } else if(key==='webRTC'){
+      return { path: fullMenu[key].path, name: key, component: WebRTC}
+    } else {// menu.json 에 들어있는 로그아웃 메뉴
+      return null
     }
   })
   // 로그아웃 파싱한 부분 제거
