@@ -17,10 +17,4 @@ public class UserUpdatePatchReq {
 
 	@ApiModelProperty(name="유저 name", example="your_name")
 	String name;
-
-	@ApiModelProperty(name="유저 email", example="your_email")
-	String email;
-
-	@ApiModelProperty(name="유저 address", example="your_address")
-	String address;
 }
