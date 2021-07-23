@@ -9,10 +9,18 @@
   },
   "user-info":{
     "name": "회원 정보 수정",
-    "hidden": false,
+    "hidden": true,
     "path": "/userInfo",
     "icon": "el-icon-user",
     "children": [],
     "show": "user"
+  },
+  "user-aa":{
+    "name": "회원 정보 all",
+    "hidden": false,
+    "path": "/userInfo",
+    "icon": "el-icon-user",
+    "children": [],
+    "show": "all"
   }
 }

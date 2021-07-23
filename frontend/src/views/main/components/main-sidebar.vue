@@ -10,15 +10,15 @@
         class="el-menu-vertical-demo"
         @select="menuSelect">
         <el-menu-item v-for="(item, index) in state.menuItems" :key="index" :index="index.toString()">
-          <i v-if="item.show&&item.icon" :class="['ic', item.icon]"/>
-          <span v-if="item.show">{{ item.title }}</span>
+          <i v-if="item.icon" :class="['ic', item.icon]"/>
+          <span>{{ item.title }}</span>
         </el-menu-item>
       </el-menu>
     </div>
   </el-row>
 </template>
 <script>
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
@@ -40,35 +40,26 @@ export default {
       menuItems: computed(() => {
         const MenuItems = store.getters['root/getMenus']
         let keys = Object.keys(MenuItems)
-        // let menuArray = []
-        // for (let i = 0; i < keys.length; ++i) {
-        //   let menuObject = {}
-        //   menuObject.icon = MenuItems[keys[i]].icon
-        //   menuObject.title = MenuItems[keys[i]].name
 
-        //   const token = localStorage.getItem('accessToken')
-        //   if(MenuItems[keys[i]].show=="user"){ //로그인 유저에게만 보여지는 메뉴이면
-        //     if(token!=null) //로그인되어있다면
-        //       menuObject.show = true //보여줌
-        //     else
-        //       menuObject.show = false //로그인되어있지 않으면 보여주지 않음
-        //   }
-        //   else{
-        //     menuObject.show = true
-        //   }
-        //   menuArray.push(menuObject)
-        // }
-        let menuArray = MenuItems.map(item => {
-          console.log(item)
-          if(item.show == 'user'){
-            const token = localStorage.getItem('accessToken')
-            if(token!=null)
-              return item
+        let menuArray = []
+        for (let i = 0; i < keys.length; ++i) {
+          let menuObject = {}
+          menuObject.icon = MenuItems[keys[i]].icon
+          menuObject.title = MenuItems[keys[i]].name
+
+          const token = localStorage.getItem('accessToken')
+          if(MenuItems[keys[i]].show=='user'){ //로그인 유저에게만 보여지는 메뉴이면
+            if(token!=null){ //로그인되어있다면
+              menuArray.push(menuObject)
+              MenuItems[keys[i]].hidden = false
+            }
           }
-          else if(item.show == 'all')
-            return item
-        })
-        console.log(menuArray)
+          else{
+            menuArray.push(menuObject)
+          }
+        }
+
+        //console.log(menuArray)
         return menuArray
       }),
       activeIndex: computed(() => store.getters['root/getActiveMenuIndex'])
