@@ -18,8 +18,8 @@ import javax.persistence.Entity;
 @Setter
 @ToString
 public class User extends BaseEntity{
-    String position;
-    String department;
+
+    String userId;
     String name;
     String userId;
 

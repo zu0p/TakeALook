@@ -12,10 +12,9 @@ import lombok.Setter;
 @Setter
 @ApiModel("UserUpdatePatchReq")
 public class UserUpdatePatchReq {
-	@ApiModelProperty(name="유저 department", example="your_department")
-	String department;
-	@ApiModelProperty(name="유저 position", example="your_position")
-	String position;
+	@ApiModelProperty(name="유저 password", example="1234")
+	String password;
+
 	@ApiModelProperty(name="유저 name", example="your_name")
 	String name;
 }
