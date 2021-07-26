@@ -7,10 +7,18 @@
     "children" : [],
     "show": "all"
   },
-  "history" : {
+  "purchase-list" : {
     "name" : "나의 구매 목록",
     "hidden" : false,
-    "path" : "/history",
+    "path" : "/purchase-list",
+    "icon" : "el-icon-s-order",
+    "children" : [],
+    "show": "all"
+  },
+  "sales-list" : {
+    "name" : "나의 판매 목록",
+    "hidden" : false,
+    "path" : "/sales-list",
     "icon" : "el-icon-s-order",
     "children" : [],
     "show": "all"

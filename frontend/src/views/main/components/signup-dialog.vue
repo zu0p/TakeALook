@@ -151,7 +151,7 @@ export default {
       // console.log(signupForm.value)
     })
 
-    const changeId = function(){
+    const changeId = function() {
       state.idValicate = false
     }
 
