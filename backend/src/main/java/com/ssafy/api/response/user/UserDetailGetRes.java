@@ -1,6 +1,5 @@
-package com.ssafy.api.response;
+package com.ssafy.api.response.user;
 
-import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.User;
 
 import io.swagger.annotations.ApiModel;
@@ -13,16 +12,19 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@ApiModel("UserResponse")
-public class UserRes{
-	@ApiModelProperty(name="User ID")
+@ApiModel("UserGetResponse")
+public class UserDetailGetRes {
+	@ApiModelProperty(name="유저 id")
 	String userId;
-	String address;
-	String email;
+	@ApiModelProperty(name="유저 name")
 	String name;
+	@ApiModelProperty(name="유저 email")
+	String email;
+	@ApiModelProperty(name="유저 address")
+	String address;
 
-	public static UserRes of(User user) {
-		UserRes res = new UserRes();
+	public static UserDetailGetRes of(User user) {
+		UserDetailGetRes res = new UserDetailGetRes();
 		res.setUserId(user.getUserId());
 		res.setEmail(user.getEmail());
 		res.setAddress(user.getAddress());
