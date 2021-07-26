@@ -41,3 +41,4 @@ export function requestUserInfo({commit}, payload){
       console.log(err)
     })
 }
+

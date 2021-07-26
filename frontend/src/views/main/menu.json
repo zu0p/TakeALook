@@ -4,15 +4,34 @@
     "hidden" : false,
     "path" : "/",
     "icon" : "el-icon-s-home",
-    "children" : [],
-    "show": "all"
+    "children" : []
+  },
+  "order-deal" : {
+    "name" : "나의 구매 목록",
+    "hidden" : false,
+    "path" : "/orderdeal",
+    "icon" : "el-icon-s-goods",
+    "children" : []
+  },
+  "my-deal" : {
+    "name" : "나의 판매 목록",
+    "hidden" : false,
+    "path" : "/mydeal",
+    "icon" : "el-icon-user-solid",
+    "children" : []
+  },
+  "keep-deal" : {
+    "name" : "나의 관심 목록",
+    "hidden" : false,
+    "path" : "/keepdeal",
+    "icon" : "el-icon-message-solid",
+    "children" : []
   },
   "history" : {
     "name" : "지난 회의 이력",
-    "hidden" : false,
+    "hidden" : true,
     "path" : "/history",
     "icon" : "el-icon-s-order",
-    "children" : [],
-    "show": "user"
+    "children" : []
   }
 }
