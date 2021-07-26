@@ -15,7 +15,7 @@ function createInstanceWithAuth(url) {
   return setInterceptors(instance)
 }
 
-const BASE_URL = 'http://localhost:8080/api/v1'
+const BASE_URL = 'https://soft-lizard-45.loca.lt/api/v1'
 const instanceWithAuth = createInstance()
 const posts = createInstanceWithAuth('posts')
 
@@ -43,19 +43,14 @@ export function requestCheckDupl({state}, payload){
 
 export function requestUserInfo({commit}, payload){
   const url = BASE_URL+'/users/me'
-  return instanceWithAuth.get(url)
+  instanceWithAuth.get(url)
+    .then(res=>{
+      commit("SET_USER_INFO", res.data.userId)
+    })
+    .catch((err)=>{
+      console.log(err)
+    })
 }
-
-export function requestModifyUserInfo({state}, payload){
-  const url = BASE_URL+`/users/${payload.id}`
-  let body = {
-    "address": payload.address,
-    "email": payload.email,
-    "name": payload.name
-  }
-  return instanceWithAuth.patch(url, payload)
-}
-
 // 게시글 작성 요청 보내기
 export function createPost(postData) {
   // const url = BASE_URL+`/create-deal-form/${userId}/${articleId}`
@@ -64,9 +59,4 @@ export function createPost(postData) {
 // 게시글 삭제 요청 보내기
 export function deletePost(postId) {
   return posts.delete(postId);
-}
-
-export function requestDropoutUser({state}, payload){
-  const url = BASE_URL+`/users/${payload.id}`
-  return instanceWithAuth.delete(url)
 }
