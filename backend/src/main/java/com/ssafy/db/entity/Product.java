@@ -22,7 +22,7 @@ public class Product extends BaseEntity {
     String description;
     String state;
     String imageUrl;
-    Boolean idSold;
+    Boolean isSold;
 
     LocalDate registTime; //상품 등록 시간
     LocalDate reserveTime; // 거래 방 예약 시간
