@@ -16,6 +16,7 @@ function createInstanceWithAuth(url) {
 }
 
 const BASE_URL = 'http://localhost:8080/api/v1'
+// const BASE_URL = 'https://slimy-moth-84.loca.lt/api/v1/'
 const instanceWithAuth = createInstance()
 const posts = createInstanceWithAuth('posts')
 

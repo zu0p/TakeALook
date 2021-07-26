@@ -144,5 +144,6 @@ export default {
 }
 .uppermenu span:hover{
   color: #ffd04b;
+  pointer-events: stroke;
 }
 </style>

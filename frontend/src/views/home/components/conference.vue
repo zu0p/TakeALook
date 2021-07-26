@@ -1,24 +1,8 @@
 <template>
-  <!-- 로그인을 하지 않은 경우 -->
-  <!-- <el-card :body-style="{ padding: '0px' }" shadow="hover">
-    <div class="image-wrapper">
-      <el-skeleton style="width: 100%">
-        <template #template>
-          <el-skeleton-item variant="image" style="width: 100%; height: 190px" />
-        </template>
-      </el-skeleton>
-      </div>
-    <div style="text-align: center; padding: 14px;">
-      <span class="title">{{ title }}</span>
-      <div class="bottom">
-        <span>{{ price }}⠀|⠀{{ time }}</span>
-      </div>
-    </div>
-  </el-card> -->
-
   <!-- 로그인한 경우 -->
+
     <!-- 거래가 끝난 경우 -->
-    <el-card :body-style="{ padding: '0px' }">
+    <el-card :body-style="{ padding: '0px' }" v-if="isLogin">
     <div class="image-wrapper enddeal">
       <el-skeleton style="width: 100%">
         <template #template>
@@ -80,11 +64,41 @@
       </div>
     </div>
   </el-card> -->
+  <!-- 로그인을 하지 않은 경우 -->
+  <el-card :body-style="{ padding: '0px' }" shadow="hover" v-else>
+    <div class="image-wrapper">
+      <el-skeleton style="width: 100%">
+        <template #template>
+          <el-skeleton-item variant="image" style="width: 100%; height: 190px" />
+        </template>
+      </el-skeleton>
+      </div>
+    <div style="text-align: center; padding: 14px;">
+      <span class="title">{{ title }}</span>
+      <div class="bottom">
+        <span>{{ price }}⠀|⠀{{ time }}</span>
+      </div>
+    </div>
+  </el-card>
 </template>
 
 <script>
+// import { onMounted } from '@vue/runtime-core'
+
 export default {
   name: 'Home',
+
+  data: function() {
+    return {
+      isLogin: false
+    }
+  },
+
+  mounted: function () {
+    if (localStorage.accessToken) {
+      this.isLogin = true
+    }
+  },
 
   props: {
     title: {
@@ -104,7 +118,7 @@ export default {
     buyer: {
       type: String,
       default: "거래가 성사되지 않았습니다"
-    },
+    }
   },
 
   setup () {
