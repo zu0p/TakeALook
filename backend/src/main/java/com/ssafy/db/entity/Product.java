@@ -18,7 +18,7 @@ public class Product extends BaseEntity {
     String productName;
     Integer basePrice;
     String category;
-    String desc;
+    String description;
     String state;
     String imageUrl;
     Boolean idSold;

@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Data
 public class TradeHistory extends BaseEntity {
     Timestamp tradeDate;
-    String product;
+    Long product;
     Integer price;
     String seller;
     String buyer;
