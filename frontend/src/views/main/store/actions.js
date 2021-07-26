@@ -33,12 +33,21 @@ export function requestCheckDupl({state}, payload){
 
 export function requestUserInfo({commit}, payload){
   const url = BASE_URL+'/users/me'
-  instanceWithAuth.get(url)
-    .then(res=>{
-      commit("SET_USER_INFO", res.data.userId)
-    })
-    .catch((err)=>{
-      console.log(err)
-    })
+  return instanceWithAuth.get(url)
+}
+
+export function requestModifyUserInfo({state}, payload){
+  const url = BASE_URL+`/users/${payload.id}`
+  let body = {
+    "address": payload.address,
+    "email": payload.email,
+    "name": payload.name
+  }
+  return instanceWithAuth.patch(url, payload)
+}
+
+export function requestDropoutUser({state}, payload){
+  const url = BASE_URL+`/users/${payload.id}`
+  return instanceWithAuth.delete(url)
 }
 

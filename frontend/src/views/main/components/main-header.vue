@@ -62,8 +62,6 @@
             class="el-menu-vertical-demo"
             @select="menuSelect">
             <el-menu-item v-for="(item, index) in state.menuItems" :key="index" :index="index.toString()">
-              <!-- <i v-if="item.show&&item.icon" :class="['ic', item.icon]"/>
-              <span v-if="item.show">{{ item.title }}</span> -->
               <i v-if="item.icon" :class="['ic', item.icon]"/>
               <span>{{ item.title }}</span>
             </el-menu-item>
@@ -123,8 +121,9 @@ export default {
           else{
             menuArray.push(menuObject)
           }
-          // menuArray.push(menuObject)
         }
+
+        //console.log(menuArray)
         return menuArray
       }),
       activeIndex: computed(() => store.getters['root/getActiveMenuIndex']),

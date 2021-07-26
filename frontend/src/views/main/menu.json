@@ -27,11 +27,18 @@
     "icon" : "el-icon-message-solid",
     "children" : []
   },
-  "history" : {
-    "name" : "지난 회의 이력",
-    "hidden" : true,
-    "path" : "/history",
-    "icon" : "el-icon-s-order",
-    "children" : []
+  "user-info":{
+    "name": "회원 정보 수정",
+    "hidden": true,
+    "path": "/userInfo",
+    "icon": "el-icon-user",
+    "children": []
+  },
+  "webRTC":{
+    "name": "webRTC test",
+    "hidden": false,
+    "path": "/webRTC",
+    "icon": "el-icon-user",
+    "children": []
   }
 }

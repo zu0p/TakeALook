@@ -5,6 +5,8 @@ import History from '@/views/history/history'
 import Mydeal from '@/views/mypage/my-deal'
 import Keepdeal from '@/views/mypage/keep-deal'
 import Orderdeal from '@/views/mypage/order-deal'
+import UserInfo from '@/views/userInfo/userInfo'
+import WebRTC from '@/views/webRTC/webRTC'
 
 const fullMenu = require('@/views/main/menu.json')
 function makeRoutesFromMenu () {
@@ -19,12 +21,17 @@ function makeRoutesFromMenu () {
       return { path: fullMenu[key].path, name: key, component: Keepdeal }
     } else if (key === 'order-deal') {
       return { path: fullMenu[key].path, name: key, component: Orderdeal }
-    } else { // menu.json 에 들어있는 로그아웃 메뉴
+    } else if (key === 'user-info'){
+      return { path: fullMenu[key].path, name: key, component: UserInfo}
+    } else if(key==='webRTC'){
+      return { path: fullMenu[key].path, name: key, component: WebRTC}
+    } else {// menu.json 에 들어있는 로그아웃 메뉴
       return null
     }
   })
   // 로그아웃 파싱한 부분 제거
   routes = routes.filter(item => item)
+
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
   routes.push({
     path: '/conferences/:conferenceId',
