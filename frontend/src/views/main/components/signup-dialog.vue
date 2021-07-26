@@ -190,7 +190,7 @@ export default {
         if (valid && state.idValicate) {
           //console.log('submit')
           const body={
-            userId:state.form.id,
+            user_id:state.form.id,
             password:state.form.password,
             name:state.form.name,
             department:state.form.department,
@@ -198,9 +198,9 @@ export default {
           }
           store.dispatch('root/requestSignup', body)
             .then(res=>{
-              //console.log(res)
-              //console.log(res.data)
-              if(res.data.statusCode==200){
+              console.log(res)
+              console.log(res.data)
+              if(res.data.statusCode==201){
                 alert('회원 가입이 완료되었습니다.')
                 //emit('closeSignupDialog')
                 window.location="/"
