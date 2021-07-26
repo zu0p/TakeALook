@@ -139,12 +139,10 @@ export default {
   cursor: pointer;
 }
 
-<<<<<<< frontend/src/views/home/home.vue
 .create-deal {
   float: right;
-=======
+}
 .uppermenu span:hover{
   color: #ffd04b;
->>>>>>> frontend/src/views/home/home.vue
 }
 </style>

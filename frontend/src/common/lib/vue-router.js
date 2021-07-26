@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/home/home'
 import ConferencesDetail from '@/views/conferences/conference-detail'
 import CreateDealform from '@/views/create-deal-form/create-deal-form'
-import History from '@/views/history/history'
 import Mydeal from '@/views/mypage/my-deal'
 import Keepdeal from '@/views/mypage/keep-deal'
 import Orderdeal from '@/views/mypage/order-deal'
@@ -18,8 +17,6 @@ function makeRoutesFromMenu () {
       return { path: fullMenu[key].path, name: key, component: Home  }
     } else if (key === 'create-deal-form') {
       return { path: fullMenu[key].path, name: key, component: CreateDealform }
-    } else if (key === 'history') {
-      return { path: fullMenu[key].path, name: key, component: History }
     } else if (key === 'my-deal') {
       return { path: fullMenu[key].path, name: key, component: Mydeal }
     } else if (key === 'keep-deal') {
