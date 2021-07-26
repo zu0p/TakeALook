@@ -15,7 +15,9 @@ import javax.persistence.Entity;
  * 유저 모델 정의.
  */
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 public class User extends BaseEntity{
 
     String userId;
