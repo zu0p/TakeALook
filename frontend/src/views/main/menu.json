@@ -4,24 +4,7 @@
     "hidden" : false,
     "path" : "/",
     "icon" : "el-icon-s-home",
-    "children" : [],
-    "show": "all"
-  },
-  "purchase-list" : {
-    "name" : "나의 구매 목록",
-    "hidden" : false,
-    "path" : "/purchase-list",
-    "icon" : "el-icon-s-order",
-    "children" : [],
-    "show": "all"
-  },
-  "sales-list" : {
-    "name" : "나의 판매 목록",
-    "hidden" : false,
-    "path" : "/sales-list",
-    "icon" : "el-icon-s-order",
-    "children" : [],
-    "show": "all"
+    "children" : []
   },
   "create-deal-form" : {
     "name" : "거래 생성",
@@ -30,6 +13,41 @@
     "icon" : "el-icon-edit",
     "children" : [],
     "show": "all"
+  },
+  "order-deal" : {
+    "name" : "나의 구매 목록",
+    "hidden" : false,
+    "path" : "/orderdeal",
+    "icon" : "el-icon-s-goods",
+    "children" : []
+  },
+  "my-deal" : {
+    "name" : "나의 판매 목록",
+    "hidden" : false,
+    "path" : "/mydeal",
+    "icon" : "el-icon-user-solid",
+    "children" : []
+  },
+  "keep-deal" : {
+    "name" : "나의 관심 목록",
+    "hidden" : false,
+    "path" : "/keepdeal",
+    "icon" : "el-icon-message-solid",
+    "children" : []
+  },
+  "user-info":{
+    "name": "회원 정보 수정",
+    "hidden": true,
+    "path": "/userInfo",
+    "icon": "el-icon-user",
+    "children": []
+  },
+  "webRTC":{
+    "name": "webRTC test",
+    "hidden": false,
+    "path": "/webRTC",
+    "icon": "el-icon-user",
+    "children": []
   }
 }
 
