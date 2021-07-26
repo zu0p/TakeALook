@@ -50,5 +50,4 @@ public class ProductRegisterPostReq {
     @ApiModelProperty(name="거래 방 제한 시간 restrictTime", example = "restrict time")
     LocalDate restrictTime;
 
-
 }

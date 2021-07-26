@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Setter
 @ApiModel("ProductResponse")
 public class ProductResponse {
+
     @ApiModelProperty(name="User ID")
     String userId; // 판매자
     String productName; // 상품명
