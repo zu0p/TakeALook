@@ -10,15 +10,15 @@
         class="el-menu-vertical-demo"
         @select="menuSelect">
         <el-menu-item v-for="(item, index) in state.menuItems" :key="index" :index="index.toString()">
-          <i v-if="item.show&&item.icon" :class="['ic', item.icon]"/>
-          <span v-if="item.show">{{ item.title }}</span>
+          <i v-if="item.icon" :class="['ic', item.icon]"/>
+          <span>{{ item.title }}</span>
         </el-menu-item>
       </el-menu>
     </div>
   </el-row>
 </template>
 <script>
-import { reactive, computed } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
@@ -43,21 +43,27 @@ export default {
         let menuArray = []
         for (let i = 0; i < keys.length; ++i) {
           let menuObject = {}
+          menuObject.key = keys[i]
           menuObject.icon = MenuItems[keys[i]].icon
           menuObject.title = MenuItems[keys[i]].name
+          menuObject.path = MenuItems[keys[i]].path
+          menuObject.children = MenuItems[keys[i]].children
+          menuObject.hidden = MenuItems[keys[i]].hidden
 
           const token = localStorage.getItem('accessToken')
-          if(MenuItems[keys[i]].show=="user"){ //로그인 유저에게만 보여지는 메뉴이면
-            if(token!=null) //로그인되어있다면
-              menuObject.show = true //보여줌
-            else
-              menuObject.show = false //로그인되어있지 않으면 보여주지 않음
+          if(MenuItems[keys[i]].hidden==true){ //로그인 유저에게만 보여지는 메뉴이면
+            if(token!=null){ //로그인되어있다면
+              menuArray.push(menuObject)
+              MenuItems[keys[i]].hidden = false
+              menuObject.hidden = false
+            }
           }
           else{
-            menuObject.show = true
+            menuArray.push(menuObject)
           }
-          menuArray.push(menuObject)
         }
+
+        //console.log(menuArray)
         return menuArray
       }),
       activeIndex: computed(() => store.getters['root/getActiveMenuIndex'])
@@ -70,10 +76,13 @@ export default {
 
     const menuSelect = function (param) {
       store.commit('root/setMenuActive', param)
-      const MenuItems = store.getters['root/getMenus']
-      let keys = Object.keys(MenuItems)
+      // const MenuItems = store.getters['root/getMenus']
+      // let keys = Object.keys(MenuItems)
+      // router.push({
+      //   name: keys[param]
+      // })
       router.push({
-        name: keys[param]
+        name: state.menuItems[param].key
       })
     }
 
