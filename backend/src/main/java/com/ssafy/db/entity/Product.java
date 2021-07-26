@@ -1,16 +1,17 @@
 package com.ssafy.db.entity;
 
 import lombok.Data;
-import org.hibernate.annotations.ManyToAny;
 
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import java.sql.Timestamp;
 
+@Entity
 @Data
-public class Product {
+public class Product extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
-    String userId;
+    User user;
     Timestamp registTime; //상품 등록 시간
     Timestamp reserveTime; // 거래 방 예약 시간
     Timestamp restrictTime; // 거래 방 제한 시간
