@@ -21,7 +21,8 @@ public class User extends BaseEntity{
 
     String userId;
     String name;
-    String userId;
+    String email;
+    String address;
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
