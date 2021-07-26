@@ -6,6 +6,14 @@
     "icon" : "el-icon-s-home",
     "children" : []
   },
+  "create-deal-form" : {
+    "name" : "거래 생성",
+    "hidden" : false,
+    "path" : "/create-deal-form",
+    "icon" : "el-icon-edit",
+    "children" : [],
+    "show": "all"
+  },
   "order-deal" : {
     "name" : "나의 구매 목록",
     "hidden" : false,
@@ -42,3 +50,4 @@
     "children": []
   }
 }
+

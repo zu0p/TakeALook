@@ -6,8 +6,18 @@ function createInstance(){
   const instance = axios.create()
   return setInterceptors(instance)
 }
+
+// Token값과 특정 url을 붙여서 셋팅
+function createInstanceWithAuth(url) {
+  const instance = axios.create({
+    baseURL: BASE_URL+`${url}`,
+  })
+  return setInterceptors(instance)
+}
+
 const BASE_URL = 'http://localhost:8080/api/v1'
 const instanceWithAuth = createInstance()
+const posts = createInstanceWithAuth('posts')
 
 export function requestLogin ({ state, commit }, payload) {
   //console.log('requestLogin', state, payload)
@@ -46,8 +56,17 @@ export function requestModifyUserInfo({state}, payload){
   return instanceWithAuth.patch(url, payload)
 }
 
+// 게시글 작성 요청 보내기
+export function createPost(postData) {
+  // const url = BASE_URL+`/create-deal-form/${userId}/${articleId}`
+  return posts.post('/', postData)
+}
+// 게시글 삭제 요청 보내기
+export function deletePost(postId) {
+  return posts.delete(postId);
+}
+
 export function requestDropoutUser({state}, payload){
   const url = BASE_URL+`/users/${payload.id}`
   return instanceWithAuth.delete(url)
 }
-
