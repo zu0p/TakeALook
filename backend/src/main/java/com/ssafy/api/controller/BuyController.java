@@ -30,6 +30,8 @@ import java.util.List;
 public class BuyController {
     @Autowired
     UserService userService; // 유저 관련 비즈니스 처리 로직
+
+    @Autowired
     BuyService buyService;
 
     @GetMapping()
@@ -55,6 +57,6 @@ public class BuyController {
         List<Product> list = buyService.getBuyList(userId);
         if(list!=null)
             System.out.println(list.get(0).getUser().getUserId());
-        return (ResponseEntity<?>) ResponseEntity.status(200).body(UserRes.of(user));
+        return (ResponseEntity<?>) ResponseEntity.status(200).body(list);
     }
 }

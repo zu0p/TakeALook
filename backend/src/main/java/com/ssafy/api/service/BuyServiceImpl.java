@@ -1,12 +1,11 @@
 package com.ssafy.api.service;
 
-import com.querydsl.core.Tuple;
-import com.ssafy.db.entity.Product;
-import com.ssafy.db.entity.TradeHistory;
-import com.ssafy.db.repository.BuyRepository;
-import com.ssafy.db.repository.BuyRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.ssafy.db.entity.Product;
+import com.ssafy.db.repository.BuyRepository;
+import com.ssafy.db.repository.BuyRepositorySupport;
 
 import java.util.List;
 

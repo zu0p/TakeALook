@@ -10,6 +10,7 @@ import com.ssafy.db.entity.QProduct;
 import com.ssafy.db.entity.QTradeHistory;
 import com.ssafy.db.entity.TradeHistory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -22,20 +23,11 @@ public class BuyRepositorySupport{
     QProduct qProduct = QProduct.product;
     QTradeHistory qTradeHistory = QTradeHistory.tradeHistory;
 
-
     public List<Product> findAllByBuyer(String buyer){
         System.out.println("repository");
-//        List<Product> list = (List<Product>) jpaQueryFactory
-//                .select()
-//                .from(qProduct)
-//                .join(qTradeHistory)
-//                .on(qProduct.id.eq(qTradeHistory.product))
-//                .where(qTradeHistory.buyer.eq(buyer)).fetch();
         List<Product> list = jpaQueryFactory
                 .select(qProduct)
                 .from(qProduct)
-//                .where(qProduct.user.userId.eq(buyer))
-//                .fetch();
                 .where(qProduct.id.in(
                         JPAExpressions
                         .select(qTradeHistory.product)
@@ -43,9 +35,10 @@ public class BuyRepositorySupport{
                         .where(qTradeHistory.buyer.eq(buyer)))
                 )
                 .fetch();
-        List<Product> tmp = new ArrayList<>();
-        tmp.add(new Product());
-        return list==null?tmp:list;
+//        List<Product> tmp = new ArrayList<>();
+//        tmp.add(new Product());
+//        return list==null?tmp:list;
+        return list;
     }
 
 }
