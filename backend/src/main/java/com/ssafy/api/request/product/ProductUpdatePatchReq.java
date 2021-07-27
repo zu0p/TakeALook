@@ -4,15 +4,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
+
 import java.time.LocalDate;
 
 @Getter
 @Setter
-@ToString
-@ApiModel("ProductRegisterPostRequest")
-public class ProductRegisterPostReq {
-
+@ApiModel("ProductUpdatePatchRequest")
+public class ProductUpdatePatchReq {
     @ApiModelProperty(name="판매자 userId", example = "userId")
     String userId;
 
@@ -45,5 +43,4 @@ public class ProductRegisterPostReq {
 
     @ApiModelProperty(name="거래 방 제한 시간 restrictTime", example = "restrict time")
     LocalDate restrictTime;
-
 }
