@@ -7,6 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -26,5 +27,5 @@ public class BuyUpdateReq {
     String seller;
 
     @ApiModelProperty(name="거래한 시간", example="?")
-    Timestamp trade_date;
+    LocalDate trade_date;
 }

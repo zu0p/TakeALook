@@ -2,7 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.buy.BuyUpdateReq;
 import com.ssafy.db.entity.TradeHistory;
-import com.ssafy.db.repository.buy.ProductRepository;
+import com.ssafy.db.repository.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
