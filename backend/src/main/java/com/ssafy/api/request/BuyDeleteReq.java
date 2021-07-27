@@ -11,20 +11,14 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @ToString
-@ApiModel("BuyUpdatePostRequest")
-public class BuyUpdatePostReq {
+@ApiModel("BuyDeleteRequest")
+public class BuyDeleteReq {
+    @ApiModelProperty(name="구매상품 ID", example="1")
+    Long id;
+
     @ApiModelProperty(name="구매자 ID", example="ssafy_web")
     String buyer;
 
-    @ApiModelProperty(name="가격", example="100000")
-    Integer price;
-
-    @ApiModelProperty(name="상품 ID", example="1")
-    Long product;
-
     @ApiModelProperty(name="판매자 ID", example="ssafy_web")
     String seller;
-
-    @ApiModelProperty(name="거래한 시간", example="?")
-    Timestamp trade_date;
 }

@@ -1,10 +1,7 @@
 package com.ssafy.api.controller;
 
-import com.querydsl.core.Tuple;
-import com.ssafy.api.request.BuyUpdatePostReq;
-import com.ssafy.api.request.UserRegisterPostReq;
-import com.ssafy.api.response.BuyRes;
-import com.ssafy.api.response.UserRes;
+import com.ssafy.api.request.BuyDeleteReq;
+import com.ssafy.api.request.BuyUpdateReq;
 import com.ssafy.api.service.BuyService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
@@ -64,10 +61,9 @@ public class BuyController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<? extends BaseResponseBody> register(
+    public ResponseEntity<? extends BaseResponseBody> registBuyProduct(
             @ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value="구매 상품 정보", required = true) BuyUpdatePostReq buyInfo) {
-        //User user = userService.createUser(registerInfo);
+            @RequestBody @ApiParam(value="구매 상품 정보", required = true) BuyUpdateReq buyInfo) {
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         User user = userService.getUserByUserId(userDetails.getUsername());
         // 현재 로그인한 아이디의 회원 == 구매자
@@ -75,5 +71,27 @@ public class BuyController {
 
         TradeHistory tradeHistory = buyService.createBuyHistory(buyInfo);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
+
+    @DeleteMapping()
+    @ApiOperation(value = "구매 상품 삭제", notes = "구매 상품 내역을 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<? extends BaseResponseBody> deleteBuyProduct(
+            @ApiIgnore Authentication authentication,
+            @RequestBody @ApiParam(value="구매 상품 정보", required = true) BuyDeleteReq buyInfo) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String authUser = userService.getUserByUserId(userDetails.getUsername()).getUserId();
+
+        System.out.println(authUser);
+        if(authUser.equals(buyInfo.getBuyer())){
+            buyService.deleteBuyInfo(buyInfo.getId());
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        }
+        return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
     }
 }
