@@ -1,5 +1,7 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.request.BuyUpdatePostReq;
+import com.ssafy.db.entity.TradeHistory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +21,19 @@ public class BuyServiceImpl implements BuyService{
 
     @Override
     public List<Product> getBuyList(String buyer) {
-        System.out.println("service");
+        //System.out.println("service");
         List<Product> list = buyRepositorySupport.findAllByBuyer(buyer);
         return list;
+    }
+
+    @Override
+    public TradeHistory createBuyHistory(BuyUpdatePostReq buyUpdatePostReq) {
+        TradeHistory tradeHistory = new TradeHistory();
+        tradeHistory.setBuyer(buyUpdatePostReq.getBuyer());
+        tradeHistory.setPrice(buyUpdatePostReq.getPrice());
+        tradeHistory.setProduct(buyUpdatePostReq.getProduct());
+        tradeHistory.setSeller(buyUpdatePostReq.getSeller());
+        tradeHistory.setTradeDate(buyUpdatePostReq.getTrade_date());
+        return buyRepository.save(tradeHistory);
     }
 }
