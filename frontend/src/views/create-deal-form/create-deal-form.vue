@@ -29,20 +29,21 @@
         <el-input v-model="state.form.price" placeholder="가격을 입력하세요 (단위: 원)" maxlength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off"></el-input>
       </el-form-item>
       <!-- 제품 판매 예약시간 -->
-      <el-form-item prop="reservation_date" label="제품 판매 예약시간" :label-width="state.formLabelWidth">
+      <el-form-item prop="reservation_dateTime" label="제품 판매 예약시간" :label-width="state.formLabelWidth">
         <el-col :span="30">
           <el-date-picker
+            v-model="state.form.reservation_dateTime"
             type="datetime"
             placeholder="날자를 선택하세요"
-            v-model="state.form.reservation_dateTime"
             style="width: 100%;"
+            :picker-options="pickerOptions"
             >
           </el-date-picker>
         </el-col>
       </el-form-item>
       <!-- 제품 설명 -->
       <el-form-item prop="desc" label="제품 설명" :label-width="state.formLabelWidth">
-        <el-input type="textarea" :rows="5" v-model="state.form.desc" placeholder="내용을 입력하세요" show-word-limit maxlength="300" autocomplete="off"></el-input>
+        <el-input type="textarea" :rows="5" v-model.trim="state.form.desc" placeholder="내용을 입력하세요" show-word-limit maxlength="300" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
   </el-container>
@@ -82,17 +83,10 @@ export default {
       formValicate: false,
       loading: false,
       formLabelWidth: '130px',
+      pickerOptions: {
+        disabledDate: this.disabledDate
+      },
     })
-
-    const onSubmit = function () {
-      state.src.imageUrl = ''
-      state.form.title = ''
-      state.form.category = ''
-      state.form.price =''
-      state.form.reservation_dateTime = ''
-      state.form.desc = ''
-    }
-
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
@@ -102,6 +96,8 @@ export default {
 
     const clickCreate = function () {
       console.log('게시글 작성 함수 실행')
+      console.log(state.form.reservation_dateTime)
+      console.log(state.pickerOptions)
       state.loading = true
       // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
       createDealForm.value.validate((valid) => {
@@ -117,7 +113,7 @@ export default {
            })
             .then(res=>{
               //console.log(res.data)
-              window.location="/"
+              window.location='/'
             }).then(()=>{
               state.loading = false
             })
@@ -135,12 +131,12 @@ export default {
 
     const clickCancel = function () {
       console.log('go home')
-      window.location="/"
+      window.location='/'
     }
 
-    return { createDealForm, state, onSubmit, clickCreate, clickCancel, }
+    return { createDealForm, state, clickCreate, clickCancel, }
   },
-  // imageUrl 관련 method
+  // imageUrl, el-date-picker 관련 method
   methods: {
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
@@ -156,6 +152,9 @@ export default {
         this.$message.error('사진 크기는 2MB를 초과할 수 없습니다!');
       }
       return isJPG && isLt2M;
+    },
+    disabledDate(time) {
+      return time.getTime() < Date.now() - 8.64e7
     },
   },
 

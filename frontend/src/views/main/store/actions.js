@@ -15,7 +15,7 @@ function createInstanceWithAuth(url) {
   return setInterceptors(instance)
 }
 
-const BASE_URL = 'https://soft-lizard-45.loca.lt/api/v1'
+const BASE_URL = 'https://silent-goose-93.loca.lt/swagger-ui/'
 const instanceWithAuth = createInstance()
 const posts = createInstanceWithAuth('posts')
 
@@ -52,11 +52,11 @@ export function requestUserInfo({commit}, payload){
     })
 }
 // 게시글 작성 요청 보내기
-export function createPost(postData) {
-  // const url = BASE_URL+`/create-deal-form/${userId}/${articleId}`
+function createPost(postData) {
+  // const url = BASE_URL+`/create-deal-form/${userId}/${}`
   return posts.post('/', postData)
 }
 // 게시글 삭제 요청 보내기
-export function deletePost(postId) {
+function deletePost(postId) {
   return posts.delete(postId);
 }
