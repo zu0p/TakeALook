@@ -1,20 +1,13 @@
 package com.ssafy.db.repository;
 
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.CollectionExpression;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.api.response.BuyRes;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.QProduct;
 import com.ssafy.db.entity.QTradeHistory;
-import com.ssafy.db.entity.TradeHistory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository

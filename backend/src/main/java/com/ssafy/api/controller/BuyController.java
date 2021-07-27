@@ -1,8 +1,7 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.request.BuyDeleteReq;
-import com.ssafy.api.request.BuyUpdateReq;
-import com.ssafy.api.response.UserRes;
+import com.ssafy.api.request.buy.BuyDeleteReq;
+import com.ssafy.api.request.buy.BuyUpdateReq;
 import com.ssafy.api.service.BuyService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;

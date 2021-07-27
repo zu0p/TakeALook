@@ -1,12 +1,10 @@
-package com.ssafy.api.response;
+package com.ssafy.api.response.buy;
 
 import com.ssafy.db.entity.Product;
-import com.ssafy.db.entity.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.parameters.P;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

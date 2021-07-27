@@ -1,6 +1,6 @@
 package com.ssafy.api.service;
 
-import com.ssafy.api.request.BuyUpdateReq;
+import com.ssafy.api.request.buy.BuyUpdateReq;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.TradeHistory;
 
