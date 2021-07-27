@@ -14,9 +14,7 @@ import javax.persistence.ManyToOne;
 @Setter
 @ToString
 public class WishProduct extends BaseEntity {
-
-    String productId;
-
+    Long productId;
     @ManyToOne(fetch = FetchType.LAZY)
     User user;
 }
