@@ -1,4 +1,4 @@
-package com.ssafy.api.service;
+package com.ssafy.api.service.user;
 
 import com.ssafy.api.request.user.UserUpdatePatchReq;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.api.request.user.UserRegisterPostReq;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.UserRepository;
-import com.ssafy.db.repository.UserRepositorySupport;
+import com.ssafy.db.repository.user.UserRepository;
+import com.ssafy.db.repository.user.UserRepositorySupport;
 
 import java.util.NoSuchElementException;
 

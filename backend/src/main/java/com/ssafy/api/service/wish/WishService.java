@@ -1,4 +1,4 @@
-package com.ssafy.api.service;
+package com.ssafy.api.service.wish;
 
 import com.ssafy.api.request.wish.WishRegistPostReq;
 import com.ssafy.api.response.wish.WishListGetRes;

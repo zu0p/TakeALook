@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.user.UserLoginPostReq;
 import com.ssafy.api.response.user.UserLoginPostRes;
-import com.ssafy.api.service.UserService;
+import com.ssafy.api.service.user.UserService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.db.entity.User;

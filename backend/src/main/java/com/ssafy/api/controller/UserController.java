@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.api.request.user.UserRegisterPostReq;
 import com.ssafy.api.response.user.UserDetailGetRes;
-import com.ssafy.api.service.UserService;
+import com.ssafy.api.service.user.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.User;

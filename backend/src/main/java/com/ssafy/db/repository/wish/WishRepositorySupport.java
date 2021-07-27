@@ -1,4 +1,4 @@
-package com.ssafy.db.repository;
+package com.ssafy.db.repository.wish;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;

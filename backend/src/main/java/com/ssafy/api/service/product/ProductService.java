@@ -1,4 +1,4 @@
-package com.ssafy.api.service;
+package com.ssafy.api.service.product;
 
 import com.ssafy.api.request.product.ProductRegisterPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;

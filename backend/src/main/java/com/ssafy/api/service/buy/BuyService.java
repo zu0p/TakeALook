@@ -1,4 +1,4 @@
-package com.ssafy.api.service;
+package com.ssafy.api.service.buy;
 
 import com.ssafy.api.request.buy.BuyUpdateReq;
 import com.ssafy.db.entity.Product;

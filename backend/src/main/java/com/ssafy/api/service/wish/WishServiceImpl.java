@@ -1,11 +1,12 @@
-package com.ssafy.api.service;
+package com.ssafy.api.service.wish;
 
 import com.ssafy.api.request.wish.WishRegistPostReq;
 import com.ssafy.api.response.wish.WishListGetRes;
+import com.ssafy.api.service.user.UserService;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.WishProduct;
-import com.ssafy.db.repository.WishRepository;
-import com.ssafy.db.repository.WishRepositorySupport;
+import com.ssafy.db.repository.wish.WishRepository;
+import com.ssafy.db.repository.wish.WishRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

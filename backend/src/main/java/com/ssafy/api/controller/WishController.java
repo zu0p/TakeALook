@@ -3,7 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.wish.WishRegistPostReq;
 import com.ssafy.api.response.wish.WishListGetRes;
 import com.ssafy.api.response.wish.WishRes;
-import com.ssafy.api.service.WishService;
+import com.ssafy.api.service.wish.WishService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

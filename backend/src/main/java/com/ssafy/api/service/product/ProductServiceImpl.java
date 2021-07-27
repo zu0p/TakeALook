@@ -1,17 +1,16 @@
-package com.ssafy.api.service;
+package com.ssafy.api.service.product;
 
 import com.ssafy.api.request.product.ProductRegisterPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.UserRepository;
-import com.ssafy.db.repository.UserRepositorySupport;
+import com.ssafy.db.repository.user.UserRepository;
+import com.ssafy.db.repository.user.UserRepositorySupport;
 import com.ssafy.db.repository.product.ProductRepository;
 import com.ssafy.db.repository.product.ProductRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
