@@ -36,9 +36,22 @@ public class TradeController {
         if(!userService.getUserExistMessage(authId))
             return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
 
-        List<Product> buyList = tradeService.getTradeList(authId);
+        List<Product> buyList = tradeService.getBuyerList(authId);
         if(buyList.isEmpty()) return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
         return ResponseEntity.status(200).body(buyList);
+    }
+
+    @GetMapping()
+    @ApiOperation(value = "판매 내역 조회", notes = "로그인한 회원의 판매 내역을 반환한다.")
+    public ResponseEntity<?> getSellerList(@ApiIgnore Authentication authentication) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String authId = userDetails.getUsername();
+        if(!userService.getUserExistMessage(authId))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
+
+        List<Product> sellList = tradeService.getSellerList(authId);
+        if(sellList.isEmpty()) return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
+        return ResponseEntity.status(200).body(sellList);
     }
 
     @PostMapping()
@@ -49,6 +62,9 @@ public class TradeController {
         if(!userService.checkAuthByUserId(tradeRegistPatchReq.getBuyer(),userDetails.getUsername()))
             return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
 
+        if(tradeService.checkTradeHistory(tradeRegistPatchReq.getProductId()))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(409,"Exist"));
+
         TradeHistory tradeHistory = tradeService.createTradeHistory(tradeRegistPatchReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -57,15 +73,15 @@ public class TradeController {
     @ApiOperation(value = "거래 목록 삭제", notes = "거래 목록을 삭제한다.")
     public ResponseEntity<? extends BaseResponseBody> deleteBuyProduct(
             @ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value="구매 상품 정보", required = true) TradeDeleteReq buyInfo) {
+            @RequestBody @ApiParam(value="구매 상품 정보", required = true) TradeDeleteReq tradeDeleteReq) {
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-        String authUser = userService.getUserByUserId(userDetails.getUsername()).getUserId();
+        if(!userService.checkAuthByUserId(tradeDeleteReq.getBuyer(),userDetails.getUsername()))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
 
-        System.out.println(authUser);
-        if(authUser.equals(buyInfo.getBuyer())){
-            tradeService.deleteTradeInfo(buyInfo.getProductId());
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-        }
-        return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
+        if(!tradeService.checkTradeHistory(tradeDeleteReq.getProductId()))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(404,"Not found"));
+
+        tradeService.deleteTradeInfo(tradeDeleteReq.getProductId());
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 }

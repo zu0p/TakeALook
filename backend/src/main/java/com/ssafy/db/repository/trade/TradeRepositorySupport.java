@@ -18,7 +18,6 @@ public class TradeRepositorySupport {
     QTradeHistory qTradeHistory = QTradeHistory.tradeHistory;
 
     public List<Product> findAllByBuyer(String buyer){
-        System.out.println("repository");
         List<Product> list = jpaQueryFactory
                 //.select(qProduct.id, qProduct.productName, qTradeHistory.price, qProduct.category, qProduct.description, qProduct.state, qProduct.user.userId, qTradeHistory.buyer)
                 .select(qProduct)
@@ -28,6 +27,20 @@ public class TradeRepositorySupport {
                         .select(qTradeHistory.productId)
                         .from(qTradeHistory)
                         .where(qTradeHistory.buyer.eq(buyer)))
+                )
+                .fetch();
+        return list;
+    }
+
+    public List<Product> findAllBySeller(String seller){
+        List<Product> list = jpaQueryFactory
+                .select(qProduct)
+                .from(qProduct)
+                .where(qProduct.id.in(
+                        JPAExpressions
+                                .select(qTradeHistory.productId)
+                                .from(qTradeHistory)
+                                .where(qTradeHistory.seller.eq(seller)))
                 )
                 .fetch();
         return list;

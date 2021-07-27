@@ -41,15 +41,13 @@ public class WishServiceImpl implements WishService{
     }
 
     @Override
-    public Long deleteWishProduct(String userId, Long productId) {
+    public void deleteWishProduct(String userId, Long productId) {
         Optional<WishProduct> wishProduct = wishRepository.findWishProductByUserIdAndProductId(userId, productId);
         wishRepository.delete(wishProduct.get());
-        return productId;
     }
 
     public Boolean getWishExistMessage(String userId, Long productId){
-        Optional<WishProduct> wishProduct = wishRepository.findWishProductByUserIdAndProductId(userId, productId);
-        if(wishProduct.isPresent()) return true;
+        if(wishRepository.findWishProductByUserIdAndProductId(userId, productId).isPresent()) return true;
         else return false;
     }
 }

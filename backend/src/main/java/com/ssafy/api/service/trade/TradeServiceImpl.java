@@ -22,8 +22,14 @@ public class TradeServiceImpl implements TradeService {
     ProductRepository productRepository;
 
     @Override
-    public List<Product> getTradeList(String buyer) {
+    public List<Product> getBuyerList(String buyer) {
         List<Product> list = tradeRepositorySupport.findAllByBuyer(buyer);
+        return list;
+    }
+
+    @Override
+    public List<Product> getSellerList(String seller) {
+        List<Product> list = tradeRepositorySupport.findAllBySeller(seller);
         return list;
     }
 
@@ -32,16 +38,22 @@ public class TradeServiceImpl implements TradeService {
         TradeHistory tradeHistory = new TradeHistory();
         tradeHistory.setBuyer(buyUpdatePostReq.getBuyer());
         tradeHistory.setPrice(buyUpdatePostReq.getPrice());
-        tradeHistory.setProductId(buyUpdatePostReq.getProduct());
+        tradeHistory.setProductId(buyUpdatePostReq.getProductId());
         tradeHistory.setSeller(buyUpdatePostReq.getSeller());
         tradeHistory.setTradeDate(buyUpdatePostReq.getTrade_date());
         return tradeRepository.save(tradeHistory);
     }
 
     @Override
-    public void deleteTradeInfo(Long buyProductId) {
-        TradeHistory tradeHistory = tradeRepository.findById(buyProductId).get();
+    public void deleteTradeInfo(Long productId) {
+        TradeHistory tradeHistory = tradeRepository.findById(productId).get();
         tradeRepository.delete(tradeHistory);
+    }
+
+    @Override
+    public Boolean checkTradeHistory(Long productId){
+        if(tradeRepository.findTradeHistoryByProductId(productId).isPresent()) return true;
+        else return false;
     }
 
 }

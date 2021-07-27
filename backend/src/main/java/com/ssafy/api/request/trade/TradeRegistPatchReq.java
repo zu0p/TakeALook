@@ -18,7 +18,7 @@ public class TradeRegistPatchReq {
     @ApiModelProperty(name="가격", example="100000")
     Integer price;
     @ApiModelProperty(name="상품 ID", example="1")
-    Long product;
+    Long productId;
     @ApiModelProperty(name="판매자 ID", example="ssafy_web")
     String seller;
     @ApiModelProperty(name="거래한 시간", example="?")

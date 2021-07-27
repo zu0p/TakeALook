@@ -46,7 +46,7 @@ public class WishController {
             return ResponseEntity.status(200).body(BaseResponseBody.of(401,"Fail"));
 
         if(wishService.getWishExistMessage(wishRegistPostReq.getUserId(),wishRegistPostReq.getProductId()))
-            return ResponseEntity.status(409).body(BaseResponseBody.of(409,"Exist"));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(409,"Exist"));
 
         Long res = wishService.insertWishProduct(wishRegistPostReq);
         return ResponseEntity.status(200).body(WishRes.of(res));
@@ -62,10 +62,10 @@ public class WishController {
             return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
 
         if(!wishService.getWishExistMessage(authId,productId))
-            return ResponseEntity.status(404).body(BaseResponseBody.of(404,"Not found"));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(404,"Not found"));
 
-        Long res = wishService.deleteWishProduct(authId, productId);
-        return ResponseEntity.status(200).body(WishRes.of(res));
+        wishService.deleteWishProduct(authId, productId);
+        return ResponseEntity.status(200).body(WishRes.of(productId));
     }
 
 }

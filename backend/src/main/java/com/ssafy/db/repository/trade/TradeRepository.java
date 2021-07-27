@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface TradeRepository extends JpaRepository<TradeHistory, Long> {
-    Optional<TradeHistory> findTradeHistoryByProductId(String productId);
+    Optional<TradeHistory> findTradeHistoryByProductId(Long productId);
 }

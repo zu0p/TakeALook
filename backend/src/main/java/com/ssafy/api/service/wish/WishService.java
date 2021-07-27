@@ -9,6 +9,6 @@ import java.util.List;
 public interface WishService {
     List<WishListGetRes> selectWishList(String userId);
     Long insertWishProduct(WishRegistPostReq wishRegistPostReq);
-    Long deleteWishProduct(String userId, Long productId);
+    void deleteWishProduct(String userId, Long productId);
     Boolean getWishExistMessage(String userId, Long productId);
 }
