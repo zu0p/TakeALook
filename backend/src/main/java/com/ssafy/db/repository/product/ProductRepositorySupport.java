@@ -16,9 +16,9 @@ public class ProductRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
     QProduct qProduct = QProduct.product;
 
-    public Optional<Product> findByProductCName(String productName) {
+    public Optional<Product> findByProductId(Long productId) {
         Product product = jpaQueryFactory.select(qProduct).from(qProduct)
-                .where(qProduct.productName.eq(productName)).fetchOne();
+                .where(qProduct.id.eq(productId)).fetchOne();
         if(product == null) return Optional.empty();
         return Optional.ofNullable(product);
     }
