@@ -15,7 +15,6 @@ import java.time.LocalDate;
 @Setter
 @ToString
 public class Product extends BaseEntity {
-
     String productName;
     Integer basePrice;
     String categories;
