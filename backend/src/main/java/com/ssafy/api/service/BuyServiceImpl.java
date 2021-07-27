@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.BuyUpdateReq;
 import com.ssafy.db.entity.TradeHistory;
+import com.ssafy.db.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ public class BuyServiceImpl implements BuyService{
 
     @Autowired
     BuyRepositorySupport buyRepositorySupport;
+
+    @Autowired
+    ProductRepository productRepository;
 
     @Override
     public List<Product> getBuyList(String buyer) {
@@ -41,5 +45,11 @@ public class BuyServiceImpl implements BuyService{
     public void deleteBuyInfo(Long buyProductId) {
         TradeHistory tradeHistory = buyRepository.findById(buyProductId).get();
         buyRepository.delete(tradeHistory);
+    }
+
+    @Override
+    public Product getBuyDetail(String productId) {
+        Product product = productRepository.findById(Long.parseLong(productId)).get();
+        return product;
     }
 }

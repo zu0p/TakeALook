@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.BuyDeleteReq;
 import com.ssafy.api.request.BuyUpdateReq;
+import com.ssafy.api.response.UserRes;
 import com.ssafy.api.service.BuyService;
 import com.ssafy.api.service.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
@@ -51,6 +52,24 @@ public class BuyController {
         System.out.println("controller");
         List<Product> list = buyService.getBuyList(userId);
         return (ResponseEntity<?>) ResponseEntity.status(200).body(list);
+    }
+
+    @GetMapping("/{productId}")
+    @ApiOperation(value = "구매 상품 상세 조회", notes = "선택한 구매 상품에 대한 상세 정보를 응답한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Product> getBuyInfo(
+            @ApiIgnore Authentication authentication,
+            @PathVariable String productId) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        User user = userService.getUserByUserId(userDetails.getUsername());
+
+        Product product = buyService.getBuyDetail(productId);
+        return ResponseEntity.status(200).body(product);
     }
 
     @PostMapping()

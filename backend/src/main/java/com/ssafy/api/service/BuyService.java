@@ -10,4 +10,5 @@ public interface BuyService {
     List<Product> getBuyList(String userId);
     TradeHistory createBuyHistory(BuyUpdateReq buyUpdatePostReq);
     void deleteBuyInfo(Long buyProductId);
+    Product getBuyDetail(String productId);
 }
