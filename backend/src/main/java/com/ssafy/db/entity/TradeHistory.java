@@ -1,15 +1,19 @@
 package com.ssafy.db.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 public class TradeHistory extends BaseEntity {
-    Timestamp tradeDate;
-    Long product;
+    LocalDate tradeDate;
+    String product;
     Integer price;
     String seller;
     String buyer;

@@ -1,9 +1,10 @@
-package com.ssafy.db.repository;
+package com.ssafy.db.repository.product;
 
 import com.ssafy.db.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-@Repository
+import java.util.Optional;
+
 public interface ProductRepository extends JpaRepository<Product, Long> {
+    Optional<Product> findById(Long productId);
 }

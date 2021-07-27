@@ -1,4 +1,4 @@
-package com.ssafy.db.repository;
+package com.ssafy.db.repository.buy;
 
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.TradeHistory;

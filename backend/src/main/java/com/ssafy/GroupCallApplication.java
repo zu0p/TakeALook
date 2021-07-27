@@ -2,6 +2,7 @@ package com.ssafy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -10,6 +11,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import java.nio.charset.Charset;
 
 @SpringBootApplication
+@EntityScan("com/ssafy/db/entity")
 public class GroupCallApplication {
 	public static void main(String[] args) {
         SpringApplication.run(GroupCallApplication.class, args);

@@ -1,16 +1,20 @@
 package com.ssafy.db.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 public class TradeSection extends BaseEntity {
     String productId;
-    Timestamp startTime; // 실제 거래 방 시작 시간
-    Timestamp endTime; // 실제 거래 방 종료 시간
+    LocalDate startTime; // 실제 거래 방 시작 시간
+    LocalDate endTime; // 실제 거래 방 종료 시간
     String title;
     Boolean isActive;
     String url;
