@@ -19,10 +19,8 @@ import java.util.NoSuchElementException;
 public class UserServiceImpl implements UserService {
 	@Autowired
 	UserRepository userRepository;
-
 	@Autowired
 	UserRepositorySupport userRepositorySupport;
-
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
@@ -40,19 +38,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserByUserId(String userId) {
-		// 디비에 유저 정보 조회 (userId 를 통한 조회).
 		try{
 			User user = userRepositorySupport.findUserByUserId(userId).get();
 			return user;
 		}catch (NoSuchElementException e){
 			return null;
 		}
-	}
-
-	@Override
-	public User selectUserById(Long userId) {
-		User user = userRepository.findUserById(userId);
-		return user;
 	}
 
 	@Override
@@ -70,5 +61,16 @@ public class UserServiceImpl implements UserService {
 		userRepository.delete(user);
 	}
 
+	@Override
+	public Boolean getUserExistMessage(String userId) {
+		if(userRepositorySupport.findUserByUserId(userId).isPresent()) return true;
+		else return false;
+	}
+
+	@Override
+	public Boolean checkAuthByUserId(String userId, String authId) {
+		if(authId.equals(userId)) return true;
+		else return false;
+	}
 
 }

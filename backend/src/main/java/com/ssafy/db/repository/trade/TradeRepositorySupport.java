@@ -1,4 +1,4 @@
-package com.ssafy.db.repository.buy;
+package com.ssafy.db.repository.trade;
 
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class BuyRepositorySupport{
+public class TradeRepositorySupport {
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     QProduct qProduct = QProduct.product;
@@ -25,14 +25,11 @@ public class BuyRepositorySupport{
                 .from(qProduct)
                 .where(qProduct.id.in(
                         JPAExpressions
-                        .select(qTradeHistory.product)
+                        .select(qTradeHistory.productId)
                         .from(qTradeHistory)
                         .where(qTradeHistory.buyer.eq(buyer)))
                 )
                 .fetch();
-//        List<Product> tmp = new ArrayList<>();
-//        tmp.add(new Product());
-//        return list==null?tmp:list;
         return list;
     }
 

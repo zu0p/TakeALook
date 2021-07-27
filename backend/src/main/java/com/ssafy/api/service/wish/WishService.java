@@ -7,8 +7,8 @@ import com.ssafy.db.entity.WishProduct;
 import java.util.List;
 
 public interface WishService {
-    List<WishListGetRes> selectWishList(Long userId);
+    List<WishListGetRes> selectWishList(String userId);
     Long insertWishProduct(WishRegistPostReq wishRegistPostReq);
-    Long deleteWishProduct(Long userId, Long productId);
-    Boolean getWishExistMessage(Long userId, Long productId);
+    Long deleteWishProduct(String userId, Long productId);
+    Boolean getWishExistMessage(String userId, Long productId);
 }

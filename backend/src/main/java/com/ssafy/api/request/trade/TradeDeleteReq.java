@@ -1,4 +1,4 @@
-package com.ssafy.api.request.buy;
+package com.ssafy.api.request.trade;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -6,19 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Timestamp;
-
 @Getter
 @Setter
 @ToString
 @ApiModel("BuyDeleteRequest")
-public class BuyDeleteReq {
+public class TradeDeleteReq {
     @ApiModelProperty(name="구매상품 ID", example="1")
-    Long id;
-
-    @ApiModelProperty(name="구매자 ID", example="ssafy_web")
+    Long productId;
+    @ApiModelProperty(name="구매자 ID", example="ssafy1")
     String buyer;
-
-    @ApiModelProperty(name="판매자 ID", example="ssafy_web")
+    @ApiModelProperty(name="판매자 ID", example="ssafy2")
     String seller;
 }

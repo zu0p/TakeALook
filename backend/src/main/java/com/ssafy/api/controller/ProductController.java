@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
-@Api(value="상품 API", tags = {"Product"})
+@Api(value="상품 API", tags = {"Product."})
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
