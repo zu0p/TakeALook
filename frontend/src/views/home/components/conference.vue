@@ -83,6 +83,8 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
+
 export default {
   name: 'Home',
 
@@ -108,6 +110,8 @@ export default {
   },
 
   setup () {
+    const router = useRouter()
+
     const updateDeal = function () {
       console.log("거래 수정")
     }
@@ -123,6 +127,7 @@ export default {
       //   name: 'keep-deal',
       // })
     }
+
   return { updateDeal, startDeal, deleteDeal }
   }
 }

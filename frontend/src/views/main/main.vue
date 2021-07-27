@@ -7,7 +7,6 @@
       @openSignupDialog="onOpenSignupDialog"/>
     <el-container class="main-container">
       <el-aside class="hide-on-small" width="240px">
-        <span>사이드바</span>
         <main-sidebar
           :width="`240px`"/>
       </el-aside>
@@ -29,7 +28,6 @@
   @import './main.css';
   @import '../../common/css/common.css';
   @import '../../common/css/element-plus.css';
-
 
 </style>
 <script>
