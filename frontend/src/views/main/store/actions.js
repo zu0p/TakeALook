@@ -71,3 +71,14 @@ export function requestDropoutUser({state}, payload){
   const url = BASE_URL+`/users/${payload.id}`
   return instanceWithAuth.delete(url)
 }
+
+export function requestDealDetail({state}, payload) {
+  const url = BASE_URL+`products/${payload.productId}`
+  return instanceWithAuth.get(url)
+}
+
+export function requestLikeDeal({state}, payload) {
+  const url = BASE_URL+'/api/v1/wish'
+  let body = payload
+  return instanceWithAuth.post(url)
+}
