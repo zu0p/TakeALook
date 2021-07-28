@@ -24,13 +24,13 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     public List<TradeListGetRes> getBuyerList(String buyer) {
-        List<TradeListGetRes> list = tradeRepositorySupport.findAllByBuyer(buyer);
+        List<TradeListGetRes> list = tradeRepositorySupport.findByBuyer(buyer);
         return list;
     }
 
     @Override
     public List<TradeListGetRes> getSellerList(String seller) {
-        List<TradeListGetRes> list = tradeRepositorySupport.findAllBySeller(seller);
+        List<TradeListGetRes> list = tradeRepositorySupport.findBySeller(seller);
         return list;
     }
 
@@ -47,7 +47,7 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     public void deleteTradeInfo(Long productId) {
-        TradeHistory tradeHistory = tradeRepository.findById(productId).get();
+        TradeHistory tradeHistory = tradeRepository.findTradeHistoryByProductId(productId).get();
         tradeRepository.delete(tradeHistory);
     }
 

@@ -31,9 +31,10 @@ public class WishServiceImpl implements WishService{
     }
 
     @Override
-    public Long insertWishProduct(WishRegistPostReq wishRegistPostReq) {
-        User user = userService.getUserByUserId(wishRegistPostReq.getUserId());
+    public Long insertWishProduct(String userId, WishRegistPostReq wishRegistPostReq) {
+        User user = userService.getUserByUserId(userId);
         WishProduct wishProduct = new WishProduct();
+
         wishProduct.setProductId(wishRegistPostReq.getProductId());
         wishProduct.setUser(user);
         wishRepository.save(wishProduct);
@@ -42,12 +43,12 @@ public class WishServiceImpl implements WishService{
 
     @Override
     public void deleteWishProduct(String userId, Long productId) {
-        Optional<WishProduct> wishProduct = wishRepository.findWishProductByUserIdAndProductId(userId, productId);
+        Optional<WishProduct> wishProduct = wishRepository.findWishProductByUserUserIdAndProductId(userId, productId);
         wishRepository.delete(wishProduct.get());
     }
 
     public Boolean getWishExistMessage(String userId, Long productId){
-        if(wishRepository.findWishProductByUserIdAndProductId(userId, productId).isPresent()) return true;
+        if(wishRepository.findWishProductByUserUserIdAndProductId(userId, productId).isPresent()) return true;
         else return false;
     }
 }

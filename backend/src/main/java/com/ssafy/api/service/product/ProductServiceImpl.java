@@ -2,6 +2,7 @@ package com.ssafy.api.service.product;
 
 import com.ssafy.api.request.product.ProductRegisterPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;
+import com.ssafy.api.service.user.UserService;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.user.UserRepository;
@@ -17,24 +18,19 @@ import java.util.NoSuchElementException;
 
 @Service("productService")
 public class ProductServiceImpl implements ProductService{
-
-    // Product Support
+    @Autowired
+    ProductService productService;
     @Autowired
     ProductRepository productRepository;
     @Autowired
     ProductRepositorySupport productRepositorySupport;
-
-    // User Support
     @Autowired
-    UserRepository userRepository;
-    @Autowired
-    UserRepositorySupport userRepositorySupport;
+    UserService userService;
 
     @Override
-    public Product createProduct(ProductRegisterPostReq productRegisterPostReq) {
+    public Product createProduct(String sellerId, ProductRegisterPostReq productRegisterPostReq) {
         Product product = new Product();
-        String userId = productRegisterPostReq.getSeller();
-        User user = userRepositorySupport.findUserByUserId(userId).get();
+        User user = userService.getUserByUserId(sellerId);
 
         product.setUser(user);
         product.setProductName(productRegisterPostReq.getProductName());
@@ -43,10 +39,11 @@ public class ProductServiceImpl implements ProductService{
         product.setDescription(productRegisterPostReq.getDescription());
         product.setState(productRegisterPostReq.getState());
         product.setImageUrl(productRegisterPostReq.getImageUrl());
-        product.setIsSold(productRegisterPostReq.getIsSold());
+        product.setIsSold(false);
         product.setRegistTime(productRegisterPostReq.getRegistTime());
         product.setReserveTime(productRegisterPostReq.getReserveTime());
-        product.setRestrictTime(productRegisterPostReq.getRestrictTime());
+        //시간 제한 추가 필요
+        product.setRestrictTime(productRegisterPostReq.getReserveTime());
         return productRepository.save(product);
     }
 
@@ -64,23 +61,25 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public Boolean checkProductAuth(String sellerId, Long productId) {
-        if(productRepositorySupport.findProductByIdAndUserId(sellerId, productId).isPresent()) return true;
+        if(productRepository.findProductByUserUserIdAndId(sellerId, productId).isPresent()) return true;
         else return false;
     }
 
     @Override
-    public Product updateProduct(Product product, ProductUpdatePatchReq productUpdatePatchReq) {
-        product.setUser(userRepositorySupport.findUserByUserId(productUpdatePatchReq.getSeller()).get());
+    public Product updateProduct(String sellerId, Long productId, ProductUpdatePatchReq productUpdatePatchReq) {
+        Product product = productService.getProductByProductId(productId);
+        User user = userService.getUserByUserId(sellerId);
+
+        product.setUser(user);
         product.setProductName(productUpdatePatchReq.getProductName());
         product.setBasePrice(productUpdatePatchReq.getBasePrice());
         product.setCategories(productUpdatePatchReq.getCategories());
         product.setDescription(productUpdatePatchReq.getDescription());
         product.setState(productUpdatePatchReq.getState());
         product.setImageUrl(productUpdatePatchReq.getImageUrl());
-        product.setIsSold(productUpdatePatchReq.getIsSold());
         product.setRegistTime(productUpdatePatchReq.getRegistTime());
         product.setReserveTime(productUpdatePatchReq.getReserveTime());
-        product.setRestrictTime(productUpdatePatchReq.getRestrictTime());
+        product.setRestrictTime(productUpdatePatchReq.getReserveTime());
         return productRepository.save(product);
     }
 

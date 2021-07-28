@@ -4,6 +4,7 @@ import com.ssafy.api.request.trade.TradeDeleteReq;
 import com.ssafy.api.request.trade.TradeRegistPatchReq;
 import com.ssafy.api.response.trade.TradeListGetRes;
 import com.ssafy.api.response.trade.TradeRes;
+import com.ssafy.api.service.product.ProductService;
 import com.ssafy.api.service.trade.TradeService;
 import com.ssafy.api.service.user.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
@@ -28,6 +29,8 @@ public class TradeController {
     UserService userService;
     @Autowired
     TradeService tradeService;
+    @Autowired
+    ProductService productService;
 
     @GetMapping("/buy")
     @ApiOperation(value = "구매 상품 목록 조회", notes = "로그인한 회원의 구매 내역을 반환한다.")
@@ -59,13 +62,11 @@ public class TradeController {
 
 
     @PostMapping()
-    @ApiOperation(value = "거래 목록 등록", notes = "구매자 기준으로 상품 거래를 등록한다.")
-    public ResponseEntity<?> registBuyProduct(@ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value="거래 상품 정보", required = true) TradeRegistPatchReq tradeRegistInfo) {
+    @ApiOperation(value = "거래 목록 등록", notes = "상품 거래를 등록한다.")
+    public ResponseEntity<?> registBuyProduct(@RequestBody @ApiParam(value="거래 상품 정보", required = true) TradeRegistPatchReq tradeRegistInfo) {
 
-        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-        if(!userService.checkAuthByUserId(tradeRegistInfo.getBuyer(),userDetails.getUsername()))
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
+        if(!productService.checkProductAuth(tradeRegistInfo.getSeller(),tradeRegistInfo.getProductId()))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401,"Fail"));
 
         if(tradeService.checkTradeHistory(tradeRegistInfo.getProductId()))
             return ResponseEntity.status(200).body(BaseResponseBody.of(409,"Exist"));
@@ -74,19 +75,14 @@ public class TradeController {
         return ResponseEntity.status(200).body(TradeRes.of(tradeRegistInfo.getProductId()));
     }
 
-    @DeleteMapping()
-    @ApiOperation(value = "거래 목록 삭제", notes = "구매자 기준으로 거래 목록을 삭제한다.")
-    public ResponseEntity<?> deleteBuyProduct(@ApiIgnore Authentication authentication,
-            @RequestBody @ApiParam(value="구매 상품 정보", required = true) TradeDeleteReq tradeDeleteReq) {
+    @DeleteMapping("/{productId}")
+    @ApiOperation(value = "거래 목록 삭제", notes = "거래 목록을 삭제한다.")
+    public ResponseEntity<?> deleteBuyProduct(@PathVariable Long productId) {
 
-        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-        if(!userService.checkAuthByUserId(tradeDeleteReq.getBuyer(),userDetails.getUsername()))
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
-
-        if(!tradeService.checkTradeHistory(tradeDeleteReq.getProductId()))
+        if(!tradeService.checkTradeHistory(productId))
             return ResponseEntity.status(200).body(BaseResponseBody.of(404,"Not found"));
 
-        tradeService.deleteTradeInfo(tradeDeleteReq.getProductId());
-        return ResponseEntity.status(200).body(TradeRes.of(tradeDeleteReq.getProductId()));
+        tradeService.deleteTradeInfo(productId);
+        return ResponseEntity.status(200).body(TradeRes.of(productId));
     }
 }

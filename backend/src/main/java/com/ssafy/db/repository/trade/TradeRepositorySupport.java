@@ -19,30 +19,30 @@ public class TradeRepositorySupport {
     QProduct qProduct = QProduct.product;
     QTradeHistory qTradeHistory = QTradeHistory.tradeHistory;
 
-    public List<TradeListGetRes> findAllByBuyer(String buyer) {
-        List<TradeListGetRes> list = jpaQueryFactory
+    public List<TradeListGetRes> findByBuyer(String buyer) {
+        List<TradeListGetRes> tradeList = jpaQueryFactory
                 .select(Projections.constructor(TradeListGetRes.class, qProduct.id, qProduct.productName, qTradeHistory.tradeDate,
                         qProduct.user.userId, qTradeHistory.buyer,
-                        qTradeHistory.price, qProduct.categories, qProduct.imageUrl, qProduct.state))
+                        qTradeHistory.price, qProduct.categories, qProduct.imageUrl, qProduct.isSold))
                 .from(qProduct)
                 .join(qTradeHistory)
                 .on(qProduct.id.eq(qTradeHistory.productId))
                 .where(qTradeHistory.buyer.eq(buyer))
                 .fetch();
-        return list;
+        return tradeList;
     }
 
-    public List<TradeListGetRes> findAllBySeller(String seller){
-        List<TradeListGetRes> list = jpaQueryFactory
+    public List<TradeListGetRes> findBySeller(String seller){
+        List<TradeListGetRes> tradeList = jpaQueryFactory
                 .select(Projections.constructor(TradeListGetRes.class, qProduct.id, qProduct.productName, qTradeHistory.tradeDate,
                         qProduct.user.userId, qTradeHistory.buyer,
-                        qTradeHistory.price, qProduct.categories, qProduct.imageUrl, qProduct.state))
+                        qTradeHistory.price, qProduct.categories, qProduct.imageUrl, qProduct.isSold))
                 .from(qProduct)
                 .join(qTradeHistory)
                 .on(qProduct.id.eq(qTradeHistory.productId))
                 .where(qTradeHistory.seller.eq(seller))
                 .fetch();
-        return list;
+        return tradeList;
     }
 
     public List<Product> findAllByBuyerSub(String buyer){
