@@ -1,26 +1,48 @@
 <template>
   {{ $route.params.conferenceId + '번 방 상세 보기 페이지' }}
+  <el-form-item>
+    본문
+  </el-form-item>
+  <el-form-item>
+  <el-button type="warning" @click="clickUpdate">수정</el-button>
+  </el-form-item>
 </template>
 <style>
 </style>
 <script>
-import { reactive, onMounted, onUnmounted } from 'vue'
+import { reactive, onBeforeMount, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   name: 'conference-detail',
 
   setup () {
     const route = useRoute()
+    const router = useRouter()
     const store = useStore()
     const state = reactive({
-      conferenceId: ''
+      conferenceId: '',
+      loading: false,
     })
 
+  // 수정 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 수정 API 호출 또는 경고창 표시
+  const clickUpdate = function () {
+    console.log(state.conferenceId)
+    router.push({
+      name: 'update-deal-form',
+      params: {
+        conferenceId: state.conferenceId,
+      }
+    })
+  }
+
     // 페이지 진입시 불리는 훅
-    onMounted(() => {
+    onBeforeMount(() => {
       state.conferenceId = route.params.conferenceId
+      // console.log(state.conferenceId)
+      // console.log(route.params.conferenceId)
+      // console.log(state.conferenceId)
       store.commit('root/setMenuActiveMenuName', 'home')
     })
 
@@ -29,7 +51,7 @@ export default {
       state.conferenceId = ''
     })
 
-    return { state }
+    return { state, clickUpdate }
   }
 }
 </script>

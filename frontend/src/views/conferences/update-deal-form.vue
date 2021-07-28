@@ -1,6 +1,6 @@
 <template>
   <!-- 사진 업로드 -->
-  <el-container class="create-deal-form">
+  <el-container class="update-deal-form">
     <el-upload
       class="avatar-uploader"
       action="https://jsonplaceholder.typicode.com/posts/"
@@ -12,7 +12,7 @@
     </el-upload>
 
     <!-- 거래 작성 폼 -->
-    <el-form v-if="!state.loading" v-model="state.form" :rules="state.rules" ref="createDealForm" :label-position="state.form.align">
+    <el-form v-if="!state.loading" v-model="state.form" :rules="state.rules" ref="updateDealForm" :label-position="state.form.align">
       <!-- 게시글 제목 -->
       <el-form-item prop="title" label="제목" :label-width="state.formLabelWidth">
         <el-input v-model="state.form.title" maxlength="16" placeholder="제목을 입력하세요" autocomplete="off"></el-input>
@@ -52,56 +52,63 @@
   <!-- 작성, 취소버튼 -->
   <hr>
   <el-form-item>
-    <el-button type="primary" @click="clickCreate">작성</el-button>
+    <el-button type="primary" @click="clickUpdate">작성</el-button>
     <el-button type="danger" @click="clickCancel">취소</el-button>
   </el-form-item>
 </template>
 
 <script>
-import { onMounted, ref, reactive, } from 'vue'
+import { onMounted, ref, reactive, onBeforeMount, } from 'vue'
 import { useStore } from 'vuex'
-import { RouterLink } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 export default {
-  name: 'CreateDealForm',
+  name: 'UpdateDealform',
 
   setup () {
     const store = useStore()
+    const router = useRouter()
     // 독립적인 반응형 값 생성 ref()
-    const createDealForm = ref(null)
+    const updateDealForm = ref(null)
 
     const state = reactive({
       form: {
-        title:'',
-        category:'',
-        price:'',
-        reservation_dateTime:'',
-        desc:'',
+        title: '',
+        category: '',
+        price: '',
+        reservation_dateTime: '',
+        desc: '',
       },
       src: {
-        imageUrl:'',
+        imageUrl: '',
       },
       formValicate: false,
       loading: false,
       formLabelWidth: '140px',
     })
-
+    //  페이지 진입 전 불리는 훅
+    onBeforeMount(()=>{
+      console.log('before mount')
+      // 게시글 정보 받아와서 폼의 prop로 보여주기
+      store.dispatch('root/request??????')
+    })
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       // mutations의 setMenuActiveMenuName을 호출하고 setMenuActiveMenuName의 create-deal-form 인자를 받아온다.
       store.commit('root/setMenuActiveMenuName', 'create-deal-form')
+      //
     })
 
-    const clickCreate = function () {
+    const clickUpdate = function () {
       console.log('게시글 작성 함수 실행')
       console.log(state.form.category)
       console.log(state.form.reservation_dateTime)
       state.loading = true
       // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
-      createDealForm.value.validate((valid) => {
+      updateDealForm.value.validate((valid) => {
         if (valid) {
           console.log('submit')
-          store.dispatch('root/createPost', {
+          store.dispatch('root/updatePost', {
             imageUrl: state.src.imageUrl,
             title: state.form.title,
             category: state.form.category,
@@ -132,7 +139,7 @@ export default {
       window.location='/'
     }
 
-    return { createDealForm, state, clickCreate, clickCancel, }
+    return { updateDealForm, state, clickUpdate, clickCancel, }
   },
   // imageUrl, el-date-picker 관련 method
   methods: {
@@ -160,7 +167,7 @@ export default {
 }
 </script>
 <style>
-  .create-deal-form {
+  .update-deal-form {
     /* justify-content: center; */
   }
   .avatar-uploader .el-upload {

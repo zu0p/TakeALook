@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/home/home'
 import ConferencesDetail from '@/views/conferences/conference-detail'
-import CreateDealform from '@/views/create-deal-form/create-deal-form'
+import UpdateDealForm from '@/views/conferences/update-deal-form'
+import CreateDealForm from '@/views/create-deal-form/create-deal-form'
 import Mydeal from '@/views/mypage/my-deal'
 import Keepdeal from '@/views/mypage/keep-deal'
 import Orderdeal from '@/views/mypage/order-deal'
@@ -16,7 +17,7 @@ function makeRoutesFromMenu () {
     if (key === 'home') {
       return { path: fullMenu[key].path, name: key, component: Home  }
     } else if (key === 'create-deal-form') {
-      return { path: fullMenu[key].path, name: key, component: CreateDealform }
+      return { path: fullMenu[key].path, name: key, component: CreateDealForm }
     } else if (key === 'my-deal') {
       return { path: fullMenu[key].path, name: key, component: Mydeal }
     } else if (key === 'keep-deal') {
@@ -36,10 +37,21 @@ function makeRoutesFromMenu () {
 
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
   routes.push({
-    path: '/conferences/:conferenceId',
+    path:'/conferences/:conferenceId',
     name: 'conference-detail',
     component: ConferencesDetail,
   })
+  // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
+  routes.push({
+    path:'/conferences/update-deal-form/:conferenceId',
+    name: 'update-deal-form',
+    component: UpdateDealForm,
+  })
+  // routes.push({
+  //   path:'/conferences/:conferenceId/:salesItemId',
+  //   name: 'conference-detail',
+  //   component: ConferencesDetail,
+  // })
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(게시글 상세보기))
   return routes
 }

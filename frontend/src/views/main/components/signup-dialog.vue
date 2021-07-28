@@ -203,7 +203,7 @@ export default {
               if(res.data.statusCode==200){
                 alert('회원 가입이 완료되었습니다.')
                 //emit('closeSignupDialog')
-                window.location="/"
+                window.location='/'
               }
             })
             .then(()=>{
