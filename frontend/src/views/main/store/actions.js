@@ -41,6 +41,7 @@ export function requestCheckDupl({state}, payload){
   return instanceWithAuth.get(url)
 }
 
+// update-deal-form.vue의 onBeforeMount훅에서 dispatch method를 통해 requestUserInfo action 시작
 export function requestUserInfo({commit}, payload){
   const url = BASE_URL+'/users/me'
   instanceWithAuth.get(url)
@@ -51,12 +52,18 @@ export function requestUserInfo({commit}, payload){
       console.log(err)
     })
 }
+// mutations로 "SET_CONFERENCE_INFO" commit 요청
+export function requestConferenceInfo({commit}, payload){
+  commit("SET_CONFERENCE_INFO", res.data.conferenceId)
+
+}
+
 // 게시글 작성 요청 보내기
-function createPost(postData) {
+export function createPost(postData) {
   // const url = BASE_URL+`/create-deal-form/${userId}/${}`
   return posts.post('/', postData)
 }
 // 게시글 삭제 요청 보내기
-function deletePost(postId) {
+export function deletePost(postId) {
   return posts.delete(postId);
 }

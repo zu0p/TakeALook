@@ -90,7 +90,17 @@ export default {
     onBeforeMount(()=>{
       console.log('before mount')
       // 게시글 정보 받아와서 폼의 prop로 보여주기
-      store.dispatch('root/request??????')
+      // dispatch method로 requestUserInfo action 호출
+      store.dispatch('root/requestConferenceInfo')
+      .then(res=>{
+        console.log(res)
+        state.form.title = res.data.title
+        state.form.category = res.data.category
+        state.form.price = res.data.price
+        state.form.reservation_dateTime = res.data.reservation_dateTime
+        state.form.desc = res.data.desc
+        state.src.imageUrl = res.data.imageUrl
+      })
     })
     // 페이지 진입시 불리는 훅
     onMounted (() => {
