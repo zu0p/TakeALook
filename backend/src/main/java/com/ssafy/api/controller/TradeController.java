@@ -8,7 +8,6 @@ import com.ssafy.api.service.trade.TradeService;
 import com.ssafy.api.service.user.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
-import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.TradeHistory;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 
 @Slf4j
-@Api(value = "구매내역 API", tags = {"Trade."})
+@Api(value = "거래 API", tags = {"Trade."})
 @RestController
 @RequestMapping("/api/v1/trade")
 public class TradeController {
@@ -30,7 +29,7 @@ public class TradeController {
     @Autowired
     TradeService tradeService;
 
-    @GetMapping()
+    @GetMapping("/buy")
     @ApiOperation(value = "구매 상품 목록 조회", notes = "로그인한 회원의 구매 내역을 반환한다.")
     public ResponseEntity<?> getBuyList(@ApiIgnore Authentication authentication) {
 
@@ -44,7 +43,7 @@ public class TradeController {
         return ResponseEntity.status(200).body(buyList);
     }
 
-    @GetMapping()
+    @GetMapping("/sell")
     @ApiOperation(value = "판매 상품 목록 조회", notes = "로그인한 회원의 판매 내역을 반환한다.")
     public ResponseEntity<?> getSellerList(@ApiIgnore Authentication authentication) {
 
