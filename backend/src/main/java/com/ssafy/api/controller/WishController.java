@@ -3,6 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.wish.WishRegistPostReq;
 import com.ssafy.api.response.wish.WishListGetRes;
 import com.ssafy.api.response.wish.WishRes;
+import com.ssafy.api.service.product.ProductService;
 import com.ssafy.api.service.user.UserService;
 import com.ssafy.api.service.wish.WishService;
 import com.ssafy.common.auth.SsafyUserDetails;
@@ -25,6 +26,8 @@ public class WishController {
     WishService wishService;
     @Autowired
     UserService userService;
+    @Autowired
+    ProductService productService;
 
     @GetMapping()
     @ApiOperation(value = "관심 상품 목록 조회", notes = "유저 인덱스를 통해 관심 상품 목록을 조회한다.")
@@ -44,13 +47,14 @@ public class WishController {
     public ResponseEntity<?> registWishProduct(@ApiIgnore Authentication authentication, @RequestBody WishRegistPostReq wishRegistInfo){
 
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-        if(!userService.checkAuthByUserId(wishRegistInfo.getUserId(), userDetails.getUsername()))
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401,"Fail"));
-
-        if(wishService.getWishExistMessage(wishRegistInfo.getUserId(),wishRegistInfo.getProductId()))
+        String authId = userDetails.getUsername();
+        if(!productService.getProductExistMessage(wishRegistInfo.getProductId()))
             return ResponseEntity.status(200).body(BaseResponseBody.of(409,"Exist"));
 
-        Long res = wishService.insertWishProduct(wishRegistInfo);
+        if(wishService.getWishExistMessage(authId,wishRegistInfo.getProductId()))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(409,"Exist"));
+
+        Long res = wishService.insertWishProduct(authId,wishRegistInfo);
         return ResponseEntity.status(200).body(WishRes.of(res));
     }
 

@@ -7,11 +7,12 @@ import com.ssafy.db.entity.Product;
 import java.util.List;
 
 public interface ProductService {
-    Product createProduct(ProductRegisterPostReq productRegisterPostReq);
+    Product createProduct(String productId, ProductRegisterPostReq productRegisterPostReq);
     Product getProductByProductId(Long productIndexId);
     Boolean getProductExistMessage(Long productIndexId);
     Boolean checkProductAuth(String sellerId, Long productId);
-    Product updateProduct(Product product, ProductUpdatePatchReq productUpdatePatchReq);
+    Product updateProduct(String sellerId, Long productId, ProductUpdatePatchReq productUpdatePatchReq);
+
     void updateIsSold(Product product);
     void deleteProduct(Long productIndexId);
 }

@@ -1,9 +1,13 @@
 package com.ssafy.api.response.trade;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
+@Getter
+@Setter
 public class TradeListGetRes {
     @ApiModelProperty(name="상품 id")
     Long productId;
