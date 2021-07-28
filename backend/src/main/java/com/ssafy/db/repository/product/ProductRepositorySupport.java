@@ -24,12 +24,4 @@ public class ProductRepositorySupport {
         if (product == null) return Optional.empty();
         return Optional.ofNullable(product);
     }
-
-    public Optional<Product> findProductByIdAndUserId(String userId, Long productId){
-        Product product = jpaQueryFactory.select(qProduct).from(qProduct)
-                .where(qProduct.id.eq(productId), qProduct.id.eq(productId))
-                .fetchOne();
-        if (product == null) return Optional.empty();
-        return Optional.ofNullable(product);
-    }
 }

@@ -41,10 +41,13 @@ public class AuthController {
         @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
         @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
     })
-	public ResponseEntity<UserLoginPostRes> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
+	public ResponseEntity<?> login(@RequestBody @ApiParam(value="로그인 정보", required = true) UserLoginPostReq loginInfo) {
 		String userId = loginInfo.getUserId();
 		String password = loginInfo.getPassword();
-		
+
+		if(!userService.getUserExistMessage(userId))
+			return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
+
 		User user = userService.getUserByUserId(userId);
 		if(passwordEncoder.matches(password, user.getPassword())) {
 			return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));

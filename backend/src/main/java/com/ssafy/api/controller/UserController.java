@@ -27,7 +27,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @Slf4j
 @Api(value = "유저 API", tags = {"User."})
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/user")
 public class UserController {
 	@Autowired
 	UserService userService;
@@ -57,7 +57,7 @@ public class UserController {
 	@ApiOperation(value = "회원 존재 유무 조회", notes = "이미 존재하는 회원인지 확인한다.")
 	public ResponseEntity<? extends BaseResponseBody> getUserExistMessage(@PathVariable String userId) {
 
-		if(!userService.getUserExistMessage(userId))
+		if(userService.getUserExistMessage(userId))
 			return ResponseEntity.status(200).body(BaseResponseBody.of(409, "Exist"));
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "None"));
 	}
@@ -75,7 +75,7 @@ public class UserController {
 		return ResponseEntity.status(200).body(UserUpdatePatchRes.of(userUpdatePatchReq));
 	}
 
-	@DeleteMapping("/{userId}")
+	@DeleteMapping()
 	@ApiOperation(value = "회원 정보 삭제", notes = "회원 정보를 삭제한다.")
 	public ResponseEntity<?> deleteUserInfo(@ApiIgnore Authentication authentication) {
 

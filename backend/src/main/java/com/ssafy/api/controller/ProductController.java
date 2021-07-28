@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @Api(value="상품 API", tags = {"Product."})
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/v1/product")
 public class ProductController {
     @Autowired
     UserService userService;
@@ -38,10 +38,11 @@ public class ProductController {
             @RequestBody @ApiParam(value="상품 정보", required = true) ProductRegisterPostReq productInfo){
 
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-        if(!userService.checkAuthByUserId(productInfo.getSeller(),userDetails.getUsername()))
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
+        String authId = userDetails.getUsername();
+        if(!userService.getUserExistMessage(authId))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
 
-        Product product = productService.createProduct(productInfo);
+        Product product = productService.createProduct(authId, productInfo);
         return ResponseEntity.status(200).body(ProductRegistPostRes.of(product));
     }
 
@@ -63,14 +64,10 @@ public class ProductController {
             @RequestBody @ApiParam(value="상품 갱신할 정보", required = true) ProductUpdatePatchReq productInfo){
 
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-        if(!userService.checkAuthByUserId(productInfo.getSeller(),userDetails.getUsername()))
-            return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
-
         if(!productService.checkProductAuth(userDetails.getUsername(),productId))
             return ResponseEntity.status(200).body(BaseResponseBody.of(404,"Not found"));
 
-        Product oldProductState = productService.getProductByProductId(productId);
-        Product newProductState = productService.updateProduct(oldProductState, productInfo);
+        Product newProductState = productService.updateProduct(userDetails.getUsername(),productId, productInfo);
         return ResponseEntity.status(200).body(ProductUpdatePatchRes.of(newProductState));
     }
 
