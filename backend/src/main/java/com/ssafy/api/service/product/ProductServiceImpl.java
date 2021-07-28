@@ -2,6 +2,7 @@ package com.ssafy.api.service.product;
 
 import com.ssafy.api.request.product.ProductRegisterPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;
+import com.ssafy.api.response.product.ProductListGetRes;
 import com.ssafy.api.service.user.UserService;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.User;
@@ -27,6 +28,11 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     UserService userService;
 
+    @Override
+    public List<ProductListGetRes> getAllProduct(){
+        List<ProductListGetRes> productList = productRepositorySupport.findAllProduct();
+        return productList;
+    }
     @Override
     public Product createProduct(String sellerId, ProductRegisterPostReq productRegisterPostReq) {
         Product product = new Product();
