@@ -25,7 +25,7 @@
 
   <ul class="infinite-list">
     <!-- url 알게 되면 연결 callDeals -->
-    <li v-for="i in state.count" class="infinite-list-item" :key="i"  @click="dealDetail">
+    <li v-for="i in state.count" @click="clickDeal(i)" class="infinite-list-item" :key="i" >
       <conference />
     </li>
     <div style="text-align: end">
@@ -91,10 +91,16 @@ export default {
       state.count += 4
     }
 
-    const dealDetail = function () {
-      router.push('detail')
+    const clickDeal = function (id) {
+      router.push({
+        name: 'deal-detail',
+        params: {
+          productId: id
+        }
+      })
     }
-    return { state, load, dealDetail }
+
+    return { state, load, clickDeal }
   }
 }
 </script>

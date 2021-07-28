@@ -71,3 +71,28 @@ export function requestDropoutUser({state}, payload){
   const url = BASE_URL+`/users/${payload.id}`
   return instanceWithAuth.delete(url)
 }
+
+export function requestDealDetail({state}, payload){
+  const url = BASE_URL+`/products/${payload}`
+  return instanceWithAuth.get(url)
+}
+
+export function requestDeleteDeal({state}, payload){
+  const url = BASE_URL+`/products/${payload}`
+  return instanceWithAuth.delete(url)
+}
+
+export function requestLikeDealList({state}, payload){
+  const url = BASE_URL+`/wish/${payload}`
+  return instanceWithAuth.get(url)
+}
+
+export function requestLikeDeal({state}, payload){
+  const url = BASE_URL+'/wish'
+  return instanceWithAuth.post(url)
+}
+
+export function requestDeleteLikeDeal({state}, payload){
+  const url = BASE_URL+`/wish/${payload.productId}/${payload.userId}`
+  return instanceWithAuth.delete(url)
+}

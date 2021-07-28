@@ -3,7 +3,7 @@
     <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 판매 목록</h1>
     <ul class="infinite-list">
     <!-- url 알게 되면 연결 callDeals -->
-      <li v-for="i in state.count" @click="clickConference(i)" class="infinite-list-item" :key="i" >
+      <li v-for="i in state.count" @click="clickDeal(i)" class="infinite-list-item" :key="i" >
         <conference />
       </li>
       <el-pagination
@@ -59,16 +59,16 @@ export default {
       state.count += 4
     }
 
-    const clickConference = function (id) {
+    const clickDeal = function (id) {
       router.push({
-        name: 'conference-detail',
+        name: 'deal-detail',
         params: {
-          conferenceId: id
+          productId: id
         }
       })
     }
 
-    return { state, load, clickConference }
+    return { state, load, clickDeal }
   }
 }
 </script>

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/home/home'
-import ConferencesDetail from '@/views/conferences/conference-detail'
+// import ConferencesDetail from '@/views/conferences/conference-detail'
 import CreateDealform from '@/views/create-deal-form/create-deal-form'
 import MyDeal from '@/views/mypage/my-deal'
 import KeepDeal from '@/views/mypage/keep-deal'
@@ -37,17 +37,13 @@ function makeRoutesFromMenu () {
 
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
   routes.push({
-    path: '/conferences/:conferenceId',
-    name: 'conference-detail',
-    component: ConferencesDetail,
-  })
-
-  routes.push({
-    //! 거래 아이디 path에 추가할 것
-    path: '/detail',
+    path: '/products/:productId',
+    // name: 'conference-detail',
+    // component: ConferencesDetail,
     name: 'deal-detail',
     component: DealDetail,
   })
+
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(게시글 상세보기))
   return routes
 }

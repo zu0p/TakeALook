@@ -25,7 +25,7 @@
           <!-- 내 거래인 경우 -->
           <!-- <a class="custom-icon2" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a> -->
           <!-- 찜한 거래인 경우 -->
-          <a class="custom-icon2" style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
+          <a class="custom-icon2" style="color:red;"  @click="deletelikeDeal"><i class="el-icon-delete-solid"></i></a>
           <el-skeleton-item variant="image" style="width: 100%; height: 190px" />
         </template>
       </el-skeleton>
@@ -37,7 +37,7 @@
         <div>
           <!-- 내가 생성한 거래인 경우 -->
           <!-- <div style="text-align:center">
-            <el-button class="buyer" type="info" plain disabled style="margin-top:20px; text-align:center;" @click="deleteDeal">구매자: {{ buyer }}</el-button>
+            <el-button class="buyer" type="info" plain disabled style="margin-top:20px; text-align:center;">구매자: {{ buyer }}</el-button>
           </div> -->
           <!-- 찜한 거래인 경우 -->
           <div style="text-align:center">
@@ -70,7 +70,7 @@
           <!-- 내가 생성한 거래가 아닌 경우 -->
             <!-- 찜한 경우 -->
           <!-- <div style="text-align:right">
-            <a class="custom-icon" @click="likeDeal" style="color:#ffd04b; margin-top:30px"><i class="el-icon-message-solid"></i></a>
+            <a class="custom-icon" @click="deletelikeDeal" style="color:#ffd04b; margin-top:30px"><i class="el-icon-message-solid"></i></a>
           </div> -->
             <!-- 찜하지 않은 경우 -->
           <!-- <div style="text-align:right">
@@ -121,14 +121,38 @@ export default {
       console.log("거래 시작")
     }
 
-    const deleteDeal = function () {
-      console.log("거래 삭제")
-      // router.push({
-      //   name: 'keep-deal',
+    const deletelikeDeal = function () {
+      store.dispatch('root/requestDeleteLikeDeal', {productId: info.productId, userId: info.userId})
+      // .then(res=>{
+      //   info.like = false
       // })
     }
 
-  return { updateDeal, startDeal, deleteDeal }
+    const likeDeal = function () {
+      store.dispatch('root/requestLikeDeal', {productId: info.productId, userId: info.userId})
+      // .then(res=>{
+      //   info.like = true
+      // })
+    }
+
+    // const deleteDeal = function () {
+    //   if (info.user) {
+    //     store.dispatch('root/requestDeleteDeal', state.productId)
+    //       .then(res=>{
+    //         console.log("거래 삭제")
+    //         alert("거래가 삭제되었습니다")
+    //         router.push({name: 'home'})
+    //       })
+    //       .catch(err=>{
+    //         console.log(err)
+    //       })
+    //   } else {
+    //     alert("자신의 거래만 삭제할 수 있습니다")
+    //   }
+    // }
+
+  return { updateDeal, startDeal, deletelikeDeal, likeDeal }
+  // return { updateDeal, startDeal, deletelikeDeal, likeDeal, deleteDeal }
   }
 }
 </script>
