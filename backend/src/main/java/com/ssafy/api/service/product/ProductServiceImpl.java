@@ -8,6 +8,7 @@ import com.ssafy.db.repository.user.UserRepository;
 import com.ssafy.db.repository.user.UserRepositorySupport;
 import com.ssafy.db.repository.product.ProductRepository;
 import com.ssafy.db.repository.product.ProductRepositorySupport;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +33,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public Product createProduct(ProductRegisterPostReq productRegisterPostReq) {
         Product product = new Product();
-
-        String userId = productRegisterPostReq.getUserId();
+        String userId = productRegisterPostReq.getSeller();
         User user = userRepositorySupport.findUserByUserId(userId).get();
 
         product.setUser(user);
@@ -47,28 +47,30 @@ public class ProductServiceImpl implements ProductService{
         product.setRegistTime(productRegisterPostReq.getRegistTime());
         product.setReserveTime(productRegisterPostReq.getReserveTime());
         product.setRestrictTime(productRegisterPostReq.getRestrictTime());
-
         return productRepository.save(product);
     }
 
     @Override
-    public List<Product> getProductsByUID(String userId) {
-        return null;
+    public Product getProductByProductId(Long productId) {
+        Product product = productRepositorySupport.findByProductId(productId).get();
+        return product;
     }
 
     @Override
-    public Product getProductByPID(Long productIndexId) {
-        try{
-            Product product = productRepositorySupport.findByProductId(productIndexId).get();
-            return product;
-        }catch (NoSuchElementException e){
-            return null;
-        }
+    public Boolean getProductExistMessage(Long productId) {
+        if(productRepositorySupport.findByProductId(productId).isPresent()) return true;
+        else return false;
+    }
+
+    @Override
+    public Boolean checkProductAuth(String sellerId, Long productId) {
+        if(productRepositorySupport.findProductByIdAndUserId(sellerId, productId).isPresent()) return true;
+        else return false;
     }
 
     @Override
     public Product updateProduct(Product product, ProductUpdatePatchReq productUpdatePatchReq) {
-        product.setUser(userRepositorySupport.findUserByUserId(productUpdatePatchReq.getUserId()).get());
+        product.setUser(userRepositorySupport.findUserByUserId(productUpdatePatchReq.getSeller()).get());
         product.setProductName(productUpdatePatchReq.getProductName());
         product.setBasePrice(productUpdatePatchReq.getBasePrice());
         product.setCategories(productUpdatePatchReq.getCategories());
@@ -80,6 +82,12 @@ public class ProductServiceImpl implements ProductService{
         product.setReserveTime(productUpdatePatchReq.getReserveTime());
         product.setRestrictTime(productUpdatePatchReq.getRestrictTime());
         return productRepository.save(product);
+    }
+
+    @Override
+    public void updateIsSold(Product product) {
+        product.setIsSold(true);
+        productRepository.save(product);
     }
 
     @Override

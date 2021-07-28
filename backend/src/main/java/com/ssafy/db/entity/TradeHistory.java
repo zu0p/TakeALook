@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @ToString
 public class TradeHistory extends BaseEntity {
     LocalDate tradeDate;
-    Long product;
+    Long productId;
     Integer price;
     String seller;
     String buyer;

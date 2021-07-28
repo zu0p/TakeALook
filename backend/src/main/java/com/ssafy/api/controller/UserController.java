@@ -24,100 +24,68 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
-/**
- * 유저 관련 API 요청 처리를 위한 컨트롤러 정의. (swagger)
- */
 @Slf4j
 @Api(value = "유저 API", tags = {"User."})
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
-
 	@Autowired
 	UserService userService;
 
 	@PostMapping()
-	@ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "성공"),
-			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 404, message = "사용자 없음"),
-			@ApiResponse(code = 500, message = "서버 오류")
-	})
+	@ApiOperation(value = "회원 가입", notes = "아이디와 패스워드를 통해 회원가입 한다.")
 	public ResponseEntity<?> registerUser(
 			@RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
+
 		User user = userService.createUser(registerInfo);
 		return ResponseEntity.status(200).body(UserRegistPostRes.of(user));
 	}
 
 	@GetMapping("/me")
 	@ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "성공"),
-			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 404, message = "사용자 없음"),
-			@ApiResponse(code = 500, message = "서버 오류")
-	})
-	public ResponseEntity<UserDetailGetRes> getUserInfo(@ApiIgnore Authentication authentication) {
-		/**
-		 * 요청 헤더 액세스 토큰이 포함된 경우에만 실행되는 인증 처리이후, 리턴되는 인증 정보 객체(authentication) 통해서 요청한 유저 식별.
-		 * 액세스 토큰이 없이 요청하는 경우, 403 에러({"error": "Forbidden", "message": "Access Denied"}) 발생.
-		 */
+		public ResponseEntity<?> getUserInfo(@ApiIgnore Authentication authentication) {
+
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		if(!userService.getUserExistMessage(userDetails.getUsername()))
+			return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
+
 		User user = userService.getUserByUserId(userDetails.getUsername());
 		return ResponseEntity.status(200).body(UserDetailGetRes.of(user));
 	}
 
 	@GetMapping("/{userId}")
 	@ApiOperation(value = "회원 존재 유무 조회", notes = "이미 존재하는 회원인지 확인한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "성공"),
-			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 404, message = "사용자 없음"),
-			@ApiResponse(code = 500, message = "서버 오류")
-	})
 	public ResponseEntity<? extends BaseResponseBody> getUserExistMessage(@PathVariable String userId) {
-		User user = userService.getUserByUserId(userId);
-		if(user!=null) return ResponseEntity.status(200).body(BaseResponseBody.of(409, "Exist"));
+
+		if(!userService.getUserExistMessage(userId))
+			return ResponseEntity.status(200).body(BaseResponseBody.of(409, "Exist"));
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "None"));
 	}
 
 	@PatchMapping()
 	@ApiOperation(value = "회원 정보 수정", notes = "회원 정보를 수정한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "성공"),
-			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 404, message = "사용자 없음"),
-			@ApiResponse(code = 500, message = "서버 오류")
-	})
 	public ResponseEntity<?> updateUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="회원 정보 수정", required = true) UserUpdatePatchReq userUpdatePatchReq) {
+
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-		User authUser = userService.getUserByUserId(userDetails.getUsername());
-		if( authUser.getUserId().equals(userUpdatePatchReq.getUserId()) ){
-			User user = userService.updateUser(authUser, userUpdatePatchReq);
-			return ResponseEntity.status(200).body(UserUpdatePatchRes.of(userUpdatePatchReq));
-		}else{
+		if(!userService.checkAuthByUserId(userUpdatePatchReq.getUserId(),userDetails.getUsername()))
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
-		}
+
+		User authUser = userService.getUserByUserId(userDetails.getUsername());
+		User user = userService.updateUser(authUser, userUpdatePatchReq);
+		return ResponseEntity.status(200).body(UserUpdatePatchRes.of(userUpdatePatchReq));
 	}
 
 	@DeleteMapping("/{userId}")
 	@ApiOperation(value = "회원 정보 삭제", notes = "회원 정보를 삭제한다.")
-	@ApiResponses({
-			@ApiResponse(code = 200, message = "성공"),
-			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 404, message = "사용자 없음"),
-			@ApiResponse(code = 500, message = "서버 오류")
-	})
-	public ResponseEntity<?> deleteUserInfo(@ApiIgnore Authentication authentication, @PathVariable String userId) {
+	public ResponseEntity<?> deleteUserInfo(@ApiIgnore Authentication authentication) {
+
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-		String authUser = userService.getUserByUserId(userDetails.getUsername()).getUserId();
-		if (userId.equals(authUser)){
-			userService.deleteUser(userId);
-			return ResponseEntity.status(200).body(UserDeleteRes.of(userId));
-		}else{
-			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
-		}
+		String authId = userDetails.getUsername();
+		if (!userService.getUserExistMessage(authId))
+			return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
+
+		userService.deleteUser(authId);
+		return ResponseEntity.status(200).body(UserDeleteRes.of(authId));
 	}
 
 }
