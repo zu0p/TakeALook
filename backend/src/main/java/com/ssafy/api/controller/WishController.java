@@ -29,6 +29,7 @@ public class WishController {
     @GetMapping()
     @ApiOperation(value = "관심 상품 목록 조회", notes = "유저 인덱스를 통해 관심 상품 목록을 조회한다.")
     public ResponseEntity<?> getWishList(@ApiIgnore Authentication authentication){
+
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
         if(!userService.getUserExistMessage(userDetails.getUsername()))
             return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
@@ -40,21 +41,23 @@ public class WishController {
 
     @PostMapping()
     @ApiOperation(value="관심 상품 등록", notes="유저 인덱스와 상품 인덱스로 관심 상품을 등록합니다")
-    public ResponseEntity<?> registWishProduct(@ApiIgnore Authentication authentication, @RequestBody WishRegistPostReq wishRegistPostReq){
+    public ResponseEntity<?> registWishProduct(@ApiIgnore Authentication authentication, @RequestBody WishRegistPostReq wishRegistInfo){
+
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
-        if(!userService.checkAuthByUserId(wishRegistPostReq.getUserId(), userDetails.getUsername()))
+        if(!userService.checkAuthByUserId(wishRegistInfo.getUserId(), userDetails.getUsername()))
             return ResponseEntity.status(200).body(BaseResponseBody.of(401,"Fail"));
 
-        if(wishService.getWishExistMessage(wishRegistPostReq.getUserId(),wishRegistPostReq.getProductId()))
+        if(wishService.getWishExistMessage(wishRegistInfo.getUserId(),wishRegistInfo.getProductId()))
             return ResponseEntity.status(200).body(BaseResponseBody.of(409,"Exist"));
 
-        Long res = wishService.insertWishProduct(wishRegistPostReq);
+        Long res = wishService.insertWishProduct(wishRegistInfo);
         return ResponseEntity.status(200).body(WishRes.of(res));
     }
 
     @DeleteMapping("/{productId}")
     @ApiOperation(value="관심 상품 삭제", notes="유저 인덱스와 상품 인덱스로 관심 상품을 삭제합니다")
     public ResponseEntity<?> deleteWishProduct(@ApiIgnore Authentication authentication, @PathVariable Long productId){
+
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
         String authId = userDetails.getUsername();
 

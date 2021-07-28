@@ -1,6 +1,7 @@
 package com.ssafy.api.service.trade;
 
 import com.ssafy.api.request.trade.TradeRegistPatchReq;
+import com.ssafy.api.response.trade.TradeListGetRes;
 import com.ssafy.db.entity.TradeHistory;
 import com.ssafy.db.repository.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +23,14 @@ public class TradeServiceImpl implements TradeService {
     ProductRepository productRepository;
 
     @Override
-    public List<Product> getBuyerList(String buyer) {
-        List<Product> list = tradeRepositorySupport.findAllByBuyer(buyer);
+    public List<TradeListGetRes> getBuyerList(String buyer) {
+        List<TradeListGetRes> list = tradeRepositorySupport.findAllByBuyer(buyer);
         return list;
     }
 
     @Override
-    public List<Product> getSellerList(String seller) {
-        List<Product> list = tradeRepositorySupport.findAllBySeller(seller);
+    public List<TradeListGetRes> getSellerList(String seller) {
+        List<TradeListGetRes> list = tradeRepositorySupport.findAllBySeller(seller);
         return list;
     }
 

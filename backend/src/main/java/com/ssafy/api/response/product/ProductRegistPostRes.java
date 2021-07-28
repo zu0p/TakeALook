@@ -15,8 +15,8 @@ import java.time.LocalDate;
 @Setter
 @ApiModel("ProductRegistResponse")
 public class ProductRegistPostRes {
-    @ApiModelProperty(name="상품 User ID")
-    String userId;
+    @ApiModelProperty(name="상품 판매자")
+    String seller;
     @ApiModelProperty(name="상품명")
     String productName;
     @ApiModelProperty(name="가격")
@@ -40,7 +40,7 @@ public class ProductRegistPostRes {
 
     public static ProductRegistPostRes of(Product product) {
         ProductRegistPostRes res = new ProductRegistPostRes();
-        res.setUserId(product.getUser().getUserId());
+        res.setSeller(product.getUser().getUserId());
         res.setProductName(product.getProductName());
         res.setBasePrice(product.getBasePrice());
         res.setCategories(product.getCategories());

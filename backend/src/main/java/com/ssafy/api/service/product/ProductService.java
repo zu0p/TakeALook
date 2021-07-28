@@ -8,8 +8,10 @@ import java.util.List;
 
 public interface ProductService {
     Product createProduct(ProductRegisterPostReq productRegisterPostReq);
-    List<Product> getProductsByUID(String userId);
-    Product getProductByPID(Long productIndexId);
+    Product getProductByProductId(Long productIndexId);
+    Boolean getProductExistMessage(Long productIndexId);
+    Boolean checkProductAuth(String sellerId, Long productId);
     Product updateProduct(Product product, ProductUpdatePatchReq productUpdatePatchReq);
+    void updateIsSold(Product product);
     void deleteProduct(Long productIndexId);
 }

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @ApiModel("ProductRegisterPostRequest")
 public class ProductRegisterPostReq {
     @ApiModelProperty(name="판매자", example = "userId")
-    String userId;
+    String seller;
     @ApiModelProperty(name="판매 상품명 productName", example = "your_product_name")
     String productName;
     @ApiModelProperty(name="판매 가격 basePrice", example = "your_base_price")

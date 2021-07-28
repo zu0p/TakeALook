@@ -23,11 +23,11 @@ public class WishRepositorySupport {
     public List<WishListGetRes> findByUserId (String userId) {
         List<WishListGetRes> wlist = jpaQueryFactory
                 .select(Projections.constructor(WishListGetRes.class,qProduct.id, qProduct.user.userId,
-                        qProduct.productName,qProduct.basePrice, qProduct.categories, qProduct.description,
-                        qProduct.state, qProduct.imageUrl, qProduct.isSold))
+                        qProduct.productName,qProduct.basePrice, qProduct.categories, qProduct.imageUrl, qProduct.isSold))
                 .from(qWishProduct)
                 .join(qProduct)
-                .on(qWishProduct.productId.eq(qProduct.id)).where(qWishProduct.user.userId.eq(userId)).fetch();
+                .on(qWishProduct.productId.eq(qProduct.id))
+                .where(qWishProduct.user.userId.eq(userId)).fetch();
         return wlist;
     }
 }
