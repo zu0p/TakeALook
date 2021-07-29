@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ApiModel("UserRegistRes")
+@ApiModel("UserRegistResponse")
 public class UserRegistPostRes {
     @ApiModelProperty(name="유저 id", example="ssafy")
     String userId;
