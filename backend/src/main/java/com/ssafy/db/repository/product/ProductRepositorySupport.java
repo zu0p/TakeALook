@@ -24,6 +24,16 @@ public class ProductRepositorySupport {
         return Optional.ofNullable(product);
     }
 
+    public List<ProductListGetRes> findByUserId(String userId) {
+        List<ProductListGetRes> productList = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.registTime))
+                .from(qProduct)
+                .where(qProduct.user.userId.eq(userId)).fetch();
+         return (productList);
+    }
+
     public List<ProductListGetRes> findAllProduct(){
         List<ProductListGetRes> productList = jpaQueryFactory
                 .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
