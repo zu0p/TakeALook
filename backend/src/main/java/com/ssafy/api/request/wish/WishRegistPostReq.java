@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ApiModel("WishRegistPostReq")
+@ApiModel("WishRegistPostRequest")
 public class WishRegistPostReq {
     @ApiModelProperty(name="관심 상품 id", example="1")
     Long productId;

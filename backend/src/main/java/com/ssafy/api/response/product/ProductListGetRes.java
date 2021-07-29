@@ -1,5 +1,6 @@
 package com.ssafy.api.response.product;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
+@ApiModel("ProductListGetResponse")
 public class ProductListGetRes {
     @ApiModelProperty(name="상품 id")
     Long productId;

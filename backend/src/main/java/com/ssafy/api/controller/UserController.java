@@ -40,7 +40,6 @@ public class UserController {
 		User user = userService.createUser(registerInfo);
 		return ResponseEntity.status(200).body(UserRegistPostRes.of(user));
 	}
-
 	@GetMapping("/me")
 	@ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
 		public ResponseEntity<?> getUserInfo(@ApiIgnore Authentication authentication) {
