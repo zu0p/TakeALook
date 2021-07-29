@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 구매 목록</h1>
+  <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 구매 목록</h1>
+  <div v-if="sellList">
     <ul class="infinite-list">
     <!-- url 알게 되면 연결 callDeals -->
-      <li v-for="i in state.count" @click="clickDeal(i)" class="infinite-list-item" :key="i" >
-        <conference />
+      <li v-for="order in info.orderList" @click="clickDeal(order.productId)" class="infinite-list-item" :key="order.productId" >
+        <conference :deal="order"/>
       </li>
       <el-pagination
         background
@@ -14,6 +14,9 @@
         :total="total">
       </el-pagination>
     </ul>
+  </div>
+  <div v-else>
+    <b>내가 구매한 상품이 없습니다</b>
   </div>
 </template>
 
@@ -43,13 +46,22 @@ export default {
 
   setup () {
     const store = useStore()
+    const router = useRouter()
+    const info = reactive({
+      orderList:''
+    })
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'order-deal')
+      if (store.dispatch('root/requestBuyList')){
+        store.dispatch('root/requestBuyList')
+        .then (res => {
+          info.orderList = res.data
+          console.log(info.orderList)
+        })
+      }
     })
-
-    const router = useRouter()
 
     const state = reactive({
       count: 10

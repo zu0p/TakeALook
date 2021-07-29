@@ -30,7 +30,7 @@ export function requestLogin ({ state, commit }, payload) {
 }
 
 export function requestSignup({state}, payload){
-  const url = BASE_URL+'/users'
+  const url = BASE_URL+'/user'
   let body = payload
 
   return instanceWithAuth.post(url, body)
@@ -38,17 +38,17 @@ export function requestSignup({state}, payload){
 
 export function requestCheckDupl({state}, payload){
   //console.log(payload)
-  const url = BASE_URL+`/users/${payload.id}`
+  const url = BASE_URL+`/user/${payload.id}`
   return instanceWithAuth.get(url)
 }
 
 export function requestUserInfo({commit}, payload){
-  const url = BASE_URL+'/users/me'
+  const url = BASE_URL+'/user/me'
   return instanceWithAuth.get(url)
 }
 
 export function requestModifyUserInfo({state}, payload){
-  const url = BASE_URL+`/users/${payload.id}`
+  const url = BASE_URL+`/user/${payload.id}`
   let body = {
     "address": payload.address,
     "email": payload.email,
@@ -68,17 +68,17 @@ export function deletePost(postId) {
 }
 
 export function requestDropoutUser({state}, payload){
-  const url = BASE_URL+`/users/${payload.id}`
+  const url = BASE_URL+`/user/${payload.id}`
   return instanceWithAuth.delete(url)
 }
 
 export function requestDealDetail({state}, payload){
-  const url = BASE_URL+`/products/${payload}`
+  const url = BASE_URL+`/product/${payload}`
   return instanceWithAuth.get(url)
 }
 
 export function requestDeleteDeal({state}, payload){
-  const url = BASE_URL+`/products/${payload}`
+  const url = BASE_URL+`/product/${payload}`
   return instanceWithAuth.delete(url)
 }
 
@@ -89,10 +89,28 @@ export function requestLikeDealList({state}, payload){
 
 export function requestLikeDeal({state}, payload){
   const url = BASE_URL+'/wish'
-  return instanceWithAuth.post(url)
+  let body = {
+    "productId": payload,
+  }
+  return instanceWithAuth.post(url, body)
 }
 
 export function requestDeleteLikeDeal({state}, payload){
-  const url = BASE_URL+`/wish/${payload.productId}/${payload.userId}`
+  const url = BASE_URL+`/wish/${payload}`
   return instanceWithAuth.delete(url)
+}
+
+export function requestWishList({state}){
+  const url = BASE_URL+'/wish'
+  return instanceWithAuth.get(url)
+}
+
+export function requestSellList({state}){
+  const url = BASE_URL+'/trade/sell'
+  return instanceWithAuth.get(url)
+}
+
+export function requestBuyList({state}){
+  const url = BASE_URL+'/trade/buy'
+  return instanceWithAuth.get(url)
 }

@@ -31,9 +31,9 @@
       </el-skeleton>
       </div>
     <div style="text-align:left; padding: 14px;">
-      <span class="title enddeal">{{ title }}</span>
+      <span class="title enddeal">{{ deal.productName }}</span>
       <div class="loginbottom">
-        <p style="margin-bottom:0;" class="enddeal">{{ price }}⠀|⠀{{ time }}</p>
+        <p style="margin-bottom:0;" class="enddeal">{{ deal.basePrice }}⠀|⠀{{ deal.reserveTime }}</p>
         <div>
           <!-- 내가 생성한 거래인 경우 -->
           <!-- <div style="text-align:center">
@@ -83,34 +83,23 @@
 </template>
 
 <script>
-import { useRouter } from 'vue-router'
+import { reactive } from '@vue/reactivity'
+import { useRouter, useRoute } from 'vue-router'
+import { onMounted } from '@vue/runtime-core'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Home',
 
-  props: {
-    title: {
-      type: String,
-      default: '맥북2016-15인치'
-    },
-    //! 가격
-    price: {
-      type: String,
-      default: "100000 원"
-    },
-    //! 시간
-    time: {
-      type: String,
-      default: "10시 30분"
-    },
-    buyer: {
-      type: String,
-      default: "거래가 성사되지 않았습니다"
-    },
-  },
+  props: ["deal"],
 
   setup () {
+    const store = useStore()
     const router = useRouter()
+    const route = useRoute()
+    const state = reactive({
+      productId: ''
+    })
 
     const updateDeal = function () {
       console.log("거래 수정")
@@ -151,8 +140,7 @@ export default {
     //   }
     // }
 
-  return { updateDeal, startDeal, deletelikeDeal, likeDeal }
-  // return { updateDeal, startDeal, deletelikeDeal, likeDeal, deleteDeal }
+  return { state, updateDeal, startDeal, deletelikeDeal, likeDeal }
   }
 }
 </script>
