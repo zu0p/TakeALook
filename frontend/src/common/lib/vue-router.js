@@ -3,11 +3,14 @@ import Home from '@/views/home/home'
 import ProductDetail from '@/views/products/product-detail'
 import UpdateDealForm from '@/views/products/update-deal-form'
 import CreateDealForm from '@/views/create-deal-form/create-deal-form'
-import Mydeal from '@/views/mypage/my-deal'
-import Keepdeal from '@/views/mypage/keep-deal'
-import Orderdeal from '@/views/mypage/order-deal'
+// import ConferencesDetail from '@/views/conferences/conference-detail'
+import CreateDealform from '@/views/create-deal-form/create-deal-form'
+import MyDeal from '@/views/mypage/my-deal'
+import KeepDeal from '@/views/mypage/keep-deal'
+import OrderDeal from '@/views/mypage/order-deal'
 import UserInfo from '@/views/userInfo/userInfo'
 import WebRTC from '@/views/webRTC/webRTC'
+import DealDetail from '@/views/deal-detail/deal-detail'
 
 const fullMenu = require('@/views/main/menu.json')
 // 리스트 이기 때문에 .map 사용
@@ -19,11 +22,11 @@ function makeRoutesFromMenu () {
     } else if (key === 'create-deal-form') {
       return { path: fullMenu[key].path, name: key, component: CreateDealForm }
     } else if (key === 'my-deal') {
-      return { path: fullMenu[key].path, name: key, component: Mydeal }
+      return { path: fullMenu[key].path, name: key, component: MyDeal }
     } else if (key === 'keep-deal') {
-      return { path: fullMenu[key].path, name: key, component: Keepdeal }
+      return { path: fullMenu[key].path, name: key, component: KeepDeal }
     } else if (key === 'order-deal') {
-      return { path: fullMenu[key].path, name: key, component: Orderdeal }
+      return { path: fullMenu[key].path, name: key, component: OrderDeal }
     } else if (key === 'user-info'){
       return { path: fullMenu[key].path, name: key, component: UserInfo}
     } else if(key==='webRTC'){
@@ -36,12 +39,12 @@ function makeRoutesFromMenu () {
   routes = routes.filter(item => item)
 
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
-  routes.push({
-    path:'/product/:productId',
-    name: 'product-detail',
-    component: ProductDetail,
-    props: true,
-  })
+//   routes.push({
+//     path:'/product/:productId',
+//     name: 'product-detail',
+//     component: ProductDetail,
+//     props: true,
+//   })
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
   routes.push({
     path:'/product/update-deal-form/:productId',
@@ -55,6 +58,12 @@ function makeRoutesFromMenu () {
   //   name: 'conference-detail',
   //   component: ConferencesDetail,
   // })
+  routes.push({
+    path: '/products/:productId',
+    name: 'deal-detail',
+    component: DealDetail,
+  })
+
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(게시글 상세보기))
   return routes
 }

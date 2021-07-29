@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.trade.TradeDeleteReq;
 import com.ssafy.api.request.trade.TradeRegistPatchReq;
+import com.ssafy.api.response.product.ProductListGetRes;
 import com.ssafy.api.response.trade.TradeListGetRes;
 import com.ssafy.api.response.trade.TradeRes;
 import com.ssafy.api.service.product.ProductService;
@@ -55,7 +56,7 @@ public class TradeController {
         if(!userService.getUserExistMessage(authId))
             return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
 
-        List<TradeListGetRes> sellList = tradeService.getSellerList(authId);
+        List<ProductListGetRes> sellList = productService.getAllProductByUserId(authId);
         if(sellList.isEmpty()) return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
         return ResponseEntity.status(200).body(sellList);
     }

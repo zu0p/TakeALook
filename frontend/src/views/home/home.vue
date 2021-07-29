@@ -1,10 +1,10 @@
 <template>
   <el-row type="flex" class="row-bg" justify="space-between" align="middle">
     <div class="uppermenu" style="margin-left:15px">
-      <span>신상품순</span> | <span>높은 가격순</span> | <span>낮은 가격순</span> | <span>거래 시간순</span>
+      <span>신상품순</span> | <span @click="priceHigh">높은 가격순</span> | <span>낮은 가격순</span> | <span>거래 시간순</span>
     </div>
     <div >
-    <el-select v-model="value" placeholder="카테고리" style="width:120px; margin-right:10px">
+    <el-select class="category" v-model="value" placeholder="카테고리" style="width:120px; margin-right:10px">
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -24,9 +24,8 @@
   </el-row>
 
   <ul class="infinite-list">
-    <!-- url 알게 되면 연결 callDeals -->
-    <li v-for="i in state.count" @click="clickProduct(i)" class="infinite-list-item" :key="i" >
-      <pruduct />
+    <li v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId" >
+      <conference :deal="deal"/>
     </li>
     <div style="text-align: end">
       <el-button type="info" style="margin-right:100px" @click="createDeal">거래 생성</el-button>
@@ -42,8 +41,9 @@
 </template>
 
 <script>
-import Product from './components/product'
-import { reactive } from 'vue'
+import Conference from './components/conference'
+import { onMounted, reactive } from 'vue'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -82,34 +82,48 @@ export default {
 
   setup () {
     const router = useRouter()
+    const store = useStore()
 
     const state = reactive({
       count: 10
     })
 
-    const load = function () {
-      state.count += 4
-    }
+    const info = reactive({
+      dealList: '',
+    })
 
-    const clickProduct = function (id) {
+    onMounted (() => {
+      store.commit('root/setMenuActiveMenuName', 'home')
+      store.dispatch('root/requestDealList')
+        .then (res => {
+          if (res.data.statusCode != 404) {
+            info.dealList = res.data
+          }
+        })
+    })
+
+    const clickDeal = function (id) {
       router.push({
-        name: 'product-detail',
+        name: 'deal-detail',
         params: {
           productId: id
         }
       })
     }
 
-    const callDeals = function () {
-      store.dispatch('root/requestDeals', body)
-        .then(res=>{
-          console.log(res)
-        })
-        .catch(err=>{
-          console.log(err)
+    const priceHigh = function () {
+      store.dispatch('root/requestDealList')
+        .then (res => {
+          if (res.data.statusCode != 404) {
+            // ! 가격 순으로 정렬
+            info.dealList = res.data
+            for (var deal of info.dealList) {
+              console.log(deal)
+            }
+          }
         })
     }
-    return { state, load, clickProduct, callDeals }
+    return { info, state, clickDeal, priceHigh }
   }
 }
 </script>
@@ -142,7 +156,9 @@ export default {
 .create-deal {
   float: right;
 }
+
 .uppermenu span:hover{
   color: #ffd04b;
+  pointer-events: stroke;
 }
 </style>

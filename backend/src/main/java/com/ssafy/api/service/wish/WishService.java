@@ -11,4 +11,5 @@ public interface WishService {
     Long insertWishProduct(String userId, WishRegistPostReq wishRegistPostReq);
     void deleteWishProduct(String userId, Long productId);
     Boolean getWishExistMessage(String userId, Long productId);
+    Long countWishProductByProductId(Long productId);
 }

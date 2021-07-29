@@ -298,5 +298,7 @@ export default {
   .main-header .hide-on-small .tool-wrapper .search-field .el-input .el-input__prefix {
     top: 5px;
   }
-
+  .mobile-sidebar-wrapper {
+    z-index: 1;
+  }
 </style>

@@ -92,13 +92,18 @@ export default {
           console.log('submit')
           store.dispatch('root/requestLogin', { userId: state.form.id, password: state.form.password })
             .then(res=>{
-              //console.log(res.data)
+              console.log(res.data)
               if(res.data.statusCode==200){
                 localStorage.setItem("accessToken", res.data.accessToken)
                 store.commit('root/SET_ACCESSTOKEN', res.data.accessToken)
                 //emit('closeLoginDialog')
                 window.location="/"
               }
+              else if(res.data.statusCode==404){
+                alert("해당 아이디가 존재하지 않습니다.")
+              }
+              state.form.id = ''
+              state.form.password = ''
             }).then(()=>{
               state.loading = false
             })
@@ -109,7 +114,7 @@ export default {
             })
         } else {
           state.loading = false
-          alert('Validate error!')
+          alert('필수 입력 항목을 적절히 입력하세요!')
         }
       });
     }

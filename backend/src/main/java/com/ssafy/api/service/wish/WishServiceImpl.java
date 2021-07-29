@@ -47,8 +47,15 @@ public class WishServiceImpl implements WishService{
         wishRepository.delete(wishProduct.get());
     }
 
+    @Override
     public Boolean getWishExistMessage(String userId, Long productId){
         if(wishRepository.findWishProductByUserUserIdAndProductId(userId, productId).isPresent()) return true;
         else return false;
+    }
+
+    @Override
+    public Long countWishProductByProductId(Long productId){
+       Long wishCount = wishRepository.countByProductId(productId);
+       return wishCount;
     }
 }
