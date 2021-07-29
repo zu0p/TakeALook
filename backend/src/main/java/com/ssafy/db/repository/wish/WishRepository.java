@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface WishRepository extends JpaRepository<WishProduct, Long> {
     Optional<WishProduct> findWishProductByUserUserIdAndProductId(String userId, Long productId);
+    Long countByProductId(Long productId);
 }
