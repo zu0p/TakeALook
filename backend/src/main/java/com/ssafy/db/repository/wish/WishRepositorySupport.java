@@ -1,4 +1,4 @@
-package com.ssafy.db.repository;
+package com.ssafy.db.repository.wish;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
@@ -20,14 +20,14 @@ public class WishRepositorySupport {
     QWishProduct qWishProduct = QWishProduct.wishProduct;
     QProduct qProduct = QProduct.product;
 
-    public List<WishListGetRes> findByUserId (Long user_id) {
+    public List<WishListGetRes> findByUserId (String userId) {
         List<WishListGetRes> wlist = jpaQueryFactory
                 .select(Projections.constructor(WishListGetRes.class,qProduct.id, qProduct.user.userId,
-                        qProduct.productName,qProduct.basePrice, qProduct.categories, qProduct.description,
-                        qProduct.state, qProduct.imageUrl, qProduct.isSold))
+                        qProduct.productName,qProduct.basePrice, qProduct.categories, qProduct.imageUrl, qProduct.isSold))
                 .from(qWishProduct)
                 .join(qProduct)
-                .on(qWishProduct.productId.eq(qProduct.id)).where(qWishProduct.user.id.eq(user_id)).fetch();
+                .on(qWishProduct.productId.eq(qProduct.id))
+                .where(qWishProduct.user.userId.eq(userId)).fetch();
         return wlist;
     }
 }

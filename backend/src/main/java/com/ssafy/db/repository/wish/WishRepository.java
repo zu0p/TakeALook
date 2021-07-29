@@ -1,4 +1,4 @@
-package com.ssafy.db.repository;
+package com.ssafy.db.repository.wish;
 
 import com.ssafy.db.entity.WishProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface WishRepository extends JpaRepository<WishProduct, Long> {
-    Optional<WishProduct> findWishProductByUserIdAndProductId(Long userId, Long productId);
+    Optional<WishProduct> findWishProductByUserUserIdAndProductId(String userId, Long productId);
 }

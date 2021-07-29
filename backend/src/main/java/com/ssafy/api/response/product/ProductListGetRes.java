@@ -1,6 +1,5 @@
 package com.ssafy.api.response.product;
 
-import com.ssafy.db.entity.Product;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -10,9 +9,11 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@ApiModel("ProductUpdatePatchResponse")
-public class ProductUpdatePatchRes {
-    @ApiModelProperty(name="판매자")
+@ApiModel("ProductListGetResponse")
+public class ProductListGetRes {
+    @ApiModelProperty(name="상품 id")
+    Long productId;
+    @ApiModelProperty(name="상품 판매자")
     String seller;
     @ApiModelProperty(name="상품명")
     String productName;
@@ -35,19 +36,19 @@ public class ProductUpdatePatchRes {
     @ApiModelProperty(name="거래 방 제한 시간")
     LocalDate restrictTime;
 
-    public static ProductRegistPostRes of(Product product) {
-        ProductRegistPostRes res = new ProductRegistPostRes();
-        res.setSeller(product.getUser().getUserId());
-        res.setProductName(product.getProductName());
-        res.setBasePrice(product.getBasePrice());
-        res.setCategories(product.getCategories());
-        res.setDescription(product.getDescription());
-        res.setState(product.getState());
-        res.setImageUrl(product.getImageUrl());
-        res.setIsSold(product.getIsSold());
-        res.setRegistTime(product.getRegistTime());
-        res.setReserveTime(product.getReserveTime());
-        res.setRestrictTime(product.getRestrictTime());
-        return res;
+    public ProductListGetRes(Long productId, String seller, String productName, Integer basePrice, String categories,
+                             String description, String state, String imageUrl, Boolean isSold, LocalDate registTime,
+                             LocalDate reserveTime) {
+        this.productId = productId;
+        this.seller = seller;
+        this.productName = productName;
+        this.basePrice = basePrice;
+        this.categories = categories;
+        this.description = description;
+        this.state = state;
+        this.imageUrl = imageUrl;
+        this.isSold = isSold;
+        this.registTime = registTime;
+        this.reserveTime = reserveTime;
     }
 }
