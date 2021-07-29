@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService{
         product.setImageUrl(productUpdatePatchReq.getImageUrl());
         product.setRegistTime(productUpdatePatchReq.getRegistTime());
         product.setReserveTime(productUpdatePatchReq.getReserveTime());
-        product.setRestrictTime(productUpdatePatchReq.getReserveTime());
+        product.setRestrictTime(productUpdatePatchReq.getRestrictTime());
         return productRepository.save(product);
     }
 

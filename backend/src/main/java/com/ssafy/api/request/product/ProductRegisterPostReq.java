@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,9 +26,9 @@ public class ProductRegisterPostReq {
     @ApiModelProperty(name="상품 사진 imageUrl", example = "your_product_image")
     String imageUrl;
     @ApiModelProperty(name="상품 등록 시간 registTime", example = "regist time")
-    LocalDate registTime;
+    LocalDateTime registTime;
     @ApiModelProperty(name="거래 방 예약 시간 reserveTime", example = "reserve time")
-    LocalDate reserveTime;
+    LocalDateTime reserveTime;
     @ApiModelProperty(name="거래 방 예약 시간 reserveTime", example = "reserve time")
-    LocalDate restrictTime;
+    LocalDateTime restrictTime;
 }

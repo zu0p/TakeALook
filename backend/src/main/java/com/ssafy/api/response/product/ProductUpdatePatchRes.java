@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -29,11 +30,11 @@ public class ProductUpdatePatchRes {
     @ApiModelProperty(name="판매 여부")
     Boolean isSold;
     @ApiModelProperty(name="상품 등록 시간")
-    LocalDate registTime;
+    LocalDateTime registTime;
     @ApiModelProperty(name="거래 방 예약 시간")
-    LocalDate reserveTime;
+    LocalDateTime reserveTime;
     @ApiModelProperty(name="거래 방 제한 시간")
-    LocalDate restrictTime;
+    LocalDateTime restrictTime;
 
     public static ProductRegistPostRes of(Product product) {
         ProductRegistPostRes res = new ProductRegistPostRes();

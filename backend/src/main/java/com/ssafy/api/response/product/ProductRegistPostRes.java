@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 상품 API ([GET] /api/v1/product) 요청에 대한 응답값 정의.
@@ -32,11 +33,11 @@ public class ProductRegistPostRes {
     @ApiModelProperty(name="판매 여부")
     Boolean isSold;
     @ApiModelProperty(name="상품 등록 시간")
-    LocalDate registTime;
+    LocalDateTime registTime;
     @ApiModelProperty(name="거래 방 예약 시간")
-    LocalDate reserveTime;
+    LocalDateTime reserveTime;
     @ApiModelProperty(name="거래 방 제한 시간")
-    LocalDate restrictTime;
+    LocalDateTime restrictTime;
 
     public static ProductRegistPostRes of(Product product) {
         ProductRegistPostRes res = new ProductRegistPostRes();

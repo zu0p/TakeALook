@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -23,9 +24,9 @@ public class Product extends BaseEntity {
     String imageUrl;
     Boolean isSold;
 
-    LocalDate registTime; //상품 등록 시간
-    LocalDate reserveTime; // 거래 방 예약 시간
-    LocalDate restrictTime; // 거래 방 제한 시간
+    LocalDateTime registTime; //상품 등록 시간
+    LocalDateTime reserveTime; // 거래 방 예약 시간
+    LocalDateTime restrictTime; // 거래 방 제한 시간
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
