@@ -1,5 +1,5 @@
 <template>
-  {{ $route.params.conferenceId + '번 방 상세 보기 페이지' }}
+  {{ $route.params.productId + '번 방 상세 보기 페이지' }}
   <el-form-item>
     본문
   </el-form-item>
@@ -15,40 +15,41 @@ import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 
 export default {
-  name: 'conference-detail',
-
-  setup () {
+  name: 'product-detail',
+  props: {
+    productId: [ String||Number ]
+  },
+  setup (props) {
     const route = useRoute()
     const router = useRouter()
     const store = useStore()
     const state = reactive({
-      conferenceId: '',
+      productId: props.productId,
       loading: false,
     })
 
   // 수정 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 수정 API 호출 또는 경고창 표시
   const clickUpdate = function () {
-    console.log(state.conferenceId)
+    console.log(state.productId)
     router.push({
       name: 'update-deal-form',
       params: {
-        conferenceId: state.conferenceId,
+        productId: state.productId,
       }
     })
   }
 
     // 페이지 진입시 불리는 훅
     onBeforeMount(() => {
-      state.conferenceId = route.params.conferenceId
-      // console.log(state.conferenceId)
-      // console.log(route.params.conferenceId)
-      // console.log(state.conferenceId)
+      // console.log(state.productId)
+      // console.log(route.params.productId)
+      // console.log(state.productId)
       store.commit('root/setMenuActiveMenuName', 'home')
     })
 
     // 페이지 이탈시 불리는 훅
     onUnmounted(() => {
-      state.conferenceId = ''
+      state.productId = ''
     })
 
     return { state, clickUpdate }

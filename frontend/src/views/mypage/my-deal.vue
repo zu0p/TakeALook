@@ -3,8 +3,8 @@
     <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 판매 목록</h1>
     <ul class="infinite-list">
     <!-- url 알게 되면 연결 callDeals -->
-      <li v-for="i in state.count" @click="clickConference(i)" class="infinite-list-item" :key="i" >
-        <conference />
+      <li v-for="i in state.count" @click="clickProduct(i)" class="infinite-list-item" :key="i" >
+        <product />
       </li>
       <el-pagination
         background
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import Conference from '@/views/home/components/conference'
+import Product from '@/views/home/components/product'
 import { onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
@@ -27,7 +27,7 @@ export default {
   name: 'My-deal',
 
   components: {
-    Conference,
+    Product,
   },
 
   data() {
@@ -59,16 +59,16 @@ export default {
       state.count += 4
     }
 
-    const clickConference = function (id) {
+    const clickProduct = function (id) {
       router.push({
-        name: 'conference-detail',
+        name: 'product-detail',
         params: {
-          conferenceId: id
+          productId: id
         }
       })
     }
 
-    return { state, load, clickConference }
+    return { state, load, clickProduct }
   }
 }
 </script>

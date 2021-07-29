@@ -25,8 +25,8 @@
 
   <ul class="infinite-list">
     <!-- url 알게 되면 연결 callDeals -->
-    <li v-for="i in state.count" @click="clickConference(i)" class="infinite-list-item" :key="i" >
-      <conference />
+    <li v-for="i in state.count" @click="clickProduct(i)" class="infinite-list-item" :key="i" >
+      <pruduct />
     </li>
     <div style="text-align: end">
       <el-button type="info" style="margin-right:100px" @click="createDeal">거래 생성</el-button>
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import Conference from './components/conference'
+import Product from './components/product'
 import { reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -50,7 +50,7 @@ export default {
   name: 'Home',
 
   components: {
-    Conference,
+    Product,
   },
   data() {
     //! pagination 데이터 설정
@@ -91,11 +91,11 @@ export default {
       state.count += 4
     }
 
-    const clickConference = function (id) {
+    const clickProduct = function (id) {
       router.push({
-        name: 'conference-detail',
+        name: 'product-detail',
         params: {
-          conferenceId: id
+          productId: id
         }
       })
     }
@@ -109,7 +109,7 @@ export default {
           console.log(err)
         })
     }
-    return { state, load, clickConference, callDeals }
+    return { state, load, clickProduct, callDeals }
   }
 }
 </script>

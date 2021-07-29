@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/home/home'
-import ConferencesDetail from '@/views/conferences/conference-detail'
-import UpdateDealForm from '@/views/conferences/update-deal-form'
+import ProductDetail from '@/views/products/product-detail'
+import UpdateDealForm from '@/views/products/update-deal-form'
 import CreateDealForm from '@/views/create-deal-form/create-deal-form'
 import Mydeal from '@/views/mypage/my-deal'
 import Keepdeal from '@/views/mypage/keep-deal'
@@ -37,15 +37,18 @@ function makeRoutesFromMenu () {
 
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
   routes.push({
-    path:'/conferences/:conferenceId',
-    name: 'conference-detail',
-    component: ConferencesDetail,
+    path:'/product/:productId',
+    name: 'product-detail',
+    component: ProductDetail,
+    props: true,
   })
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
   routes.push({
-    path:'/conferences/update-deal-form/:conferenceId',
+    path:'/product/update-deal-form/:productId',
     name: 'update-deal-form',
     component: UpdateDealForm,
+    // 유동적으로 바뀌는 productId를 update-deal-form에 props로 넘겨준다.
+    props: true,
   })
   // routes.push({
   //   path:'/conferences/:conferenceId/:salesItemId',

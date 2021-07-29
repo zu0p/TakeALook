@@ -14,26 +14,26 @@
     <!-- 거래 작성 폼 -->
     <el-form v-if="!state.loading" v-model="state.form" :rules="state.rules" ref="updateDealForm" :label-position="state.form.align">
       <!-- 게시글 제목 -->
-      <el-form-item prop="title" label="제목" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.title" maxlength="16" placeholder="제목을 입력하세요" autocomplete="off"></el-input>
+      <el-form-item prop="productName" label="제목" :label-width="state.formLabelWidth">
+        <el-input v-model="state.form.productName" maxlength="16" placeholder="제목을 입력하세요" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item prop="category" label="상품 분류" :label-width="state.formLabelWidth">
-        <el-select v-model="state.form.category" placeholder="카테고리를 선택해주세요">
+      <el-form-item prop="categories" label="상품 분류" :label-width="state.formLabelWidth">
+        <el-select v-model="state.form.categories" placeholder="카테고리를 선택해주세요">
           <el-option label="전자기기" value="electronics"></el-option>
           <el-option label="의류" value="clothing"></el-option>
         </el-select>
       </el-form-item>
       <!-- 가격 -->
       <!-- 숫자만 입력가능하다. -->
-      <el-form-item prop="price" label="가격" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.price" placeholder="가격을 입력하세요 (단위: 원)" maxlength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off"></el-input>
+      <el-form-item prop="basePrice" label="가격" :label-width="state.formLabelWidth">
+        <el-input v-model="state.form.basePrice" placeholder="가격을 입력하세요 (단위: 원)" maxlength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off"></el-input>
       </el-form-item>
       <!-- 제품 판매 예약시간 -->
-      <el-form-item prop="reservation_dateTime" label="제품 판매 예약시간" :label-width="state.formLabelWidth">
+      <el-form-item prop="reserveTime" label="제품 판매 예약시간" :label-width="state.formLabelWidth">
         <el-col :span="30">
           <el-date-picker
             class="date_picker"
-            v-model="state.form.reservation_dateTime"
+            v-model="state.form.reserveTime"
             type="datetime"
             placeholder="날자를 선택하세요"
             style="width: 100%;"
@@ -43,8 +43,8 @@
         </el-col>
       </el-form-item>
       <!-- 제품 설명 -->
-      <el-form-item prop="desc" label="제품 설명" :label-width="state.formLabelWidth">
-        <el-input type="textarea" resize="none" :rows="5" v-model.trim="state.form.desc" placeholder="내용을 입력하세요" show-word-limit maxlength="300" autocomplete="off"></el-input>
+      <el-form-item prop="description" label="제품 설명" :label-width="state.formLabelWidth">
+        <el-input type="textarea" resize="none" :rows="5" v-model.trim="state.form.description" placeholder="내용을 입력하세요" show-word-limit maxlength="300" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
   </el-container>
@@ -61,11 +61,17 @@
 import { onMounted, ref, reactive, onBeforeMount, } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 export default {
   name: 'UpdateDealform',
-
-  setup () {
+  // setup 안에서 props를 사용하려면 여기서 정의를 해주어야 한다.
+  props: {
+    productId: [ String||Number ]
+  },
+  // props를 통해 productId값이 담겨온다.
+  setup (props) {
+    console.log(props.productId)
     const store = useStore()
     const router = useRouter()
     // 독립적인 반응형 값 생성 ref()
@@ -73,11 +79,11 @@ export default {
 
     const state = reactive({
       form: {
-        title: '',
-        category: '',
-        price: '',
-        reservation_dateTime: '',
-        desc: '',
+        productName: '',
+        categories: '',
+        basePrice: '',
+        reserveTime: '',
+        description: '',
       },
       src: {
         imageUrl: '',
@@ -89,18 +95,26 @@ export default {
     //  페이지 진입 전 불리는 훅
     onBeforeMount(()=>{
       console.log('before mount')
-      // 게시글 정보 받아와서 폼의 prop로 보여주기
-      // dispatch method로 requestUserInfo action 호출
-      store.dispatch('root/requestConferenceInfo')
+      // axios처리로 data불러오기
+      axios({
+        url: `/product/${props.productId}`
+      })
       .then(res=>{
         console.log(res)
-        state.form.title = res.data.title
-        state.form.category = res.data.category
-        state.form.price = res.data.price
-        state.form.reservation_dateTime = res.data.reservation_dateTime
-        state.form.desc = res.data.desc
+        state.form.productName = res.data.productName
+        state.form.categories = res.data.categories
+        state.form.basePrice = res.data.basePrice
+        state.form.reserveTime = res.data.reserveTime
+        state.form.description = res.data.description
         state.src.imageUrl = res.data.imageUrl
       })
+      // 게시글 정보 받아와서 폼의 prop로 보여주기
+      // dispatch method로 requestProductInfo action 호출
+      // props.productID가 payload에 담긴다.
+      // store.dispatch('root/requestProductInfo', props.productId)
+      //   .then(data=> {
+      //     console.log(data)
+      //   })
     })
     // 페이지 진입시 불리는 훅
     onMounted (() => {
@@ -111,8 +125,8 @@ export default {
 
     const clickUpdate = function () {
       console.log('게시글 작성 함수 실행')
-      console.log(state.form.category)
-      console.log(state.form.reservation_dateTime)
+      console.log(state.form.categories)
+      console.log(state.form.reserveTime)
       state.loading = true
       // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
       updateDealForm.value.validate((valid) => {
@@ -120,11 +134,11 @@ export default {
           console.log('submit')
           store.dispatch('root/updatePost', {
             imageUrl: state.src.imageUrl,
-            title: state.form.title,
-            category: state.form.category,
-            price: state.form.price,
-            reservation_dateTime: state.form.reservation_dateTime,
-            desc: state.form.desc,
+            productName: state.form.productName,
+            categories: state.form.categories,
+            basePrice: state.form.basePrice,
+            reserveTime: state.form.reserveTime,
+            description: state.form.description,
            })
             .then(res=>{
               //console.log(res.data)
