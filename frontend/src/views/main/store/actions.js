@@ -15,10 +15,12 @@ function createInstanceWithAuth(url) {
   return setInterceptors(instance)
 }
 
-const BASE_URL = 'http://localhost:8080/api/v1'
-// const BASE_URL = 'https://soft-lizard-45.loca.lt/api/v1/'
+// const BASE_URL = 'https://silent-goose-93.loca.lt/swagger-ui/'
+const BASE_URL = 'http://i5d101.p.ssafy.io:8080/api/v1'
+// const BASE_URL = 'http://localhost:8080/api/v1'
+
 const instanceWithAuth = createInstance()
-const posts = createInstanceWithAuth('posts')
+// const posts = createInstanceWithAuth('posts')
 
 export function requestLogin ({ state, commit }, payload) {
   //console.log('requestLogin', state, payload)
@@ -42,6 +44,7 @@ export function requestCheckDupl({state}, payload){
   return instanceWithAuth.get(url)
 }
 
+// update-deal-form.vue의 onBeforeMount훅에서 dispatch method를 통해 requestUserInfo action 시작
 export function requestUserInfo({commit}, payload){
   const url = BASE_URL+'/user/me'
   return instanceWithAuth.get(url)
@@ -52,10 +55,22 @@ export function requestModifyUserInfo({state}, payload){
   return instanceWithAuth.patch(url, payload)
 }
 
+export function requestProductInfo({commit}, payload){
+  console.log(payload)
+  const url = BASE_URL+`/product/${payload}`
+  //  instanceWithAuth: 인증 + 요청 함께 이뤄짐
+  // 결국 onBeforeMount훅은 instanceWithAuth를 반환한다.
+  return instanceWithAuth.get(url)
+}
 // 게시글 작성 요청 보내기
-export function createPost(postData) {
-  // const url = BASE_URL+`/create-deal-form/${userId}/${articleId}`
-  return posts.post('/', postData)
+// 두번째 인자값에 내가 담아올 것을 담아옴
+export function createPost({commit}, postData) {
+  // console.log(postData)
+  const url = BASE_URL+'/product'
+  console.log(url)
+  let body = postData
+  // const url = BASE_URL+`/create-deal-form/${userId}/${}`
+  return instanceWithAuth.post(url, body)
 }
 // 게시글 삭제 요청 보내기
 export function deletePost(postId) {

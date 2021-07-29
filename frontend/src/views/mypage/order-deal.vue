@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Conference from '@/views/home/components/conference'
+import Product from '@/views/home/components/product'
 import { onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
@@ -30,7 +30,7 @@ export default {
   name: 'Order-deal',
 
   components: {
-    Conference,
+    Product,
   },
 
   data() {
@@ -70,16 +70,26 @@ export default {
       state.count += 4
     }
 
+<<<<<<< HEAD
+    const clickProduct = function (id) {
+      router.push({
+        name: 'product-detail',
+=======
     const clickDeal = function (id) {
       router.push({
         name: 'deal-detail',
+>>>>>>> ba2d0a5369f3c3daea3e4ec7daa90b32a3c1bacd
         params: {
           productId: id
         }
       })
     }
 
+<<<<<<< HEAD
+    return { state, load, clickProduct }
+=======
     return { state, load, clickDeal }
+>>>>>>> ba2d0a5369f3c3daea3e4ec7daa90b32a3c1bacd
   }
 }
 </script>

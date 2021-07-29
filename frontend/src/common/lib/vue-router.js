@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/home/home'
+import ProductDetail from '@/views/products/product-detail'
+import UpdateDealForm from '@/views/products/update-deal-form'
+import CreateDealForm from '@/views/create-deal-form/create-deal-form'
 // import ConferencesDetail from '@/views/conferences/conference-detail'
 import CreateDealform from '@/views/create-deal-form/create-deal-form'
 import MyDeal from '@/views/mypage/my-deal'
@@ -17,7 +20,7 @@ function makeRoutesFromMenu () {
     if (key === 'home') {
       return { path: fullMenu[key].path, name: key, component: Home  }
     } else if (key === 'create-deal-form') {
-      return { path: fullMenu[key].path, name: key, component: CreateDealform }
+      return { path: fullMenu[key].path, name: key, component: CreateDealForm }
     } else if (key === 'my-deal') {
       return { path: fullMenu[key].path, name: key, component: MyDeal }
     } else if (key === 'keep-deal') {
@@ -36,6 +39,25 @@ function makeRoutesFromMenu () {
   routes = routes.filter(item => item)
 
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
+//   routes.push({
+//     path:'/product/:productId',
+//     name: 'product-detail',
+//     component: ProductDetail,
+//     props: true,
+//   })
+  // menu 자체에는 나오지 않는 페이지 라우터에 추가(방 상세보기)
+  routes.push({
+    path:'/product/update-deal-form/:productId',
+    name: 'update-deal-form',
+    component: UpdateDealForm,
+    // 유동적으로 바뀌는 productId를 update-deal-form에 props로 넘겨준다.
+    props: true,
+  })
+  // routes.push({
+  //   path:'/conferences/:conferenceId/:salesItemId',
+  //   name: 'conference-detail',
+  //   component: ConferencesDetail,
+  // })
   routes.push({
     path: '/products/:productId',
     name: 'deal-detail',
