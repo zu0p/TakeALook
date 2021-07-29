@@ -28,4 +28,6 @@ public class ProductRegisterPostReq {
     LocalDate registTime;
     @ApiModelProperty(name="거래 방 예약 시간 reserveTime", example = "reserve time")
     LocalDate reserveTime;
+    @ApiModelProperty(name="거래 방 예약 시간 reserveTime", example = "reserve time")
+    LocalDate restrictTime;
 }
