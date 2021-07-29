@@ -16,9 +16,10 @@ function createInstanceWithAuth(url) {
 }
 
 // const BASE_URL = 'https://silent-goose-93.loca.lt/swagger-ui/'
-const BASE_URL = '/api/v1'
+const BASE_URL = 'http://i5d101.p.ssafy.io:8080/api/v1'
+// const BASE_URL = 'http://localhost:8080/api/v1'
 const instanceWithAuth = createInstance()
-const posts = createInstanceWithAuth('posts')
+// const posts = createInstanceWithAuth('posts')
 
 export function requestLogin ({ state, commit }, payload) {
   //console.log('requestLogin', state, payload)
@@ -67,11 +68,16 @@ export function requestProductInfo({commit}, payload){
 }
 
 // 게시글 작성 요청 보내기
-export function createPost(postData) {
+// 두번째 인자값에 내가 담아올 것을 담아옴
+export function createPost({commit}, postData) {
+  // console.log(postData)
+  const url = BASE_URL+'/product'
+  console.log(url)
+  let body = postData
   // const url = BASE_URL+`/create-deal-form/${userId}/${}`
-  return posts.post('/', postData)
+  return instanceWithAuth.post(url, body)
 }
 // 게시글 삭제 요청 보내기
-export function deletePost(postId) {
-  return posts.delete(postId);
-}
+// export function deletePost(postId) {
+//   return posts.delete(postId);
+// }
