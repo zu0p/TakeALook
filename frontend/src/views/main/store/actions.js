@@ -114,3 +114,18 @@ export function requestBuyList({state}){
   const url = BASE_URL+'/trade/buy'
   return instanceWithAuth.get(url)
 }
+
+export function requestDealList({state}){
+  const url = BASE_URL+'/product/list'
+  return instanceWithAuth.get(url)
+}
+
+export function requestCheckWish({state}, payload){
+  const url = BASE_URL+`/wish/${payload}`
+  return instanceWithAuth.get(url)
+}
+
+export function requestWishCount({state}, payload){
+  const url = BASE_URL+`/wish/count/${payload}`
+  return instanceWithAuth.get(url)
+}

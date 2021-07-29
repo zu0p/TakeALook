@@ -2,7 +2,6 @@
   <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 판매 목록</h1>
   <div v-if="info.sellList">
     <ul class="infinite-list">
-    <!-- url 알게 되면 연결 callDeals -->
       <li v-for="sell in info.sellList" @click="clickDeal(sell.productId)" class="infinite-list-item" :key="sell.productId" >
         <conference :deal="sell"/>
       </li>
@@ -53,14 +52,15 @@ export default {
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'my-deal')
-      if(store.dispatch('root/requestSellList')){
-      // ! 404 에러
-        store.dispatch('root/requestSellList')
+      store.dispatch('root/requestSellList')
         .then (res => {
-          console.log(res)
-          info.sellList = res.data
+          if (res.data.statusCode != 404) {
+            info.sellList = res.data
+          } else {
+            console.log(res)
+            console.log(5412)
+          }
         })
-      }
     })
 
     const router = useRouter()

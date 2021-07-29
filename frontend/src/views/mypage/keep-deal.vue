@@ -16,7 +16,7 @@
   </div>
   <div v-else>
     <b>찜한 거래가 없습니다</b>
-  </div>>
+  </div>
 </template>
 
 <script>
@@ -57,7 +57,6 @@ export default {
         store.dispatch('root/requestWishList')
           .then (res => {
             info.wishList = res.data
-            console.log(info.wishList)
           })
       }
     })

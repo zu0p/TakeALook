@@ -1,7 +1,7 @@
 <template>
   <el-row type="flex" class="row-bg" justify="space-between" align="middle">
     <div class="uppermenu" style="margin-left:15px">
-      <span>신상품순</span> | <span>높은 가격순</span> | <span>낮은 가격순</span> | <span>거래 시간순</span>
+      <span>신상품순</span> | <span @click="priceHigh">높은 가격순</span> | <span>낮은 가격순</span> | <span>거래 시간순</span>
     </div>
     <div >
     <el-select class="category" v-model="value" placeholder="카테고리" style="width:120px; margin-right:10px">
@@ -24,8 +24,8 @@
   </el-row>
 
   <ul class="infinite-list">
-    <li v-for="i in state.count" @click="clickDeal(i)" class="infinite-list-item" :key="i" >
-      <conference />
+    <li v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId" >
+      <conference :deal="deal"/>
     </li>
     <div style="text-align: end">
       <el-button type="info" style="margin-right:100px" @click="createDeal">거래 생성</el-button>
@@ -42,7 +42,8 @@
 
 <script>
 import Conference from './components/conference'
-import { reactive } from 'vue'
+import { onMounted, reactive } from 'vue'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -81,14 +82,25 @@ export default {
 
   setup () {
     const router = useRouter()
+    const store = useStore()
 
     const state = reactive({
       count: 10
     })
 
-    const load = function () {
-      state.count += 4
-    }
+    const info = reactive({
+      dealList: '',
+    })
+
+    onMounted (() => {
+      store.commit('root/setMenuActiveMenuName', 'home')
+      store.dispatch('root/requestDealList')
+        .then (res => {
+          if (res.data.statusCode != 404) {
+            info.dealList = res.data
+          }
+        })
+    })
 
     const clickDeal = function (id) {
       router.push({
@@ -99,7 +111,20 @@ export default {
       })
     }
 
-    return { state, load, clickDeal }
+    const priceHigh = function () {
+      store.dispatch('root/requestDealList')
+        .then (res => {
+          if (res.data.statusCode != 404) {
+            // ! 가격 순으로 정렬
+            info.dealList = res.data
+            for (var deal of info.dealList) {
+              console.log(deal)
+            }
+          }
+        })
+    }
+
+    return { info, state, clickDeal, priceHigh }
   }
 }
 </script>

@@ -1,10 +1,10 @@
 <template>
   <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 구매 목록</h1>
-  <div v-if="sellList">
+  <div v-if="buyList">
     <ul class="infinite-list">
     <!-- url 알게 되면 연결 callDeals -->
-      <li v-for="order in info.orderList" @click="clickDeal(order.productId)" class="infinite-list-item" :key="order.productId" >
-        <conference :deal="order"/>
+      <li v-for="buy in info.buyList" @click="clickDeal(buy.productId)" class="infinite-list-item" :key="buy.productId" >
+        <conference :deal="buy"/>
       </li>
       <el-pagination
         background
@@ -48,7 +48,7 @@ export default {
     const store = useStore()
     const router = useRouter()
     const info = reactive({
-      orderList:''
+      buyList:''
     })
 
     // 페이지 진입시 불리는 훅
@@ -56,10 +56,9 @@ export default {
       store.commit('root/setMenuActiveMenuName', 'order-deal')
       if (store.dispatch('root/requestBuyList')){
         store.dispatch('root/requestBuyList')
-        .then (res => {
-          info.orderList = res.data
-          console.log(info.orderList)
-        })
+          .then (res => {
+            info.buyList = res.data
+          })
       }
     })
 

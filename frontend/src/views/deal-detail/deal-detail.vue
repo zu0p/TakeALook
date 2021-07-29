@@ -3,7 +3,11 @@
     <el-container>
       <img :src="info.imageUrl" alt="">
       <el-form ref="form" label-width="120px" style="text-align:left; margin-left:100px;" label-position="left">
-        <h1 style="font-size:28px;">상품 이름</h1>
+        <h1 style="font-size:28px; margin-bottom:5px;">상품 이름</h1>
+        <div style="text-align:right;" v-if="info.mine">
+          <i class="el-icon-message-solid" style="color:#ffd04b; margin-right:10px;"></i>
+          <span style="color:#ffd04b;">{{ info.wishCount }}</span>
+        </div>
         <el-form-item label="판매자">
           <span style="margin-top:0; margin-left:20px; font-weight: 900;">{{ info.seller }}</span>
         </el-form-item>
@@ -25,17 +29,19 @@
           <br>
         </div>
         <div v-else>
-          <!-- 내가 작성한 거래인 경우 -->
-          <div v-if="info.user" style="text-align:center;">
-            <el-button @click="updateDeal" type="primary" style="width:95px;" icon="el-icon-edit">수정</el-button>
-            <el-button @click="deleteDeal" type="danger" style="width:95px;" icon="el-icon-delete">삭제</el-button>
-            <br>
-          </div>
-          <!-- 내가 작성한 거래가 아닌 경우 -->
-          <div v-else style="text-align:center">
-            <el-button v-if="info.like" @click="deletelikeDeal" type="danger" style="width: 200px" icon="el-icon-message-solid">찜 취소</el-button>
-            <el-button v-else @click="likeDeal" type="danger" style="width: 200px;" icon="el-icon-bell">찜</el-button>
-            <br>
+          <div v-if="info.isLogin">
+            <!-- 내가 작성한 거래인 경우 -->
+            <div v-if="info.mine" style="text-align:center;">
+              <el-button @click="updateDeal" type="primary" style="width:95px;" icon="el-icon-edit">수정</el-button>
+              <el-button @click="deleteDeal" type="danger" style="width:95px;" icon="el-icon-delete">삭제</el-button>
+              <br>
+            </div>
+            <!-- 내가 작성한 거래가 아닌 경우 -->
+            <div v-else style="text-align:center">
+              <el-button v-if="info.like" @click="deletelikeDeal" type="danger" style="width: 200px" icon="el-icon-message-solid">찜 취소 {{ info.wishCount }}</el-button>
+              <el-button v-else @click="likeDeal" type="danger" style="width: 200px;" icon="el-icon-bell">찜 {{ info.wishCount }}</el-button>
+              <br>
+            </div>
           </div>
         </div>
         <div style="text-align:center">
@@ -71,9 +77,12 @@ export default {
       productId:'',
       imageUrl: '',
       seller: '',
-      user: false,
+      registTime: '',
+      wishCount: 0,
+      mine: false,
       like: false,
       isSold: false,
+      isLogin: false
     })
 
     onBeforeMount (() => {
@@ -95,23 +104,31 @@ export default {
             info.productId = res.data.productId
             info.imageUrl = res.data.imageUrl
             info.isSold = res.data.isSold
+            info.registTime = res.data.registTime
+
             // 본인 등록 거래인 경우 수정, 삭제 버튼
             store.dispatch('root/requestUserInfo')
             .then(res=>{
+              info.isLogin = true
               if (info.seller == res.data.userId) {
-                console.log("본인 등록")
-                info.user = true
+                info.mine = true
+                store.dispatch('root/requestWishCount', state.productId)
+                  .then(res=>{
+                    info.wishCount = res.data.wishCount
+                  })
               } else {
-                console.log("본인 거래 아님")
-                //! 이미 찜을 한 경우와 그렇지 않은 경우 보이는 버튼 다르게
-                store.dispatch('root/requestWishList')
+                // 이미 찜을 한 경우와 그렇지 않은 경우
+                store.dispatch('root/requestCheckWish', state.productId)
                 .then(res=>{
-                  console.log(res.data)
+                  if (res.statusCode == 200) {
+                    info.like = true
+                  }
+                store.dispatch('root/requestWishCount', state.productId)
+                .then(res=>{
+                  info.wishCount = res.data.wishCount
+                })
               })
             }
-          })
-          .catch(err=>{
-            console.log(err)
           })
           }
         })
@@ -123,15 +140,13 @@ export default {
     })
 
     const backHome = function () {
-      router.push({name: 'home'})
-      store.commit('root/setMenuActiveMenuName', 'home')
+      router.go(-1)
     }
 
     const deleteDeal = function () {
-      if (info.user) {
-        store.dispatch('root/requestDeleteDeal', {productId: state.productId})
+      if (info.mine) {
+        store.dispatch('root/requestDeleteDeal', state.productId)
           .then(res=>{
-            console.log("거래 삭제")
             alert("거래가 삭제되었습니다")
             router.push({name: 'home'})
             store.commit('root/setMenuActiveMenuName', 'home')
@@ -148,9 +163,10 @@ export default {
       store.dispatch('root/requestLikeDeal', state.productId)
       .then(res=>{
         info.like = true
-      })
-      .catch(err=>{
-        console.log(err)
+        store.dispatch('root/requestWishCount', state.productId)
+          .then(res=>{
+            info.wishCount = res.data.wishCount
+          })
       })
     }
 
@@ -158,6 +174,10 @@ export default {
       store.dispatch('root/requestDeleteLikeDeal', state.productId)
       .then(res=>{
         info.like = false
+        store.dispatch('root/requestWishCount', state.productId)
+          .then(res=>{
+            info.wishCount = res.data.wishCount
+          })
       })
     }
 
