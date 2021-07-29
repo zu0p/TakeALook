@@ -33,6 +33,13 @@ public class ProductServiceImpl implements ProductService{
         List<ProductListGetRes> productList = productRepositorySupport.findAllProduct();
         return productList;
     }
+
+    @Override
+    public List<ProductListGetRes> getAllProductByUserId(String userId){
+        List<ProductListGetRes> productList = productRepositorySupport.findByUserId(userId);
+        return productList;
+    }
+
     @Override
     public Product createProduct(String sellerId, ProductRegisterPostReq productRegisterPostReq) {
         Product product = new Product();
