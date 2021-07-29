@@ -5,11 +5,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -24,9 +24,12 @@ public class Product extends BaseEntity {
     String imageUrl;
     Boolean isSold;
 
-    LocalDateTime registTime; //상품 등록 시간
-    LocalDateTime reserveTime; // 거래 방 예약 시간
-    LocalDateTime restrictTime; // 거래 방 제한 시간
+    @Temporal(TemporalType.TIMESTAMP)
+    Date registTime; //상품 등록 시간
+    @Temporal(TemporalType.TIMESTAMP)
+    Date reserveTime; // 거래 방 예약 시간
+    @Temporal(TemporalType.TIMESTAMP)
+    Date restrictTime; // 거래 방 제한 시간
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)

@@ -5,8 +5,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -31,15 +33,15 @@ public class ProductListGetRes {
     @ApiModelProperty(name="판매 여부")
     Boolean isSold;
     @ApiModelProperty(name="상품 등록 시간")
-    LocalDateTime registTime;
+    Date registTime;
     @ApiModelProperty(name="거래 방 예약 시간")
-    LocalDateTime reserveTime;
+    Date reserveTime;
     @ApiModelProperty(name="거래 방 제한 시간")
-    LocalDateTime restrictTime;
+    Date restrictTime;
 
     public ProductListGetRes(Long productId, String seller, String productName, Integer basePrice, String categories,
-                             String description, String state, String imageUrl, Boolean isSold, LocalDateTime registTime,
-                             LocalDateTime reserveTime, LocalDateTime restrictTime) {
+                             String description, String state, String imageUrl, Boolean isSold, Date registTime,
+                             Date reserveTime, Date restrictTime) {
         this.productId = productId;
         this.seller = seller;
         this.productName = productName;
