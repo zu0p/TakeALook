@@ -70,26 +70,16 @@ export default {
       state.count += 4
     }
 
-<<<<<<< HEAD
-    const clickProduct = function (id) {
-      router.push({
-        name: 'product-detail',
-=======
     const clickDeal = function (id) {
       router.push({
         name: 'deal-detail',
->>>>>>> ba2d0a5369f3c3daea3e4ec7daa90b32a3c1bacd
         params: {
           productId: id
         }
       })
     }
 
-<<<<<<< HEAD
-    return { state, load, clickProduct }
-=======
     return { state, load, clickDeal }
->>>>>>> ba2d0a5369f3c3daea3e4ec7daa90b32a3c1bacd
   }
 }
 </script>
