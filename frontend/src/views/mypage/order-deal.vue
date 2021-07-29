@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import Product from '@/views/home/components/product'
+import Conference from '@/views/home/components/conference'
 import { onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
@@ -30,7 +30,7 @@ export default {
   name: 'Order-deal',
 
   components: {
-    Product,
+    Conference,
   },
 
   data() {

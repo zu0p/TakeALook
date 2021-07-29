@@ -50,7 +50,7 @@ export default {
   name: 'Home',
 
   components: {
-    Product,
+    Conference,
   },
   data() {
     //! pagination 데이터 설정
@@ -123,6 +123,7 @@ export default {
           }
         })
     }
+
     return { info, state, clickDeal, priceHigh }
   }
 }
