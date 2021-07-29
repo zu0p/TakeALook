@@ -38,7 +38,7 @@
       <div class="image-wrapper">
         <el-skeleton style="width: 100%">
           <template #template>
-            <el-skeleton-item variant="image" style="width: 100%; height: 190px" />
+            <el-skeleton-item variant="image" style="width: 100%; height: 190px"/>
           </template>
         </el-skeleton>
         </div>
@@ -78,12 +78,8 @@
   <div v-else>
     <el-card :body-style="{ padding: '0px' }" shadow="hover">
       <div class="image-wrapper">
-        <el-skeleton style="width: 100%">
-          <template #template>
-            <el-skeleton-item variant="image" style="width: 100%; height: 190px" />
-          </template>
-        </el-skeleton>
-        </div>
+        <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
+      </div>
       <div style="text-align: center; padding: 14px;">
         <span class="title">{{ deal.productName }}</span>
         <div class="bottom">
