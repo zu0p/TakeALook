@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ApiModel
+@ApiModel("ProductDeleteResponse")
 public class ProductDeleteRes {
     @ApiModelProperty(name="상품 판매자")
     String userId;

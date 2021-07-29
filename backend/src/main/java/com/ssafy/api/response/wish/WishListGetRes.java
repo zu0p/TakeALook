@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@ApiModel("WishListGetRes")
+@ApiModel("WishListGetResponse")
 public class WishListGetRes {
     @ApiModelProperty(name="상품 id")
     Long productId;

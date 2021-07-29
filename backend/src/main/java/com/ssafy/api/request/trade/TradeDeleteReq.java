@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@ApiModel("BuyDeleteRequest")
+@ApiModel("TradeDeleteRequest")
 public class TradeDeleteReq {
     @ApiModelProperty(name="구매상품 ID", example="1")
     Long productId;

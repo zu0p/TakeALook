@@ -1,9 +1,8 @@
 package com.ssafy.db.repository.product;
 
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.api.response.trade.TradeListGetRes;
+import com.ssafy.api.response.product.ProductListGetRes;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.QProduct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +22,15 @@ public class ProductRepositorySupport {
                 .where(qProduct.id.eq(productId)).fetchOne();
         if (product == null) return Optional.empty();
         return Optional.ofNullable(product);
+    }
+
+    public List<ProductListGetRes> findAllProduct(){
+        List<ProductListGetRes> productList = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.registTime))
+                .from(qProduct)
+                .fetch();
+        return productList;
     }
 }

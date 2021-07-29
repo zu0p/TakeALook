@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-@ApiModel("BuyRegistPatchReq")
+@ApiModel("TradeRegistPatchRequest")
 public class TradeRegistPatchReq {
     @ApiModelProperty(name="구매자 ID", example="ssafy_web")
     String buyer;
