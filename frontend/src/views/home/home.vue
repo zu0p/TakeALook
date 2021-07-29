@@ -4,7 +4,7 @@
       <span>신상품순</span> | <span>높은 가격순</span> | <span>낮은 가격순</span> | <span>거래 시간순</span>
     </div>
     <div >
-    <el-select v-model="value" placeholder="카테고리" style="width:120px; margin-right:10px">
+    <el-select class="category" v-model="value" placeholder="카테고리" style="width:120px; margin-right:10px">
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -24,8 +24,6 @@
   </el-row>
 
   <ul class="infinite-list">
-    <!-- url 알게 되면 연결 callDeals -->
-    <!-- <li v-for="i in state.count" @click="clickConference(i)" class="infinite-list-item" :key="i" > -->
     <li v-for="i in state.count" @click="clickDeal(i)" class="infinite-list-item" :key="i" >
       <conference />
     </li>
@@ -94,19 +92,14 @@ export default {
 
     const clickDeal = function (id) {
       router.push({
-        name: 'conference-detail',
-        // name: 'deal-detail',
+        name: 'deal-detail',
         params: {
           productId: id
         }
       })
     }
 
-    const createDeal = function () {
-      router.push({ name: 'create-deal-form'})
-    }
-
-    return { state, load, clickDeal, createDeal }
+    return { state, load, clickDeal }
   }
 }
 </script>
@@ -139,6 +132,7 @@ export default {
 .create-deal {
   float: right;
 }
+
 .uppermenu span:hover{
   color: #ffd04b;
   pointer-events: stroke;

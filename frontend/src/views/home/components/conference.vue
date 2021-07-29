@@ -2,39 +2,39 @@
   <!-- 로그인한 경우 -->
   <div v-if="isLogin">
       <!-- 거래가 끝난 경우 -->
-      <!-- <el-card :body-style="{ padding: '0px' }">
+      <el-card :body-style="{ padding: '0px' }">
       <div class="image-wrapper enddeal">
         <el-skeleton style="width: 100%">
-          <template #template> -->
+          <template #template>
             <!-- 내 거래인 경우 -->
             <!-- <a class="custom-icon2" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a> -->
             <!-- 찜한 거래인 경우 -->
-            <!-- <a class="custom-icon2" style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a> -->
-            <!-- <el-skeleton-item variant="image" style="width: 100%; height: 190px" />
+            <a class="custom-icon2" style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
+            <el-skeleton-item variant="image" style="width: 100%; height: 190px" />
           </template>
         </el-skeleton>
         </div>
       <div style="text-align:left; padding: 14px;">
-        <span class="title enddeal">{{ title }}</span>
+        <span class="title enddeal">{{ deal.productName }}</span>
         <div class="loginbottom">
-          <p style="margin-bottom:0;" class="enddeal">{{ price }}⠀|⠀{{ time }}</p>
-          <div> -->
+          <p style="margin-bottom:0;" class="enddeal">{{ deal.basePrice }}⠀|⠀{{ deal.reserveTime }}</p>
+          <div>
             <!-- 내가 생성한 거래인 경우 -->
             <!-- <div style="text-align:center">
-              <el-button class="buyer" type="info" plain disabled style="margin-top:20px; text-align:center;" @click="deleteDeal">구매자: {{ buyer }}</el-button>
+              <el-button class="buyer" type="info" plain disabled style="margin-top:20px; text-align:center;" @click="deleteDeal">구매자: {{ deal.buyer }}</el-button>
             </div> -->
             <!-- 찜한 거래인 경우 -->
-            <!-- <div style="text-align:center">
+            <div style="text-align:center">
               <el-button class="buyer" type="info" plain disabled style="margin-top:20px; text-align:center;">거래가 완료된 상품입니다</el-button>
-            </div> -->
-          <!-- </div>
+            </div>
+          </div>
         </div>
       </div>
-    </el-card> -->
+    </el-card>
 
 
       <!-- 거래가 시작되지 않은 경우 -->
-    <el-card :body-style="{ padding: '0px' }" shadow="hover">
+    <!-- <el-card :body-style="{ padding: '0px' }" shadow="hover">
       <div class="image-wrapper">
         <el-skeleton style="width: 100%">
           <template #template>
@@ -43,10 +43,10 @@
         </el-skeleton>
         </div>
       <div style="text-align:left; padding: 14px;" @click="dealDetail">
-        <span class="title">{{ title }}</span>
+        <span class="title">{{ deal.title }}</span>
         <div class="loginbottom">
-          <p style="margin-bottom:0;">{{ price }}⠀|⠀{{ time }}</p>
-          <div>
+          <p style="margin-bottom:0;">{{ deal.price }}⠀|⠀{{ deal.time }}</p>
+          <div> -->
             <!-- 내가 생성한 거래인 경우 -->
               <!-- 거래 시작 가능한 방 -->
             <!-- <div style="text-align:right">
@@ -54,18 +54,18 @@
               <el-button type="primary" @click="startDeal" style="margin-top:30px" size="small">거래 시작</el-button>
             </div> -->
             <!-- 내가 생성한 거래가 아닌 경우 -->
-              <!-- 찜하지 않은 경우 -->
-            <div style="text-align:right">
-              <a class="custom-icon" @click="likeDeal" style="color:#ffd04b; margin-top:30px"><i class="el-icon-bell"></i></a>
-            </div>
               <!-- 찜한 경우 -->
             <!-- <div style="text-align:right">
-              <a class="custom-icon" @click="deleteDeal" style="color:#ffd04b; margin-top:30px"><i class="el-icon-message-solid"></i></a>
+              <a class="custom-icon" @click="deletelikeDeal" style="color:#ffd04b; margin-top:30px"><i class="el-icon-message-solid"></i></a>
             </div> -->
+              <!-- 찜하지 않은 경우 -->
+            <!-- <div style="text-align:right">
+              <a class="custom-icon" @click="likeDeal" style="color:#ffd04b; margin-top:30px"><i class="el-icon-bell"></i></a>
+            </div>
           </div>
         </div>
       </div>
-    </el-card>
+    </el-card> -->
   </div>
 
 
@@ -90,48 +90,25 @@
 </template>
 
 <script>
-// import { useStore } from 'vuex'
+import { reactive } from '@vue/reactivity'
+import { useRouter, useRoute } from 'vue-router'
+import { onMounted } from '@vue/runtime-core'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Home',
 
-  data: function() {
-    return {
-      isLogin: false
-    }
-  },
-
-  mounted: function () {
-    if (localStorage.accessToken) {
-      this.isLogin = true
-    }
-  },
-
-  props: {
-    title: {
-      type: String,
-      default: '맥북2016-15인치'
-    },
-    //! 가격
-    price: {
-      type: String,
-      default: "100000 원"
-    },
-    //! 시간
-    time: {
-      type: String,
-      default: "10시 30분"
-    },
-    buyer: {
-      type: String,
-      default: "거래가 성사되지 않았습니다"
-    }
-  },
+  props: ["deal"],
 
   setup () {
-    // const store = useStore()
+    const store = useStore()
+    const router = useRouter()
+    const route = useRoute()
+    const state = reactive({
+      productId: ''
+    })
 
-    const updateDeal = function (e) {
+    const updateDeal = function () {
       e.stopPropagation()
       console.log("거래 수정")
     }
@@ -141,27 +118,40 @@ export default {
       console.log("거래 시작")
     }
 
+    const deletelikeDeal = function (e) {
+      e.stopPropagation()
+      store.dispatch('root/requestDeleteLikeDeal', {productId: info.productId, userId: info.userId})
+      // .then(res=>{
+      //   info.like = false
+      // })
+    }
+
     const likeDeal = function (e) {
       e.stopPropagation()
-      // store.dispatch('root/requestUserInfo')
-      //   .then(res=>{
-      //     const userId = res.data.userId
-      //     console.log(userId)
-      //   })
-      console.log("찜하기")
+      store.dispatch('root/requestLikeDeal', {productId: info.productId, userId: info.userId})
+      // .then(res=>{
+      //   info.like = true
+      // })
     }
 
-    const deleteDeal = function (e) {
-      e.stopPropagation()
-      console.log("거래 삭제")
-    }
+    // const deleteDeal = function (e) {
+        e.stopPropagation()
+    //   if (info.user) {
+    //     store.dispatch('root/requestDeleteDeal', state.productId)
+    //       .then(res=>{
+    //         console.log("거래 삭제")
+    //         alert("거래가 삭제되었습니다")
+    //         router.push({name: 'home'})
+    //       })
+    //       .catch(err=>{
+    //         console.log(err)
+    //       })
+    //   } else {
+    //     alert("자신의 거래만 삭제할 수 있습니다")
+    //   }
+    // }
 
-    const deleteLike = function (e) {
-      e.stopPropagation()
-      console.log("찜 목록에서 삭제")
-    }
-
-  return { updateDeal, startDeal, deleteDeal, likeDeal, deleteLike }
+  return { state, updateDeal, startDeal, deletelikeDeal, likeDeal }
   }
 }
 </script>

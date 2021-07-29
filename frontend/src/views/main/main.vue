@@ -29,7 +29,6 @@
   @import '../../common/css/common.css';
   @import '../../common/css/element-plus.css';
 
-
 </style>
 <script>
 import LoginDialog from './components/login-dialog'

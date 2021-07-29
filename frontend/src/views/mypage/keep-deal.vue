@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 관심 목록</h1>
+  <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 관심 목록</h1>
+  <div v-if="info.wishList">
     <ul class="infinite-list">
-    <!-- url 알게 되면 연결 callDeals -->
-      <!-- <li v-for="i in state.count" @click="clickConference(i)" class="infinite-list-item" :key="i" > -->
-      <li v-for="i in state.count" class="infinite-list-item" :key="i" >
-        <conference/>
+      <li v-for="wish in info.wishList" @click="clickDeal(wish.productId)" class="infinite-list-item" :key="wish.productId" >
+        <conference :deal="wish"/>
       </li>
       <el-pagination
         background
@@ -16,6 +14,9 @@
       </el-pagination>
     </ul>
   </div>
+  <div v-else>
+    <b>찜한 거래가 없습니다</b>
+  </div>>
 </template>
 
 <script>
@@ -45,17 +46,19 @@ export default {
 
   setup () {
     const store = useStore()
+    const info = reactive({
+      wishList:'',
+    })
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'keep-deal')
-      const dealList = function () {
-        store.dispatch('root/requestDeals')
-        .then (res => {
-          console.log(res)
-          // !넘어오는 데이터 확인해서 저장
-          // this.deals = res.data
-        })
+      if (store.dispatch('root/requestWishList')){
+        store.dispatch('root/requestWishList')
+          .then (res => {
+            info.wishList = res.data
+            console.log(info.wishList)
+          })
       }
     })
 
@@ -69,21 +72,17 @@ export default {
       state.count += 4
     }
 
-    // const clickConference = function (id) {
-    //   router.push({
-    //     name: 'conference-detail',
-    //     params: {
-    //       conferenceId: id
-    //     }
-    //   })
-    // }
-
-    const clickDeal = function (res) {
-      console.log(res)
+    const clickDeal = function (id) {
+      router.push({
+        name: 'deal-detail',
+        params: {
+          productId: id
+        }
+      })
     }
 
     // return { state, load, clickConference }
-    return { state, load, clickDeal }
+    return { info, state, load, clickDeal }
   }
 }
 </script>
