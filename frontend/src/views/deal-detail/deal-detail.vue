@@ -120,7 +120,8 @@ export default {
                 // 이미 찜을 한 경우와 그렇지 않은 경우
                 store.dispatch('root/requestCheckWish', state.productId)
                 .then(res=>{
-                  if (res.statusCode == 200) {
+                  console.log(res)
+                  if (res.data.statusCode == 200) {
                     info.like = true
                   }
                 store.dispatch('root/requestWishCount', state.productId)

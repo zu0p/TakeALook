@@ -10,17 +10,6 @@
             <a class="custom-icon2" v-else style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
             <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
         </div>
-
-        <!-- <el-skeleton style="width: 100%">
-          <template #template> -->
-            <!-- 내 거래인 경우 -->
-            <!-- <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a> -->
-            <!-- 찜한 거래인 경우 -->
-            <!-- <a class="custom-icon2" v-else style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
-            <el-skeleton-item variant="image" style="width: 100%; height: 190px"/>
-          </template>
-        </el-skeleton> -->
-
       <div style="text-align:left; padding: 14px;">
         <span class="title enddeal">{{ deal.productName }}</span>
         <div class="loginbottom">
