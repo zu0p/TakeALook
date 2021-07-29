@@ -3,13 +3,13 @@
     <div  class="user-info">
       <el-form class="user-info-form" :model="info.form" :rules="info.rules" ref="userInfoForm" label-width="100px" label-position="left">
         <h1 class="form-title">회원 정보 수정</h1>
-        <el-form-item label="name">
+        <el-form-item prop="name" label="name">
             <el-input v-model="info.form.name" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="id">
+        <el-form-item prop="id" label="id">
           <el-input disabled v-model="info.form.id" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="e-mail">
+        <el-form-item prop="email" label="e-mail">
           <el-input v-model="info.form.email" style="width:45%" autocomplete="off"></el-input>
           <span style="margin:0 5px 0 5px" >@</span>
           <el-select v-model="info.form.emailUrl.fix">
@@ -21,10 +21,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="address">
+        <el-form-item prop="address" label="address">
           <el-input v-model="info.form.address" autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="password">
+        <el-form-item prop="password"  label="password">
           <el-input v-model="info.form.password" autocomplete="off" show-password></el-input>
         </el-form-item>
 

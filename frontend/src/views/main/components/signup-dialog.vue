@@ -78,6 +78,7 @@ export default {
           {max: 30, message: '최대 30자까지 입력 가능합니다.'}
         ],
         email:[
+          {pattern: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/, message: '이메일 형식을 맞춰주세요.'},
           {max: 30, message: '최대 30자까지 입력 가능합니다.'}
         ],
         name:[
