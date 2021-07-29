@@ -4,12 +4,6 @@
     <img v-if="state.loading" src="https://i.imgur.com/JfPpwOA.gif">
 
     <el-form v-if="!state.loading" :model="state.form" :rules="state.rules" ref="signupForm" :label-position="state.form.align">
-      <el-form-item prop="department" label="소속" :label-width="state.formLabelWidth" >
-        <el-input v-model="state.form.department" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item prop="position" label="직책" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.position" autocomplete="off"></el-input>
-      </el-form-item>
       <el-form-item prop="name" label="이름" :label-width="state.formLabelWidth">
         <el-input v-model="state.form.name" autocomplete="off"></el-input>
       </el-form-item>
@@ -22,6 +16,12 @@
       </el-form-item>
       <el-form-item prop="chk_password" label="비밀번호 확인" :label-width="state.formLabelWidth">
         <el-input v-model="state.form.chk_password" autocomplete="off" show-password></el-input>
+      </el-form-item>
+      <el-form-item prop="address" label="주소" :label-width="state.formLabelWidth" >
+        <el-input v-model="state.form.address" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item prop="email" label="이메일" :label-width="state.formLabelWidth">
+        <el-input v-model="state.form.email" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
 
@@ -65,8 +65,8 @@ export default {
     */
     const state = reactive({
       form: {
-        department:'',
-        position:'',
+        address:'',
+        email:'',
         name:'',
         id: '',
         password: '',
@@ -74,10 +74,10 @@ export default {
         align: 'left',
       },
       rules: {
-        department:[
+        address:[
           {max: 30, message: '최대 30자까지 입력 가능합니다.'}
         ],
-        position:[
+        email:[
           {max: 30, message: '최대 30자까지 입력 가능합니다.'}
         ],
         name:[
@@ -141,15 +141,9 @@ export default {
       loading: false
     })
 
-    watch(()=>{
-      // console.log(state.form.id)
-      // console.log(signupForm.value)
-      console.log(state.disableButton+" // "+state.idValicate)
-    })
-
-    onMounted(() => {
-      // console.log(signupForm.value)
-    })
+    // watch(()=>{
+    //   console.log(state.disableButton+" // "+state.idValicate)
+    // })
 
     const changeId = function() {
       state.idValicate = false
@@ -170,7 +164,8 @@ export default {
         .then(res=>{
           //console.log(res)
           if(res.data.statusCode == 409){
-            alert(res.data.message)
+            //alert(res.data.message)
+            alert("이미 존재하는 아이디 입니다.")
             state.form.id = ''
           }
           else{
@@ -193,8 +188,8 @@ export default {
             userId:state.form.id,
             password:state.form.password,
             name:state.form.name,
-            department:state.form.department,
-            position:state.form.position
+            address:state.form.address,
+            email:state.form.email
           }
           store.dispatch('root/requestSignup', body)
             .then(res=>{
@@ -225,8 +220,8 @@ export default {
     }
 
     const handleClose = function () {
-      state.form.department = ''
-      state.form.position = ''
+      state.form.address = ''
+      state.form.email = ''
       state.form.name =''
       state.form.id = ''
       state.form.password = ''
