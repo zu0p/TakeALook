@@ -1,10 +1,9 @@
 <template>
-  <div>
-    <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 판매 목록</h1>
+  <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 판매 목록</h1>
+  <div v-if="info.sellList">
     <ul class="infinite-list">
-    <!-- url 알게 되면 연결 callDeals -->
-      <li v-for="i in state.count" @click="clickConference(i)" class="infinite-list-item" :key="i" >
-        <conference />
+      <li v-for="sell in info.sellList" @click="clickDeal(sell.productId)" class="infinite-list-item" :key="sell.productId" >
+        <conference :deal="sell"/>
       </li>
       <el-pagination
         background
@@ -14,6 +13,9 @@
         :total="total">
       </el-pagination>
     </ul>
+  </div>
+  <div v-else>
+    <b>내가 등록한 거래가 없습니다</b>
   </div>
 </template>
 
@@ -43,10 +45,22 @@ export default {
 
   setup () {
     const store = useStore()
+    const info = reactive({
+      sellList:''
+    })
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'my-deal')
+      store.dispatch('root/requestSellList')
+        .then (res => {
+          if (res.data.statusCode != 404) {
+            info.sellList = res.data
+          } else {
+            console.log(res)
+            console.log(5412)
+          }
+        })
     })
 
     const router = useRouter()
@@ -59,16 +73,16 @@ export default {
       state.count += 4
     }
 
-    const clickConference = function (id) {
+    const clickDeal = function (id) {
       router.push({
-        name: 'conference-detail',
+        name: 'deal-detail',
         params: {
-          conferenceId: id
+          productId: id
         }
       })
     }
 
-    return { state, load, clickConference }
+    return { info, state, load, clickDeal }
   }
 }
 </script>

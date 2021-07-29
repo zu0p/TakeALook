@@ -103,7 +103,7 @@ __외부 템플릿 또는 에셋__ (이미지 또는 링크 첨부)
   - __사용 기능__ : 디자인 전반 적용
 - [Vue Black Dashboard Pro](https://www.creative-tim.com/product/vue-black-dashboard-pro?affiliate_id=116187) (유료)
   - __사용 기능__ : 캘린더 컴포넌트 사용
-<br>
+  <br>
 
 __자체 제작 산출물__ (필요시 이미지 또는 설명 첨부)
 - LOGO

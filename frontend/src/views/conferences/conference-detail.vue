@@ -1,5 +1,5 @@
 <template>
-  {{ $route.params.conferenceId + '번 방 상세 보기 페이지' }}
+  {{ $route.params.productId + '번 방 상세 보기 페이지' }}
 </template>
 <style>
 </style>
@@ -15,18 +15,18 @@ export default {
     const route = useRoute()
     const store = useStore()
     const state = reactive({
-      conferenceId: ''
+      productId: ''
     })
 
     // 페이지 진입시 불리는 훅
     onMounted(() => {
-      state.conferenceId = route.params.conferenceId
+      state.productId = route.params.productId
       store.commit('root/setMenuActiveMenuName', 'home')
     })
 
     // 페이지 이탈시 불리는 훅
     onUnmounted(() => {
-      state.conferenceId = ''
+      state.productId = ''
     })
 
     return { state }
