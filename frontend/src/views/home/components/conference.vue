@@ -3,17 +3,24 @@
   <div v-if="info.isLogin">
       <!-- 거래가 끝난 경우 -->
       <el-card :body-style="{ padding: '0px' }" v-if="info.isSold">
-      <div class="image-wrapper enddeal">
-        <el-skeleton style="width: 100%">
-          <template #template>
+        <div class="image-wrapper enddeal">
             <!-- 내 거래인 경우 -->
             <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a>
             <!-- 찜한 거래인 경우 -->
             <a class="custom-icon2" v-else style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
+            <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
+        </div>
+
+        <!-- <el-skeleton style="width: 100%">
+          <template #template> -->
+            <!-- 내 거래인 경우 -->
+            <!-- <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a> -->
+            <!-- 찜한 거래인 경우 -->
+            <!-- <a class="custom-icon2" v-else style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
             <el-skeleton-item variant="image" style="width: 100%; height: 190px"/>
           </template>
-        </el-skeleton>
-        </div>
+        </el-skeleton> -->
+
       <div style="text-align:left; padding: 14px;">
         <span class="title enddeal">{{ deal.productName }}</span>
         <div class="loginbottom">
@@ -36,12 +43,8 @@
       <!-- 거래가 시작되지 않은 경우 -->
     <el-card :body-style="{ padding: '0px' }" shadow="hover" v-else>
       <div class="image-wrapper">
-        <el-skeleton style="width: 100%">
-          <template #template>
-            <el-skeleton-item variant="image" style="width: 100%; height: 190px"/>
-          </template>
-        </el-skeleton>
-        </div>
+        <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
+      </div>
       <div style="text-align:left; padding: 14px;" @click="dealDetail">
         <span class="title">{{ deal.productName }}</span>
         <div class="loginbottom">
@@ -80,9 +83,9 @@
       <div class="image-wrapper">
         <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
       </div>
-      <div style="text-align: center; padding: 14px;">
+      <div style="text-align: left; padding: 14px;">
         <span class="title">{{ deal.productName }}</span>
-        <div class="bottom">
+        <div class="bottom" style="margin-top:10px;">
           <span>{{ deal.basePrice }}⠀|⠀{{ deal.reserveTime }}</span>
         </div>
       </div>
@@ -213,7 +216,7 @@ export default {
 .custom-icon2 {
   font-size: 30px;
   position: absolute;
-  margin-left:115px;
+  margin-left:65%;
   margin-top:15px;
 }
 
