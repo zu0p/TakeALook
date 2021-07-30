@@ -52,7 +52,7 @@
   <!-- 작성, 취소버튼 -->
   <hr>
   <el-form-item>
-    <el-button type="primary" @click="clickUpdate">작성</el-button>
+    <el-button type="primary" @click="clickUpdate">수정</el-button>
     <el-button type="danger" @click="clickCancel">취소</el-button>
   </el-form-item>
 </template>
