@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/home/home'
 // import ConferencesDetail from '@/views/conferences/conference-detail'
 import CreateDealform from '@/views/create-deal-form/create-deal-form'
+import UpdateDealForm from '@/views/products/update-deal-form'
 import MyDeal from '@/views/mypage/my-deal'
 import KeepDeal from '@/views/mypage/keep-deal'
 import OrderDeal from '@/views/mypage/order-deal'
@@ -40,6 +41,13 @@ function makeRoutesFromMenu () {
     path: '/products/:productId',
     name: 'deal-detail',
     component: DealDetail,
+  })
+
+  routes.push({
+    path:'/product/update-deal-form/:productId',
+    name: 'update-deal-form',
+    component: UpdateDealForm,
+    props: true,
   })
 
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(게시글 상세보기))

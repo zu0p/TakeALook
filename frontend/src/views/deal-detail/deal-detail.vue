@@ -1,7 +1,7 @@
 <template>
   <div style="margin-left: 50px; margin-right: 50px;">
     <el-container>
-      <img :src="info.imageUrl" alt="">
+      <img :src="info.imageUrl" alt="" style="max-width:50%;">
       <el-form ref="form" label-width="120px" style="text-align:left; margin-left:100px;" label-position="left">
         <h1 style="font-size:28px; margin-bottom:5px;">상품 이름</h1>
         <div style="text-align:right;" v-if="info.mine">
@@ -182,7 +182,13 @@ export default {
       })
     }
 
-    return { info, backHome, deleteDeal, likeDeal, deletelikeDeal }
+    const updateDeal = function(){
+      router.push({
+        name: 'update-deal-form',
+        props: state.productId
+      })
+    }
+    return { info, backHome, deleteDeal, likeDeal, deletelikeDeal, updateDeal }
   }
 }
 </script>

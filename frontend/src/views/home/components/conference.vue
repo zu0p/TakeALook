@@ -106,6 +106,14 @@ export default {
       wish: false
     })
 
+    let reserveTime = ''
+    reserveTime = props.deal.reserveTime.replace('T',' ')
+    reserveTime = reserveTime.replace('-','/')
+    //2~15
+    reserveTime = reserveTime.substring(2, 16)
+    props.deal.reserveTime = reserveTime
+    console.log(reserveTime)
+
     onBeforeMount(()=> {
       if(localStorage.accessToken){
         store.dispatch('root/requestUserInfo')
@@ -125,13 +133,18 @@ export default {
                 }
               })
           })
-
       }
     })
 
     const updateDeal = function (e) {
       e.stopPropagation()
       console.log("거래 수정")
+      router.push({
+        name: 'update-deal-form',
+        params: {
+          productId: props.deal.productId,
+        }
+      })
     }
 
     const startDeal = function (e) {
