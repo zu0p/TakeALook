@@ -1,5 +1,7 @@
 
+// 서버 실행 시
 const fs = require('fs');
+
 // Vue3 관련 설정 파일
 module.exports = {
   devServer: {
@@ -18,12 +20,10 @@ module.exports = {
 
     // 서버 실행시
     https: true,
-    https: {
-      key: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/privkey.pem'),
-      cert: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/cert.pem'),
-      ca: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/chain.pem'),
-    },
-    host: '0.0.0.0',
+    key: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/cert.pem'),
+    ca: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/chain.pem'),
+    host: 'i5d101.p.ssafy.io',
     port: 8083,
     open: true,
     proxy: {
