@@ -132,6 +132,12 @@ export default {
     const updateDeal = function (e) {
       e.stopPropagation()
       console.log("거래 수정")
+      router.push({
+        name: 'update-deal-form',
+        params: {
+          productId: props.deal.productId,
+        }
+      })
     }
 
     const startDeal = function (e) {

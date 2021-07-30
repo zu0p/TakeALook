@@ -54,9 +54,25 @@ export function requestModifyUserInfo({state}, payload){
 }
 
 // 게시글 작성 요청 보내기
-export function createPost(postData) {
-  // const url = BASE_URL+`/create-deal-form/${userId}/${articleId}`
-  return posts.post('/', postData)
+export function createPost({commit}, postData) {
+  const url = BASE_URL+'/product'
+  console.log(url)
+  let body = postData
+  // const url = BASE_URL+`/create-deal-form/${userId}/${}`
+  return instanceWithAuth.post(url, body)
+}
+
+export function updatePost({commit}, payload){
+  const url = BASE_URL+`/product/${payload.productId}`
+  const body = {
+    imageUrl: payload.imageUrl,
+    productName: payload.productName,
+    categories: payload.categories,
+    basePrice: payload.basePrice,
+    reserveTime: payload.reserveTime,
+    description: payload.description,
+  }
+  return instanceWithAuth.patch(url, body)
 }
 // 게시글 삭제 요청 보내기
 export function deletePost(postId) {
