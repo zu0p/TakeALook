@@ -20,11 +20,9 @@ module.exports = {
 
     // 서버 실행시
     https: true,
-    https: {
-      key: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/privkey.pem'),
-      cert: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/cert.pem'),
-      ca: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/chain.pem'),
-    },
+    key: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/cert.pem'),
+    ca: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/chain.pem'),
     port: 8083,
     open: true,
     proxy: {
