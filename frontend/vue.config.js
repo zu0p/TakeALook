@@ -27,7 +27,7 @@ module.exports = {
     open: true,
     proxy: {
       '/api/v1': {
-        target: 'http://i5d101.p.ssafy.io:8080/',
+        target: 'https://i5d101.p.ssafy.io:8080/',
       }
     },
     historyApiFallback: true,
