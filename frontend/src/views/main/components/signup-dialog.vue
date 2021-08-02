@@ -186,7 +186,7 @@ export default {
         if (valid && state.idValicate) {
           //console.log('submit')
           const body={
-            userId:state.form.id,
+            user_id:state.form.id,
             password:state.form.password,
             name:state.form.name,
             address:state.form.address,
