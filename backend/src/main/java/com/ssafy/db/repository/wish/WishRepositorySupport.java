@@ -23,7 +23,8 @@ public class WishRepositorySupport {
     public List<WishListGetRes> findByUserId (String userId) {
         List<WishListGetRes> wlist = jpaQueryFactory
                 .select(Projections.constructor(WishListGetRes.class,qProduct.id, qProduct.user.userId,
-                        qProduct.productName,qProduct.basePrice, qProduct.categories, qProduct.imageUrl, qProduct.isSold))
+                        qProduct.productName,qProduct.basePrice, qProduct.categories, qProduct.imageUrl, qProduct.isSold,
+                        qProduct.reserveTime))
                 .from(qWishProduct)
                 .join(qProduct)
                 .on(qWishProduct.productId.eq(qProduct.id))
