@@ -8,6 +8,7 @@ import KeepDeal from '@/views/mypage/keep-deal'
 import OrderDeal from '@/views/mypage/order-deal'
 import UserInfo from '@/views/userInfo/userInfo'
 import WebRTC from '@/views/webRTC/webRTC'
+import MeetingDetail from '@/views/webRTC/meetingRoom'
 import DealDetail from '@/views/deal-detail/deal-detail'
 
 const fullMenu = require('@/views/main/menu.json')
@@ -50,6 +51,11 @@ function makeRoutesFromMenu () {
     props: true,
   })
 
+  routes.push({
+    path: '/meeting/:meetingId/:userId',
+    name: 'meeting-detail',
+    component: MeetingDetail
+  })
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(게시글 상세보기))
   return routes
 }
