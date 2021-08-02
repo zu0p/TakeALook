@@ -8,6 +8,7 @@ export function getMenus (state) {
 }
 // Active된 메뉴 인덱스 가져오기
 export function getActiveMenuIndex (state) {
+  console.log(state)
 	const keys = Object.keys(state.menus)
 	return keys.findIndex(item => item === state.activeMenu)
 }
