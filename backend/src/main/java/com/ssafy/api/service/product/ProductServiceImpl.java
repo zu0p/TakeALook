@@ -56,7 +56,7 @@ public class ProductServiceImpl implements ProductService{
         product.setRegistTime(productRegisterPostReq.getRegistTime());
         product.setReserveTime(productRegisterPostReq.getReserveTime());
         //시간 제한 추가 필요
-        product.setRestrictTime(productRegisterPostReq.getReserveTime());
+        product.setRestrictTime(productRegisterPostReq.getRestrictTime());
         return productRepository.save(product);
     }
 
@@ -92,7 +92,7 @@ public class ProductServiceImpl implements ProductService{
         product.setImageUrl(productUpdatePatchReq.getImageUrl());
         product.setRegistTime(productUpdatePatchReq.getRegistTime());
         product.setReserveTime(productUpdatePatchReq.getReserveTime());
-        product.setRestrictTime(productUpdatePatchReq.getReserveTime());
+        product.setRestrictTime(productUpdatePatchReq.getRestrictTime());
         return productRepository.save(product);
     }
 

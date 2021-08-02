@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -27,8 +28,10 @@ public class WishListGetRes {
     String imageUrl;
     @ApiModelProperty(name="상품 판매 여부")
     Boolean isSold;
+    @ApiModelProperty(name="거래 방 예약 시간")
+    Date reserveTime;
 
-    public WishListGetRes(Long productId, String seller, String productName, Integer basePrice, String categories, String imageUrl, Boolean isSold) {
+    public WishListGetRes(Long productId, String seller, String productName, Integer basePrice, String categories, String imageUrl, Boolean isSold, Date reserveTime) {
         this.productId = productId;
         this.seller = seller;
         this.productName = productName;
@@ -36,5 +39,6 @@ public class WishListGetRes {
         this.categories = categories;
         this.imageUrl = imageUrl;
         this.isSold = isSold;
+        this.reserveTime=reserveTime;
     }
 }
