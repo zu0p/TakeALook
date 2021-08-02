@@ -63,6 +63,10 @@ export default function Participant(name) {
 		return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length != 0);
 	}
 
+  function isOpen(ws){
+    return ws.readyState === ws.OPEN
+  }
+
 	this.offerToReceiveVideo = function(error, offerSdp, wp){
 		if (error) return console.error ("sdp offer error")
 		console.log('Invoking SDP offer callback function');
@@ -96,7 +100,7 @@ export default function Participant(name) {
   this.sendMessage = function(message) {
     var jsonMessage = JSON.stringify(message);
     console.log('Sending message: ' + jsonMessage);
-
+      if(isOpen(ws)) return
       ws.send(jsonMessage);
       if (typeof callback !== 'undefined') {
         callback();
