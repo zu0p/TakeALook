@@ -3,7 +3,7 @@
     class="main-footer"
     :gutter="10">
     <div class="contents">
-      Copyright © SAMSUNG All Rights Reserved.
+      Copyright © zu0p | nahyeon | masterLee | jihyun | junsung
     </div>
   </el-row>
 </template>
