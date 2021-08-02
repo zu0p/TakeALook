@@ -17,6 +17,7 @@ export default function Participant(name) {
 	var span = document.createElement('span');
 	var video = document.createElement('video');
 	var rtcPeer;
+  const ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
 
 	container.appendChild(video);
 	container.appendChild(span);
@@ -29,6 +30,14 @@ export default function Participant(name) {
 	video.autoplay = true;
 	video.controls = false;
 
+  this.sendMessage = function(message) {
+    var jsonMessage = JSON.stringify(message)
+    console.log('Sending message: ' + jsonMessage)
+    ws.send(jsonMessage)
+    if (typeof callback !== 'undefined') {
+      callback();
+    }
+  }
 
 	this.getElement = function() {
 		return container;
@@ -62,7 +71,7 @@ export default function Participant(name) {
 				sender : name,
 				sdpOffer : offerSdp
 			};
-		sendMessage(msg);
+		this.sendMessage(msg);
 	}
 
 
@@ -74,7 +83,7 @@ export default function Participant(name) {
 		    candidate: candidate,
 		    name: name
 		  };
-		  sendMessage(message);
+		  this.sendMessage(message);
 	}
 
 	Object.defineProperty(this, 'rtcPeer', { writable: true});

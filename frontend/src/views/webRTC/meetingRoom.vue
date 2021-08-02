@@ -185,7 +185,7 @@ export default {
               waitForConnection(callback, interval);
           }, interval);
       }
-  }
+    }
 
     return {state, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
   }
