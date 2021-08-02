@@ -18,7 +18,6 @@ export default function Participant(name) {
 	var video = document.createElement('video');
 	var rtcPeer;
   const ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
-
 	container.appendChild(video);
 	container.appendChild(span);
 	container.onclick = switchContainerClass;
@@ -92,5 +91,29 @@ export default function Participant(name) {
 		console.log('Disposing participant ' + this.name);
 		this.rtcPeer.dispose();
 		container.parentNode.removeChild(container);
-	};
+  };
+
+  this.sendMessage = function(message) {
+    var jsonMessage = JSON.stringify(message);
+    console.log('Sending message: ' + jsonMessage);
+
+      ws.send(jsonMessage);
+      if (typeof callback !== 'undefined') {
+        callback();
+      }
+  }
+
+  this.waitForConnection = function (callback, interval) {
+    if (ws.readyState === 1) {
+      callback();
+    } else {
+      var that = this;
+      // optional: implement backoff for interval here
+      setTimeout(function () {
+        console.log("websocket connecting...");
+        this.waitForConnection(callback, interval);
+      }, interval);
+    }
+  }
+
 }
