@@ -89,7 +89,7 @@ export default function Participant(name) {
 		  this.sendMessage(message);
 	}
 
-	Object.defineProperty(this, 'rtcPeer', { writable: true});
+	Object.defineProperty(this, this.rtcPeer, { writable: true});
 
 	this.dispose = function() {
 		console.log('Disposing participant ' + this.name);

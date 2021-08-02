@@ -73,6 +73,7 @@ export default {
     })
 
     const onNewParticipant = function(request){
+      console.log("누가 들어옴!!")
       receiveVideo(request.name)
     }
 
