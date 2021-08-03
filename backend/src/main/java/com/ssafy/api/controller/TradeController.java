@@ -36,7 +36,6 @@ public class TradeController {
     @GetMapping("/buy")
     @ApiOperation(value = "구매 상품 목록 조회", notes = "로그인한 회원의 구매 내역을 반환한다.")
     public ResponseEntity<?> getBuyList(@ApiIgnore Authentication authentication) {
-
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String authId = userDetails.getUsername();
         if(!userService.getUserExistMessage(authId))
@@ -50,7 +49,6 @@ public class TradeController {
     @GetMapping("/sell")
     @ApiOperation(value = "판매 상품 목록 조회", notes = "로그인한 회원의 판매 내역을 반환한다.")
     public ResponseEntity<?> getSellerList(@ApiIgnore Authentication authentication) {
-
         SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
         String authId = userDetails.getUsername();
         if(!userService.getUserExistMessage(authId))
@@ -65,7 +63,6 @@ public class TradeController {
     @PostMapping()
     @ApiOperation(value = "거래 목록 등록", notes = "상품 거래를 등록한다.")
     public ResponseEntity<?> registBuyProduct(@RequestBody @ApiParam(value="거래 상품 정보", required = true) TradeRegistPatchReq tradeRegistInfo) {
-
         if(!productService.checkProductAuth(tradeRegistInfo.getSeller(),tradeRegistInfo.getProductId()))
             return ResponseEntity.status(200).body(BaseResponseBody.of(401,"Fail"));
 
@@ -79,7 +76,6 @@ public class TradeController {
     @DeleteMapping("/{productId}")
     @ApiOperation(value = "거래 목록 삭제", notes = "거래 목록을 삭제한다.")
     public ResponseEntity<?> deleteBuyProduct(@PathVariable Long productId) {
-
         if(!tradeService.checkTradeHistory(productId))
             return ResponseEntity.status(200).body(BaseResponseBody.of(404,"Not found"));
 
