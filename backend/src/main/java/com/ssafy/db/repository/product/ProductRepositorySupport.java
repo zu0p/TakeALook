@@ -1,11 +1,15 @@
 package com.ssafy.db.repository.product;
 
+import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.response.product.ProductListGetRes;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.QProduct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,13 +38,55 @@ public class ProductRepositorySupport {
          return (productList);
     }
 
-    public List<ProductListGetRes> findAllProduct(){
-        List<ProductListGetRes> productList = jpaQueryFactory
+    public Page<ProductListGetRes> findAllList(Pageable pageable){
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
                 .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
                         qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
-                .fetch();
-        return productList;
+                .orderBy(qProduct.registTime.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
+
+    public Page<ProductListGetRes> findAllReserveTime(Pageable pageable){
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                .from(qProduct)
+                .orderBy(qProduct.reserveTime.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
+
+    public Page<ProductListGetRes> findAllHighPrice(Pageable pageable){
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                .from(qProduct)
+                .orderBy(qProduct.basePrice.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
+
+    public Page<ProductListGetRes> findAllLowPrice(Pageable pageable){
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                .from(qProduct)
+                .orderBy(qProduct.basePrice.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
     }
 }

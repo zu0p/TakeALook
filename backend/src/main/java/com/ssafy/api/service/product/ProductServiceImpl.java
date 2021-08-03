@@ -1,21 +1,25 @@
 package com.ssafy.api.service.product;
 
+import com.ssafy.api.request.paging.PageReq;
 import com.ssafy.api.request.product.ProductRegisterPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;
 import com.ssafy.api.response.product.ProductListGetRes;
+import com.ssafy.api.service.trade.TradeService;
 import com.ssafy.api.service.user.UserService;
+import com.ssafy.api.service.wish.WishService;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.user.UserRepository;
-import com.ssafy.db.repository.user.UserRepositorySupport;
 import com.ssafy.db.repository.product.ProductRepository;
 import com.ssafy.db.repository.product.ProductRepositorySupport;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.ssafy.db.repository.wish.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service("productService")
 public class ProductServiceImpl implements ProductService{
@@ -27,10 +31,39 @@ public class ProductServiceImpl implements ProductService{
     ProductRepositorySupport productRepositorySupport;
     @Autowired
     UserService userService;
+    @Autowired
+    WishService wishService;
+    @Autowired
+    WishRepository wishRepository;
+    @Autowired
+    TradeService tradeService;
+
 
     @Override
-    public List<ProductListGetRes> getAllProduct(){
-        List<ProductListGetRes> productList = productRepositorySupport.findAllProduct();
+    public Page<ProductListGetRes> getList(PageReq pageReq){
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<ProductListGetRes> productList = productRepositorySupport.findAllList(pageable);
+        return productList;
+    }
+
+    @Override
+    public Page<ProductListGetRes> getListByReserveTime(PageReq pageReq){
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<ProductListGetRes> productList = productRepositorySupport.findAllReserveTime(pageable);
+        return productList;
+    }
+
+    @Override
+    public Page<ProductListGetRes> getListByHighPrice(PageReq pageReq){
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<ProductListGetRes> productList = productRepositorySupport.findAllHighPrice(pageable);
+        return productList;
+    }
+
+    @Override
+    public Page<ProductListGetRes> getListByLowPrice(PageReq pageReq){
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<ProductListGetRes> productList = productRepositorySupport.findAllLowPrice(pageable);
         return productList;
     }
 
@@ -103,8 +136,12 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void deleteProduct(Long productIndexId) {
-        Product product = productRepositorySupport.findByProductId(productIndexId).get();
+    @Transactional
+    public void deleteProduct(Long productId) {
+        if(wishService.countWishProductByProductId(productId)>0) wishRepository.deleteAllByProductId(productId);
+        //if(tradeService.checkTradeHistory(productId))tradeService.deleteTradeInfo(productId);
+
+        Product product = productRepositorySupport.findByProductId(productId).get();
         productRepository.delete(product);
     }
 
