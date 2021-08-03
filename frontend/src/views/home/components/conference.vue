@@ -1,6 +1,6 @@
 <template>
   <!-- 로그인한 경우 -->
-  <div v-if="info.isLogin">
+  <div v-if="info.isLogin" style="text-align:center">
       <!-- 거래가 끝난 경우 -->
       <el-card :body-style="{ padding: '0px' }" v-if="info.isSold">
         <div class="image-wrapper enddeal">
@@ -35,7 +35,7 @@
         <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
       </div>
       <div style="text-align:left; padding: 14px;" @click="dealDetail">
-        <span class="title">{{ deal.productName }}</span>
+        <span class="title">{{ deal.productName }} <span style="color:lightgray; font-size:11px;">{{deal.categories}}</span></span>
         <div class="loginbottom">
           <p style="margin-bottom:0;">{{ deal.basePrice }}⠀|⠀{{ deal.reserveTime }}</p>
             <!-- 내가 생성한 거래인 경우 -->
@@ -50,14 +50,14 @@
             <!-- 내가 생성한 거래가 아닌 경우 -->
           <div v-else>
               <!-- 찜한 경우 -->
-            <div style="text-align:right" v-if="info.wish">
+            <div style="text-align:right; margin-top:30px" v-if="info.wish">
               <span style="color:#ffd04b; margin-right:10px;">{{ info.wishCount }}</span>
-              <a class="custom-icon" @click="deletelikeDeal" style="color:#ffd04b; margin-top:30px"><i class="el-icon-message-solid"></i></a>
+              <a class="custom-icon" @click="deletelikeDeal" style="color:#ffd04b;"><i class="el-icon-message-solid"></i></a>
             </div>
               <!-- 찜하지 않은 경우 -->
-            <div style="text-align:right" v-else>
+            <div style="text-align:right; margin-top:30px" v-else>
               <span style="color:#ffd04b; margin-right:10px;">{{ info.wishCount }}</span>
-              <a class="custom-icon" @click="likeDeal" style="color:#ffd04b; margin-top:30px"><i class="el-icon-bell"></i></a>
+              <a class="custom-icon" @click="likeDeal" style="color:#ffd04b;"><i class="el-icon-bell"></i></a>
             </div>
           </div>
         </div>
@@ -106,13 +106,13 @@ export default {
       wish: false
     })
 
-    let reserveTime = ''
-    reserveTime = props.deal.reserveTime.replace('T',' ')
-    reserveTime = reserveTime.replace('-','/')
-    //2~15
-    reserveTime = reserveTime.substring(2, 16)
-    props.deal.reserveTime = reserveTime
-    console.log(reserveTime)
+    // let reserveTime = ''
+    // reserveTime = props.deal.reserveTime.replace('T',' ')
+    // reserveTime = reserveTime.replace('-','/')
+    // //2~15
+    // reserveTime = reserveTime.substring(2, 16)
+    // props.deal.reserveTime = reserveTime
+    // console.log(reserveTime)
 
     onBeforeMount(()=> {
       if(localStorage.accessToken){
@@ -160,6 +160,7 @@ export default {
         store.dispatch('root/requestWishCount', props.deal.productId)
           .then(res=>{
             info.wishCount = res.data.wishCount
+            router.go()
           })
       })
     }

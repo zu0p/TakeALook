@@ -4,7 +4,7 @@
       <span>신상품순</span> | <span @click="priceHigh">높은 가격순</span> | <span>낮은 가격순</span> | <span>거래 시간순</span>
     </div>
     <div >
-    <el-select class="category" v-model="value" placeholder="카테고리" style="width:120px; margin-right:10px">
+    <el-select class="category" v-model="info.value" placeholder="카테고리" style="width:140px; margin-right:10px;">
       <el-option
         v-for="item in options"
         :key="item.value"
@@ -15,11 +15,11 @@
     <el-input
       placeholder="검색할 내용을 입력하세요"
       prefix-icon="el-icon-search"
-      v-model="state.searchValue"
+      v-model="info.search"
       @keyup.enter="searchDeal"
       style="width:300px;">
     </el-input>
-    <el-button type="info" style="margin-left:10px" @click="searchDeal">검색</el-button>
+    <el-button type="info" style="margin-left:10px" @click="searchDeal" v-model="info.search">검색</el-button>
     </div>
   </el-row>
 
@@ -27,6 +27,7 @@
     <li v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId" >
       <conference :deal="deal"/>
     </li>
+    <h2 v-if="!info.searchResult" style="margin-top:200px; margin-bottom:200px; text-align:center;">검색어에 해당하는 거래가 존재하지 않습니다</h2>
     <div style="text-align: end">
       <el-button type="info" style="margin-right:100px" @click="createDeal">거래 생성</el-button>
     </div>
@@ -35,9 +36,12 @@
       layout="prev, pager, next"
       @current-change="handleCurrentChange"
       :page-size="pageSize"
-      :total="total">
+      :total="total"
+      v-if="info.searchResult"
+      style=" text-align:center;">
     </el-pagination>
   </ul>
+
 </template>
 
 <script>
@@ -56,27 +60,30 @@ export default {
     //! pagination 데이터 설정
     return {
       options: [{
-        value: 'Option1',
-        label: 'Option1'
+        value: '',
+        label: '전체'
+      },{
+        value: '디지털/가전',
+        label: '디지털/가전'
       }, {
-        value: 'Option2',
-        label: 'Option2'
+        value: '가구/인테리어',
+        label: '가구/인테리어'
       }, {
-        value: 'Option3',
-        label: 'Option3'
+        value: '여성패션/잡화',
+        label: '여성패션/잡화'
       }, {
-        value: 'Option4',
-        label: 'Option4'
+        value: '남성패션/잡화',
+        label: '남성패션/잡화'
       }, {
-        value: 'Option5',
-        label: 'Option5'
+        value: '뷰티/미용',
+        label: '뷰티/미용'
+      }, {
+        value: '미술품',
+        label: '미술품'
       }],
-      value: '',
-      filtered: [],
-      search: '',
-      page: 3,
-      pageSize: 4,
-      total: 20,
+      page: 9,
+      pageSize: 8,
+      total: 15,
     }
   },
 
@@ -84,12 +91,11 @@ export default {
     const router = useRouter()
     const store = useStore()
 
-    const state = reactive({
-      count: 10
-    })
-
     const info = reactive({
       dealList: '',
+      search: '',
+      value: '',
+      searchResult: true
     })
 
     onMounted (() => {
@@ -111,20 +117,30 @@ export default {
       })
     }
 
-    const priceHigh = function () {
+    const searchDeal = function () {
       store.dispatch('root/requestDealList')
         .then (res => {
           if (res.data.statusCode != 404) {
-            // ! 가격 순으로 정렬
-            info.dealList = res.data
-            for (var deal of info.dealList) {
-              console.log(deal)
+            info.dealList = []
+            for(var deal in res.data) {
+              if (res.data[deal].productName.includes(info.search)) {
+                if (info.value) {
+                  if (info.value === res.data[deal].categories) {
+                    info.dealList.push(res.data[deal])
+                  }
+                } else {
+                  info.dealList.push(res.data[deal])
+                }
+              }
+            }
+            if (!info.dealList.length) {
+              info.searchResult = false
             }
           }
         })
     }
 
-    return { info, state, clickDeal, priceHigh }
+    return { info, clickDeal, searchDeal }
   }
 }
 </script>
@@ -145,6 +161,12 @@ export default {
   .infinite-list {
     min-width: 1021px;
   }
+}
+
+.infinite-list {
+  text-align: left;
+  margin-left: 4%;
+  margin-right: auto;
 }
 
 .infinite-list .infinite-list-item {

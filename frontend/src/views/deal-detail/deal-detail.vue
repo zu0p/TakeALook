@@ -1,8 +1,8 @@
 <template>
   <div style="margin-left: 50px; margin-right: 50px;">
     <el-container>
-      <img :src="info.imageUrl" alt="" style="max-width:50%;">
-      <el-form ref="form" label-width="120px" style="text-align:left; margin-left:100px;" label-position="left">
+      <img :src="info.imageUrl" alt="" style="max-width:50%; margin-left:5%;">
+      <el-form ref="form" label-width="120px" style="text-align:left; margin-left:10%;" label-position="left">
         <h1 style="font-size:28px; margin-bottom:5px;">상품 이름</h1>
         <div style="text-align:right;" v-if="info.mine">
           <i class="el-icon-message-solid" style="color:#ffd04b; margin-right:10px;"></i>
@@ -78,6 +78,7 @@ export default {
       imageUrl: '',
       seller: '',
       registTime: '',
+      recommend: '',
       wishCount: 0,
       mine: false,
       like: false,
@@ -91,7 +92,6 @@ export default {
         .then(res=>{
           if(res.data.statusCode == 404){
             alert("존재하지 않는 거래입니다")
-            // !이전 페이지 이동
             router.push({name: 'home'})
             store.commit('root/setMenuActiveMenuName', 'home')
           } else{
@@ -124,6 +124,7 @@ export default {
                   if (res.data.statusCode == 200) {
                     info.like = true
                   }
+                // 찜 수 확인
                 store.dispatch('root/requestWishCount', state.productId)
                 .then(res=>{
                   info.wishCount = res.data.wishCount

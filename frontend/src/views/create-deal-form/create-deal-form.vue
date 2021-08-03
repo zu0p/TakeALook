@@ -1,14 +1,15 @@
 <template>
   <!-- 사진 업로드 -->
   <el-container class="create-deal-form">
-    <el-upload
-      class="avatar-uploader"
-      :show-file-list="false"
-      :on-success="handleAvatarSuccess"
-      :before-upload="beforeAvatarUpload">
-      <img v-if="state.src.imageUrl" :src="state.src.imageUrl" class="avatar">
-      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
+    <!-- 이미지 -->
+    <form method="post" enctype="multipart/form-data">
+      <div class="button">
+          <label for="chooseFile">
+              👉 CLICK HERE! 👈
+          </label>
+      </div>
+      <input type="file" id="chooseFile" name="chooseFile" accept="image/*" :onchange="loadFile">
+    </form>
 
     <!-- 거래 작성 폼 -->
     <el-form v-if="!state.loading" v-model="state.form" ref="createDealForm" :label-position="state.form.align">
@@ -62,6 +63,7 @@ import { onMounted, ref, reactive, } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
+
 export default {
   name: 'CreateDealForm',
 
@@ -95,6 +97,31 @@ export default {
       // mutations의 setMenuActiveMenuName을 호출하고 setMenuActiveMenuName의 create-deal-form 인자를 받아온다.
       store.commit('root/setMenuActiveMenuName', 'create-deal-form')
     })
+
+    // 이미지 파일 처리
+    // const loadFile = function (res) {
+    //   const imgUrl = URL.createObjectURL(res.path[0].files[0])
+    //   state.src.imageUrl = imgUrl
+    // }
+    const loadFile = function (e) {
+      console.log(e.target.files[0])
+      let img = e.target.files[0]
+      let fd = new FormData()
+      fd.append('image', img)
+      console.log(fd)
+
+    }
+
+    const showImage = function () {
+      //이미지는 화면에 나타나고
+      newImage.style.visibility = "visible";
+
+      //이미지 업로드 버튼은 숨겨진다
+      document.getElementById('image-upload').style.visibility = 'hidden';
+
+      document.getElementById('fileName').textContent = null;     //기존 파일 이름 지우기
+    }
+
     // reserveTime1 의 타입은 String이다.
     const dateTimeToString = function () {
       // 단어별로 구분
@@ -175,25 +202,10 @@ export default {
       window.location='/'
     }
 
-    return { createDealForm, state, clickCreate, clickCancel, }
+    return { createDealForm, state, clickCreate, clickCancel, loadFile, showImage }
   },
   // imageUrl, el-date-picker 관련 method
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('Avatar picture must be JPG format!');
-      }
-      if (!isLt2M) {
-        this.$message.error('사진 크기는 2MB를 초과할 수 없습니다!');
-      }
-      return isJPG && isLt2M;
-    },
     disabledDate(time) {
       return time && time.valueOf() < Date.now();
       // return time.getTime() < Date.now() - 8.64e7
@@ -206,30 +218,18 @@ export default {
   .create-deal-form {
     /* justify-content: center; */
   }
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
+  /* label 스타일 조정 */
+  .button {
+    display: flex;
+    justify-content: center;
+  }
+  label {
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
+    font-size: 1em;
   }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 40px;
-    color: #8c939d;
-    width: 300px;
-    height: 300px;
-    line-height: 50%;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
-  .el-picker-panel__footer .el-button--text.el-picker-panel__link-btn {
-    display: none;
+
+  /* 못생긴 기존 input 숨기기 */
+  #chooseFile {
+    visibility: hidden;
   }
 </style>
