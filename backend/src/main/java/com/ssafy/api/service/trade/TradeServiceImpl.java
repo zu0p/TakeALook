@@ -11,6 +11,7 @@ import com.ssafy.db.entity.Product;
 import com.ssafy.db.repository.trade.TradeRepository;
 import com.ssafy.db.repository.trade.TradeRepositorySupport;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service("buyService")
