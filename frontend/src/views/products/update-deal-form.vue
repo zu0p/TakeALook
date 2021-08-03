@@ -7,7 +7,7 @@
       :show-file-list="false"
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <img v-if="state.src.imageUrl" :src="state.src.imageUrl" class="avatar">
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
 
@@ -52,7 +52,7 @@
   <!-- 작성, 취소버튼 -->
   <hr>
   <el-form-item>
-    <el-button type="primary" @click="clickUpdate">작성</el-button>
+    <el-button type="primary" @click="clickUpdate">수정</el-button>
     <el-button type="danger" @click="clickCancel">취소</el-button>
   </el-form-item>
 </template>
@@ -124,15 +124,15 @@ export default {
     })
 
     const clickUpdate = function () {
-      console.log('게시글 작성 함수 실행')
-      console.log(state.form.categories)
-      console.log(state.form.reserveTime)
+      // console.log(state.form.categories)
+      // console.log(state.form.reserveTime)
       state.loading = true
       // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
-      updateDealForm.value.validate((valid) => {
-        if (valid) {
+      // updateDealForm.value.validate((valid) => {
+      //   if (valid) {
           console.log('submit')
           store.dispatch('root/updatePost', {
+            productId: props.productId,
             imageUrl: state.src.imageUrl,
             productName: state.form.productName,
             categories: state.form.categories,
@@ -142,7 +142,7 @@ export default {
            })
             .then(res=>{
               //console.log(res.data)
-              window.location='/'
+              router.push({name:'home'})
             }).then(()=>{
               state.loading = false
             })
@@ -151,11 +151,11 @@ export default {
               console.log(err)
               alert("양식이 올바르지 않습니다!")
             })
-        } else {
-          state.loading = false
-          alert('Validate error!')
-        }
-      });
+      //   } else {
+      //     state.loading = false
+      //     alert('Validate error!')
+      //   }
+      // });
     }
 
     const clickCancel = function () {

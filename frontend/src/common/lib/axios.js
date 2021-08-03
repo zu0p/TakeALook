@@ -3,7 +3,8 @@ import VueAxios from 'vue-axios'
 import axios from 'axios'
 // import config from '../config'
 
-const BASE_URL = '/api/v1'
+const BASE_URL = 'http://i5d101.p.ssafy.io:8080/api/v1'
+// const BASE_URL = 'http://localhost:8080/api/v1'
 const DEFAULT_ACCEPT_TYPE = 'application/json'
 
 axios.defaults.baseURL = BASE_URL

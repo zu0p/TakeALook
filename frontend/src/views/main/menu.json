@@ -8,7 +8,7 @@
   },
   "create-deal-form" : {
     "name" : "거래 생성",
-    "hidden" : false,
+    "hidden" : true,
     "path" : "/create-deal-form",
     "icon" : "el-icon-edit",
     "children" : [],
@@ -37,14 +37,14 @@
   },
   "user-info":{
     "name": "회원 정보 수정",
-    "hidden": false,
+    "hidden": true,
     "path": "/userInfo",
     "icon": "el-icon-user",
     "children": []
   },
   "webRTC":{
     "name": "webRTC test",
-    "hidden": false,
+    "hidden": true,
     "path": "/webRTC",
     "icon": "el-icon-user",
     "children": []

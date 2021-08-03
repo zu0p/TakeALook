@@ -28,7 +28,7 @@ public class ProductRepositorySupport {
         List<ProductListGetRes> productList = jpaQueryFactory
                 .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
                 qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
-                qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.registTime))
+                qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
                 .where(qProduct.user.userId.eq(userId)).fetch();
          return (productList);
@@ -38,7 +38,7 @@ public class ProductRepositorySupport {
         List<ProductListGetRes> productList = jpaQueryFactory
                 .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
                         qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
-                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.registTime))
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
                 .fetch();
         return productList;

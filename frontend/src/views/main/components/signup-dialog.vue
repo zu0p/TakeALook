@@ -194,20 +194,13 @@ export default {
           }
           store.dispatch('root/requestSignup', body)
             .then(res=>{
-
-              //console.log(res)
-              //console.log(res.data)
-              if(res.data.statusCode==200){
-                alert('회원 가입이 완료되었습니다.')
-                //emit('closeSignupDialog')
-                window.location='/'
-              }
-
               // if(res.data.statusCode==200){
               //   alert('회원 가입이 완료되었습니다.')
               //   //emit('closeSignupDialog')
               //   window.location="/"
               // }
+              alert('회원 가입이 완료되었습니다.')
+              window.location='/'
             })
             .then(()=>{
               state.loading = false
@@ -275,3 +268,4 @@ export default {
   width: 120px;
 }
 </style>
+
