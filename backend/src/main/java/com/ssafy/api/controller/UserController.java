@@ -36,14 +36,13 @@ public class UserController {
 	@ApiOperation(value = "회원 가입", notes = "아이디와 패스워드를 통해 회원가입 한다.")
 	public ResponseEntity<?> registerUser(
 			@RequestBody @ApiParam(value="회원가입 정보", required = true) UserRegisterPostReq registerInfo) {
-
 		User user = userService.createUser(registerInfo);
 		return ResponseEntity.status(200).body(UserRegistPostRes.of(user));
 	}
+
 	@GetMapping("/me")
 	@ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
 		public ResponseEntity<?> getUserInfo(@ApiIgnore Authentication authentication) {
-
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		if(!userService.getUserExistMessage(userDetails.getUsername()))
 			return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
@@ -55,7 +54,6 @@ public class UserController {
 	@GetMapping("/{userId}")
 	@ApiOperation(value = "회원 존재 유무 조회", notes = "이미 존재하는 회원인지 확인한다.")
 	public ResponseEntity<? extends BaseResponseBody> getUserExistMessage(@PathVariable String userId) {
-
 		if(userService.getUserExistMessage(userId))
 			return ResponseEntity.status(200).body(BaseResponseBody.of(409, "Exist"));
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "None"));
@@ -64,7 +62,6 @@ public class UserController {
 	@PatchMapping()
 	@ApiOperation(value = "회원 정보 수정", notes = "회원 정보를 수정한다.")
 	public ResponseEntity<?> updateUserInfo(@ApiIgnore Authentication authentication, @RequestBody @ApiParam(value="회원 정보 수정", required = true) UserUpdatePatchReq userUpdatePatchReq) {
-
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		if(!userService.checkAuthByUserId(userUpdatePatchReq.getUserId(),userDetails.getUsername()))
 			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "Fail"));
@@ -77,7 +74,6 @@ public class UserController {
 	@DeleteMapping()
 	@ApiOperation(value = "회원 정보 삭제", notes = "회원 정보를 삭제한다.")
 	public ResponseEntity<?> deleteUserInfo(@ApiIgnore Authentication authentication) {
-
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
 		String authId = userDetails.getUsername();
 		if (!userService.getUserExistMessage(authId))
