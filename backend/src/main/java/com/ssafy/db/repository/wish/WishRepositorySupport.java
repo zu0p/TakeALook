@@ -8,7 +8,9 @@ import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.QProduct;
 import com.ssafy.db.entity.QWishProduct;
 import com.ssafy.db.entity.WishProduct;
+import org.kurento.client.internal.server.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,10 +22,10 @@ public class WishRepositorySupport {
     QWishProduct qWishProduct = QWishProduct.wishProduct;
     QProduct qProduct = QProduct.product;
 
-    public List<WishListGetRes> findByUserId (String userId) {
+    public List<WishListGetRes> findByUserId(String userId) {
         List<WishListGetRes> wlist = jpaQueryFactory
-                .select(Projections.constructor(WishListGetRes.class,qProduct.id, qProduct.user.userId,
-                        qProduct.productName,qProduct.basePrice, qProduct.categories, qProduct.imageUrl, qProduct.isSold,
+                .select(Projections.constructor(WishListGetRes.class, qProduct.id, qProduct.user.userId,
+                        qProduct.productName, qProduct.basePrice, qProduct.categories, qProduct.imageUrl, qProduct.isSold,
                         qProduct.reserveTime))
                 .from(qWishProduct)
                 .join(qProduct)
