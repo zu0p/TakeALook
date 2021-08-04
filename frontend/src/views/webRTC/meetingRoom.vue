@@ -1,11 +1,18 @@
 <template>
-
   <div id="room">
-				<h2 id="room-header"></h2>
-				<div id="participants"></div>
-				<!-- <input type="button" id="button-leave" @click="leaveRoom"
-					value="Leave room"> -->
-        <el-button @click="leaveRoom" >Leave Room</el-button>
+    <h2 id="room-header"></h2>
+
+    <div id="participants">
+    <el-row :gutter="40">
+      <el-col id="seller" :span="16"></el-col>
+      <el-col id="chat" :span="8"><div class="grid-content bg-blue"></div></el-col>
+    </el-row>
+    <el-row id="buyer" :gutter="20">
+    </el-row>
+    </div>
+    <!-- <input type="button" id="button-leave" @click="leaveRoom"
+      value="Leave room"> -->
+    <el-button @click="leaveRoom" >Leave Room</el-button>
 	</div>
 </template>
 
@@ -205,5 +212,17 @@ export default {
 </script>
 
 <style>
-
+.bg-blue {
+  background: #F0F8FF;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 500px;
+}
+.participant video {
+  border-radius: 4px;
+}
+#seller.participant video{
+  height: 500px;
+}
 </style>

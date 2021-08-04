@@ -1,6 +1,5 @@
 const PARTICIPANT_MAIN_CLASS = 'participant main';
 const PARTICIPANT_CLASS = 'participant';
-//let ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
 import ws from './webSocket.js'
 /**
  * Creates a video element for a new participant
@@ -20,19 +19,19 @@ export default function Participant(name) {
 	var rtcPeer;
 
 	Object.defineProperty(this, 'rtcPeer', { writable: true});
-  // let ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
 
-  // ws.onclose = function(){
-  //   console.log("web socket closed!!")
-  //   setTimeout(function () {
-  //     // web socket re-connect
-  //     ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
-  //   }, 100)
-  // }
 	container.appendChild(video);
 	container.appendChild(span);
 	container.onclick = switchContainerClass;
-	document.getElementById('participants').appendChild(container);
+  if(this.name=='seller'){
+    document.getElementById('seller').appendChild(container);
+  }
+  else{
+    var col = document.createElement('el-col')
+    col.appendChild(container)
+    document.getElementById('buyer').appendChild(col);
+    // document.getElementById('participants').appendChild(container);
+  }
 
 	span.appendChild(document.createTextNode(name));
 
@@ -92,45 +91,13 @@ export default function Participant(name) {
 		container.parentNode.removeChild(container);
   };
 
-  function isOpen(ws){
-    return ws.readyState === ws.OPEN
-  }
-
   this.sendMessage = function(message) {
     var jsonMessage = JSON.stringify(message);
     console.log('Sending message: ' + jsonMessage);
-      //if(isOpen(ws)) return
-
-      // if(ws.readyState != 1){
-      //   ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
-      // }
-      // waitForConnection(function(){
-      //   // console.log(socket)
-      //   console.log("socket state: "+ws.readyState)
-      //   ws.send(jsonMessage)
-      //   //console.log("send!")
-      //   if (typeof callback !== 'undefined') {
-      //     callback();
-      //   }
-      // }, 2000)
       console.log("ws: "+ws.readyState)
       ws.send(jsonMessage);
       if (typeof callback !== 'undefined') {
         callback();
       }
   }
-
-  // function waitForConnection(callback, interval) {
-  //   if (ws.readyState === 1) {
-  //     callback();
-  //   } else {
-  //     var that = this;
-  //     // optional: implement backoff for interval here
-  //     setTimeout(function () {
-  //       console.log("websocket connecting...");
-  //       waitForConnection(callback, interval);
-  //     }, interval);
-  //   }
-  // }
-
 }
