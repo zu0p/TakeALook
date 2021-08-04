@@ -33,6 +33,14 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
+    @PostMapping("/all")
+    @ApiOperation(value = "전체 판매 상품 목록", notes = "전체 상품을 조회한다")
+    public ResponseEntity<?> getAllProduct() {
+        List<ProductListGetRes> productList = productService.getAllProduct();
+        if(productList.isEmpty()) return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
+        return ResponseEntity.status(200).body(productList);
+    }
+
     @PostMapping("/list")
     @ApiOperation(value = "판매 상품 목록 (신상품순)", notes = "전체 상품을 등록일 순서로 조회한다")
     public ResponseEntity<?> getProductList(@RequestBody PageReq pageReq) {
