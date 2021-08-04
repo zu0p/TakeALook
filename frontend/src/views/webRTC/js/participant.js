@@ -1,6 +1,5 @@
 const PARTICIPANT_MAIN_CLASS = 'participant main';
 const PARTICIPANT_CLASS = 'participant';
-
 /**
  * Creates a video element for a new participant
  *
@@ -17,7 +16,16 @@ export default function Participant(name) {
 	var span = document.createElement('span');
 	var video = document.createElement('video');
 	var rtcPeer;
-  const ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
+  // let ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
+
+  	let ws = sessionStorage.getItem('ws')
+  // ws.onclose = function(){
+  //   console.log("web socket closed!!")
+  //   setTimeout(function () {
+  //     // web socket re-connect
+  //     ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
+  //   }, 100)
+  // }
 	container.appendChild(video);
 	container.appendChild(span);
 	container.onclick = switchContainerClass;
@@ -63,10 +71,6 @@ export default function Participant(name) {
 		return ((document.getElementsByClassName(PARTICIPANT_MAIN_CLASS)).length != 0);
 	}
 
-  function isOpen(ws){
-    return ws.readyState === ws.OPEN
-  }
-
 	this.offerToReceiveVideo = function(error, offerSdp, wp){
 		if (error) return console.error ("sdp offer error")
 		console.log('Invoking SDP offer callback function');
@@ -76,7 +80,6 @@ export default function Participant(name) {
 			};
 		this.sendMessage(msg);
 	}
-
 
 	this.onIceCandidate = function (candidate, wp) {
 		  console.log("Local candidate" + JSON.stringify(candidate));
@@ -89,7 +92,7 @@ export default function Participant(name) {
 		  this.sendMessage(message);
 	}
 
-	Object.defineProperty(this, this.rtcPeer, { writable: true});
+	Object.defineProperty(this, 'rtcPeer', { writable: true});
 
 	this.dispose = function() {
 		console.log('Disposing participant ' + this.name);
@@ -97,17 +100,33 @@ export default function Participant(name) {
 		container.parentNode.removeChild(container);
   };
 
+  function isOpen(ws){
+    return ws.readyState === ws.OPEN
+  }
+
   this.sendMessage = function(message) {
     var jsonMessage = JSON.stringify(message);
     console.log('Sending message: ' + jsonMessage);
-      if(isOpen(ws)) return
-      ws.send(jsonMessage);
-      if (typeof callback !== 'undefined') {
-        callback();
+      //if(isOpen(ws)) return
+      if(ws.readyState != 1){
+        ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
       }
+      waitForConnection(function(){
+        // console.log(socket)
+        console.log("socket state: "+ws.readyState)
+        ws.send(jsonMessage)
+        //console.log("send!")
+        if (typeof callback !== 'undefined') {
+          callback();
+        }
+      }, 2000)
+      // ws.send(jsonMessage);
+      // if (typeof callback !== 'undefined') {
+      //   callback();
+      // }
   }
 
-  this.waitForConnection = function (callback, interval) {
+  function waitForConnection(callback, interval) {
     if (ws.readyState === 1) {
       callback();
     } else {
@@ -115,7 +134,7 @@ export default function Participant(name) {
       // optional: implement backoff for interval here
       setTimeout(function () {
         console.log("websocket connecting...");
-        this.waitForConnection(callback, interval);
+        waitForConnection(callback, interval);
       }, interval);
     }
   }

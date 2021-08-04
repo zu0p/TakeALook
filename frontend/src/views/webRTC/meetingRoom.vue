@@ -55,6 +55,7 @@ export default {
         console.error('Unrecognized message', parsedMessage)
       }
     }
+    sessionStorage.setItem('ws', ws)
 
     onBeforeMount(()=> {
       let curUrl = document.location.href.split('/').reverse()
@@ -124,7 +125,7 @@ export default {
           }
         }
       }
-      console.log(state.name + " registered in room " + room)
+      console.log(state.name + " registered in room " + state.room)
       var participant = new Participant(state.name)
       participants[state.name] = participant
       var video = participant.getVideoElement()
@@ -172,7 +173,7 @@ export default {
         if (typeof callback !== 'undefined') {
           callback();
         }
-      }, 1000)
+      }, 2000)
     }
 
     const waitForConnection = function (callback, interval) {
@@ -188,7 +189,7 @@ export default {
       }
     }
 
-    return {state, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
+    return {ws, state, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
   }
 
 }
