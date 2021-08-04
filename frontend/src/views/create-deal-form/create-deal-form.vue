@@ -144,7 +144,7 @@ export default {
           if(i<10)
             res+=`0${i}-`
           else
-            res += `i-`
+            res += `${i}-`
           break;
         }
       }
@@ -154,7 +154,7 @@ export default {
           if(i<10)
             res1+=`0${i}-`
           else
-            res1 += `i-`
+            res1 += `${i}-`
           break;
         }
       }
@@ -165,7 +165,9 @@ export default {
     }
 
     const clickCreate = function () {
+      console.log('가격 및 시간 확인')
       console.log(state.form.basePrice)
+      console.log(state.date)
       console.log(state.date1)
       // backend에서 원하는 형식으로 주기 위해 현재시간과 예약시간의 형태를 변경하는 함수
       dateTimeToString()
@@ -179,8 +181,8 @@ export default {
           description: state.form.description,
           imageUrl: state.src.imageUrl,
           productName: state.form.productName,
-          registTime: state.date1,
           reserveTime: state.date,
+          registTime: state.date1,
           // restrictTime: state.form.restrictTime,
           // state: state.form.state,
       }

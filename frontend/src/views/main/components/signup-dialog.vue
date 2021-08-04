@@ -137,23 +137,23 @@ export default {
       },
       dialogVisible: computed(() => props.open),
       formLabelWidth: '120px',
-      idValicate: false,
+      idValidate: false,
       disableButton: true,
       loading: false
     })
 
     // watch(()=>{
-    //   console.log(state.disableButton+" // "+state.idValicate)
+    //   console.log(state.disableButton+" // "+state.idValidate)
     // })
 
     const changeId = function() {
-      state.idValicate = false
+      state.idValidate = false
     }
 
     const changeForm = function(){
       signupForm.value.validate(v=>{
       console.log(v)
-        if(v && state.idValicate){
+        if(v && state.idValidate){
           state.disableButton = false
           console.log(state.disableButton)
         }
@@ -171,7 +171,7 @@ export default {
           }
           else{
             alert("사용 가능한 아이디 입니다.")
-            state.idValicate = true
+            state.idValidate = true
           }
         })
         .catch(err=>{
@@ -183,7 +183,7 @@ export default {
       state.loading = true
       // 가입하기 클릭 시 validate 체크 후 그 결과 값에 따라, 회원가입 API 호출 또는 경고창 표시
       signupForm.value.validate((valid) => {
-        if (valid && state.idValicate) {
+        if (valid && state.idValidate) {
           //console.log('submit')
           const body={
             userId:state.form.id,
@@ -213,7 +213,7 @@ export default {
         } else if(!valid){
           state.loading = false
           alert('필수 항목을 입력하세요.')
-        } else if(!state.idValicate){
+        } else if(!state.idValidate){
           state.loading = false
           alert('아이디 중복확인이 필요합니다.')
         }
