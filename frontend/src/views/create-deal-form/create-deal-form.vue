@@ -105,10 +105,11 @@ export default {
     // }
     const loadFile = function (e) {
       console.log(e.target.files[0])
-      let img = e.target.files[0]
-      let fd = new FormData()
-      fd.append('image', img)
-      console.log(fd)
+      // let img = e.target.files[0]
+
+      // let fd = new FormData()
+      // fd.append('image', img)
+      // console.log(fd)
 
     }
 

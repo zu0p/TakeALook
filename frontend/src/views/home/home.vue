@@ -1,7 +1,10 @@
 <template>
   <el-row type="flex" class="row-bg" justify="space-between" align="middle">
     <div class="uppermenu" style="margin-left:15px">
-      <span>신상품순</span> | <span @click="priceHigh">높은 가격순</span> | <span>낮은 가격순</span> | <span>거래 시간순</span>
+      <span @click="newDeal" v-if="info.current == 0" style="color:#ffd04b">신상품순</span><span @click="newDeal" v-else>신상품순</span>
+      | <span @click="priceHigh" v-if="info.current == 1" style="color:#ffd04b">높은 가격순</span> <span @click="priceHigh" v-else>높은 가격순</span>
+      | <span @click="priceLow" v-if="info.current == 2" style="color:#ffd04b">낮은 가격순</span><span @click="priceLow" v-else>낮은 가격순</span>
+      | <span @click="reserveTime" v-if="info.current == 3" style="color:#ffd04b">거래 시간순</span><span @click="reserveTime" v-else>거래 시간순</span>
     </div>
     <div >
     <el-select class="category" v-model="info.value" placeholder="카테고리" style="width:140px; margin-right:10px;">
@@ -35,8 +38,8 @@
       background
       layout="prev, pager, next"
       @current-change="handleCurrentChange"
-      :page-size="pageSize"
-      :total="total"
+      :page-size="info.pageSize"
+      :total="info.total"
       v-if="info.searchResult"
       style=" text-align:center;">
     </el-pagination>
@@ -81,9 +84,6 @@ export default {
         value: '미술품',
         label: '미술품'
       }],
-      page: 9,
-      pageSize: 8,
-      total: 15,
     }
   },
 
@@ -95,18 +95,62 @@ export default {
       dealList: '',
       search: '',
       value: '',
+      current: 0,
+      page: 0,
+      // 한 페이지에 뜨는 상품 수
+      pageSize: 10,
+      // 페이지네이션 총 페이지
+      total: 0,
       searchResult: true
     })
 
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'home')
-      store.dispatch('root/requestDealList')
+      store.dispatch('root/requestDealList', {page: 0, size: 10})
         .then (res => {
+          info.total = res.data.totalElements
           if (res.data.statusCode != 404) {
-            info.dealList = res.data
+            info.dealList = res.data.content
           }
         })
+
     })
+
+    const handleCurrentChange = function (e) {
+      info.page = e-1
+      console.log(info.page)
+
+      // 신상품순
+      if (info.current == 0) {
+        store.dispatch('root/requestDealList', {page: info.page, size: 10})
+          .then (res => {
+            if (res.data.statusCode != 404) {
+              info.dealList = res.data.content
+            }
+          })
+      } if (info.current == 1) { // 높은 가격순
+          store.dispatch('root/requestPriceHigh', {page: info.page, size: 10})
+            .then (res => {
+              if (res.data.statusCode != 404) {
+                info.dealList = res.data.content
+              }
+            })
+      } if (info.current == 2) { // 낮은 가격순
+          store.dispatch('root/requestPriceLow', {page: info.page, size: 10})
+          .then (res => {
+            if (res.data.statusCode != 404) {
+              info.dealList = res.data.content
+            }
+          })
+      } if (info.current == 3) { // 거래 시간순
+          store.dispatch('root/requestReserveTime', {page: info.page, size: 10})
+            .then (res => {
+              if (res.data.statusCode != 404) {
+                info.dealList = res.data.content
+              }
+            })
+      }
+    }
 
     const clickDeal = function (id) {
       router.push({
@@ -118,12 +162,16 @@ export default {
     }
 
     const searchDeal = function () {
-      store.dispatch('root/requestDealList')
+      store.dispatch('root/requestDealList',)
         .then (res => {
           if (res.data.statusCode != 404) {
             info.dealList = []
             for(var deal in res.data) {
-              if (res.data[deal].productName.includes(info.search)) {
+              if (!info.search && info.value) {
+                if (info.value === res.data[deal].categories) {
+                    info.dealList.push(res.data[deal])
+                  }
+              } else if (res.data[deal].productName.includes(info.search)){
                 if (info.value) {
                   if (info.value === res.data[deal].categories) {
                     info.dealList.push(res.data[deal])
@@ -140,7 +188,27 @@ export default {
         })
     }
 
-    return { info, clickDeal, searchDeal }
+    const priceHigh = function () {
+      info.current = 1
+      handleCurrentChange()
+    }
+
+    const newDeal = function () {
+      info.current = 0
+      handleCurrentChange()
+    }
+
+    const priceLow = function () {
+      info.current = 2
+      handleCurrentChange()
+    }
+
+    const reserveTime = function () {
+      info.current = 3
+      handleCurrentChange()
+    }
+
+    return { info, clickDeal, searchDeal, handleCurrentChange, priceHigh, newDeal, priceLow, reserveTime }
   }
 }
 </script>

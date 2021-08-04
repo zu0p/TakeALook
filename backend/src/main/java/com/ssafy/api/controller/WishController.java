@@ -34,7 +34,6 @@ public class WishController {
     @GetMapping("/{productId}")
     @ApiOperation(value = "관심 상품 확인", notes = "유저 아이디와 상품아이디를 통해 상품 관심 여부를 조회한다.")
     public ResponseEntity<?> getWishExistMessage(@ApiIgnore Authentication authentication, @PathVariable Long productId ){
-
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
         if(!wishService.getWishExistMessage(userDetails.getUsername(),productId))
             return ResponseEntity.status(200).body(BaseResponseBody.of(404,"Not found"));
@@ -55,7 +54,6 @@ public class WishController {
     @GetMapping()
     @ApiOperation(value = "관심 상품 목록 조회", notes = "유저 아이디를 통해 관심 상품 목록을 조회한다.")
     public ResponseEntity<?> getWishList(@ApiIgnore Authentication authentication){
-
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
         if(!userService.getUserExistMessage(userDetails.getUsername()))
             return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
@@ -68,7 +66,6 @@ public class WishController {
     @PostMapping()
     @ApiOperation(value="관심 상품 등록", notes="유저 아이디와 상품 인덱스로 관심 상품을 등록합니다")
     public ResponseEntity<?> registWishProduct(@ApiIgnore Authentication authentication, @RequestBody WishRegistPostReq wishRegistInfo){
-
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
         String authId = userDetails.getUsername();
         if(!productService.getProductExistMessage(wishRegistInfo.getProductId()))
@@ -84,7 +81,6 @@ public class WishController {
     @DeleteMapping("/{productId}")
     @ApiOperation(value="관심 상품 삭제", notes="유저 아이디와 상품 인덱스로 관심 상품을 삭제합니다")
     public ResponseEntity<?> deleteWishProduct(@ApiIgnore Authentication authentication, @PathVariable Long productId){
-
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
         String authId = userDetails.getUsername();
         if(!userService.getUserExistMessage(authId))
