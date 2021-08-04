@@ -2,6 +2,7 @@ package com.ssafy.api.service.product;
 
 import com.ssafy.api.request.paging.PageReq;
 import com.ssafy.api.request.product.ProductRegisterPostReq;
+import com.ssafy.api.request.product.ProductSearchPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;
 import com.ssafy.api.response.product.ProductListGetRes;
 import com.ssafy.db.entity.Product;
@@ -12,6 +13,8 @@ import java.util.List;
 public interface ProductService {
     List<ProductListGetRes> getAllProduct();
     List<ProductListGetRes> getAllProductByUserId(String userId);
+
+    Page<ProductListGetRes> searchProduct(ProductSearchPostReq productSearchInfo);
     Page<ProductListGetRes> getList(PageReq pageReq);
     Page<ProductListGetRes> getListByReserveTime(PageReq pageReq);
     Page<ProductListGetRes> getListByHighPrice(PageReq pageReq);
