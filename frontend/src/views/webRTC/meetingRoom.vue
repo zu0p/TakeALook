@@ -171,7 +171,7 @@ export default {
       console.log('Participant ' + request.name + ' left')
       var participant = state.participants[request.name]
       participant.dispose()
-      delete participants[request.name]
+      delete state.participants[request.name]
     }
 
     const sendMessage = function(message) {
