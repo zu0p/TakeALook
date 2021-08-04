@@ -10,11 +10,12 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface ProductService {
+    List<ProductListGetRes> getAllProduct();
+    List<ProductListGetRes> getAllProductByUserId(String userId);
     Page<ProductListGetRes> getList(PageReq pageReq);
     Page<ProductListGetRes> getListByReserveTime(PageReq pageReq);
     Page<ProductListGetRes> getListByHighPrice(PageReq pageReq);
     Page<ProductListGetRes> getListByLowPrice(PageReq pageReq);
-    List<ProductListGetRes> getAllProductByUserId(String userId);
 
     Product createProduct(String productId, ProductRegisterPostReq productRegisterPostReq);
     Product getProductByProductId(Long productIndexId);

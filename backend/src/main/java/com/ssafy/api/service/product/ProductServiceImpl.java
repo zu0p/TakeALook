@@ -38,6 +38,11 @@ public class ProductServiceImpl implements ProductService{
     @Autowired
     TradeService tradeService;
 
+    @Override
+    public List<ProductListGetRes> getAllProduct(){
+        List<ProductListGetRes> productList = productRepositorySupport.findAll();
+        return productList;
+    }
 
     @Override
     public Page<ProductListGetRes> getList(PageReq pageReq){
