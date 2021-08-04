@@ -38,6 +38,16 @@ public class ProductRepositorySupport {
          return (productList);
     }
 
+    public List<ProductListGetRes> findAll(){
+        List<ProductListGetRes> productList = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                .from(qProduct)
+                .fetch();
+        return productList;
+    }
+
     public Page<ProductListGetRes> findAllList(Pageable pageable){
         QueryResults<ProductListGetRes> result = jpaQueryFactory
                 .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
