@@ -1,5 +1,6 @@
 package com.ssafy.api.controller;
 
+import com.ssafy.api.request.paging.PageReq;
 import com.ssafy.api.request.wish.WishRegistPostReq;
 import com.ssafy.api.response.wish.WishCountGetRes;
 import com.ssafy.api.response.wish.WishListGetRes;
@@ -12,6 +13,7 @@ import com.ssafy.common.model.response.BaseResponseBody;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -51,14 +53,14 @@ public class WishController {
         return ResponseEntity.status(200).body(WishCountGetRes.of(wishCount));
     }
 
-    @GetMapping()
+    @PostMapping("/list")
     @ApiOperation(value = "관심 상품 목록 조회", notes = "유저 아이디를 통해 관심 상품 목록을 조회한다.")
-    public ResponseEntity<?> getWishList(@ApiIgnore Authentication authentication){
+    public ResponseEntity<?> getWishList(@ApiIgnore Authentication authentication, @RequestBody PageReq pageReq){
         SsafyUserDetails userDetails = (SsafyUserDetails) authentication.getDetails();
         if(!userService.getUserExistMessage(userDetails.getUsername()))
             return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
 
-        List<WishListGetRes> wishList = wishService.selectWishList(userDetails.getUsername());
+        Page<WishListGetRes> wishList = wishService.selectWishList(pageReq, userDetails.getUsername());
         if(wishList.isEmpty()) return ResponseEntity.status(404).body(BaseResponseBody.of(404,"Not found"));
         return ResponseEntity.status(200).body(wishList);
     }

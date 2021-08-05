@@ -12,8 +12,8 @@ import java.util.List;
 
 public interface ProductService {
     List<ProductListGetRes> getAllProduct();
-    List<ProductListGetRes> getAllProductByUserId(String userId);
 
+    Page<ProductListGetRes> getAllProductByUserId(PageReq pageReq, String userId);
     Page<ProductListGetRes> searchProduct(ProductSearchPostReq productSearchInfo);
     Page<ProductListGetRes> getList(PageReq pageReq);
     Page<ProductListGetRes> getListByReserveTime(PageReq pageReq);

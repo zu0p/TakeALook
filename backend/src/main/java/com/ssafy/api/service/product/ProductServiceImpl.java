@@ -76,8 +76,9 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductListGetRes> getAllProductByUserId(String userId){
-        List<ProductListGetRes> productList = productRepositorySupport.findByUserId(userId);
+    public Page<ProductListGetRes> getAllProductByUserId(PageReq pageReq, String userId){
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<ProductListGetRes> productList = productRepositorySupport.findByUserId(pageable, userId);
         return productList;
     }
 
