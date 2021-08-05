@@ -112,19 +112,22 @@ export function requestDeleteLikeDeal({state}, payload){
   return instanceWithAuth.delete(url)
 }
 
-export function requestWishList({state}){
-  const url = BASE_URL+'/wish'
-  return instanceWithAuth.get(url)
+export function requestWishList({state}, payload){
+  const url = BASE_URL+'/wish/list'
+  let body = payload
+  return instanceWithAuth.post(url, body)
 }
 
-export function requestSellList({state}){
+export function requestSellList({state}, payload){
   const url = BASE_URL+'/trade/sell'
-  return instanceWithAuth.get(url)
+  let body = payload
+  return instanceWithAuth.post(url, body)
 }
 
-export function requestBuyList({state}){
+export function requestBuyList({state}, payload){
   const url = BASE_URL+'/trade/buy'
-  return instanceWithAuth.get(url)
+  let body = payload
+  return instanceWithAuth.post(url, body)
 }
 
 export function requestDealList({state}, payload){

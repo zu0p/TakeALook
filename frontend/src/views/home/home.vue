@@ -26,15 +26,15 @@
     </div>
   </el-row>
 
-  <ul class="infinite-list" >
-    <div v-if="!info.searched">
-      <li v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId" >
+  <ul class="infinite-list">
+    <div v-if="!info.searched" >
+      <li v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId">
         <conference :deal="deal"/>
       </li>
     </div>
     <div v-else>
       <h2 v-if="!info.searchResult" style="margin-top:200px; margin-bottom:200px; text-align:center;">검색어에 해당하는 거래가 존재하지 않습니다</h2>
-      <li v-else v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId" >
+      <li v-else v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId">
         <conference :deal="deal"/>
       </li>
     </div>
@@ -114,7 +114,6 @@ export default {
       pageSize: 10,
       // 총 상품 수
       total: 0,
-      totalPage:0,
       searchResult: true
     })
 
@@ -145,38 +144,37 @@ export default {
 
     const handleCurrentChange = function (e) {
       info.page = e-1
-      info.currentpage = e
       // 신상품순
       if (info.current == 0) {
-        store.dispatch('root/requestDealList', {page: info.page, size: 10})
+        store.dispatch('root/requestDealList', {page: info.page, size:9})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.dealList = res.data.content
             }
           })
       } else if (info.current == 1) { // 높은 가격순
-          store.dispatch('root/requestPriceHigh', {page: info.page, size: 10})
+          store.dispatch('root/requestPriceHigh', {page: info.page, size:9})
             .then (res => {
               if (res.data.statusCode != 404) {
                 info.dealList = res.data.content
               }
             })
       } else if (info.current == 2) { // 낮은 가격순
-          store.dispatch('root/requestPriceLow', {page: info.page, size: 10})
+          store.dispatch('root/requestPriceLow', {page: info.page, size:9})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.dealList = res.data.content
             }
           })
       } else if (info.current == 3) { // 거래 시간순
-          store.dispatch('root/requestReserveTime', {page: info.page, size: 10})
+          store.dispatch('root/requestReserveTime', {page: info.page, size:9})
             .then (res => {
               if (res.data.statusCode != 404) {
                 info.dealList = res.data.content
               }
             })
       } else if (info.current == 4) { // 검색 중인 경우
-          store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:info.page, size:10})
+          store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:info.page, size:9})
 
       }
     }
@@ -195,7 +193,7 @@ export default {
       if (!info.search && !info.value) {
         info.searched = false
         info.current = 0
-        store.dispatch('root/requestDealList', {page: 0, size: 10})
+        store.dispatch('root/requestDealList', {page: 0, size: 9})
           .then (res => {
             if (res.data.statusCode != 404){
               info.total = res.data.totalElements
@@ -205,7 +203,7 @@ export default {
             }
           })
       } else {
-        store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:0, size:10})
+        store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:0, size:9})
         .then(res=> {
           info.searched = true
           if (res.data.statusCode != 404){
@@ -271,7 +269,7 @@ export default {
 
     const priceHigh = function () {
       info.current = 1
-        store.dispatch('root/requestPriceHigh', {page: 0, size: 10})
+        store.dispatch('root/requestPriceHigh', {page: 0, size: 9})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -286,7 +284,7 @@ export default {
 
     const newDeal = function () {
       info.current = 0
-        store.dispatch('root/requestDealList', {page: 0, size: 10})
+        store.dispatch('root/requestDealList', {page: 0, size: 9})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -301,7 +299,7 @@ export default {
 
     const priceLow = function () {
       info.current = 2
-        store.dispatch('root/requestPriceLow', {page: 0, size: 10})
+        store.dispatch('root/requestPriceLow', {page: 0, size: 9})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -316,7 +314,7 @@ export default {
 
     const reserveTime = function () {
       info.current = 3
-        store.dispatch('root/requestReserveTime', {page: 0, size: 10})
+        store.dispatch('root/requestReserveTime', {page: 0, size: 9})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -353,10 +351,9 @@ export default {
 }
 
 .infinite-list {
-  text-align: left;
-  margin-left: 4%;
-  margin-right: auto;
+  text-align: center;
 }
+
 
 .infinite-list .infinite-list-item {
   min-width: 335px;

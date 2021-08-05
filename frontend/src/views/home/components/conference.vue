@@ -8,7 +8,7 @@
             <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a>
             <!-- 찜한 거래인 경우 -->
             <a class="custom-icon2" v-else style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
-            <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
+            <img :src="deal.imageUrl" alt="" style="width: 100%; display: block;">
         </div>
       <div style="text-align:left; padding: 14px;">
         <span class="title enddeal">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
@@ -34,7 +34,7 @@
       <!-- 거래가 시작되지 않은 경우 -->
     <el-card :body-style="{ padding: '0px' }" shadow="hover" v-else>
       <div class="image-wrapper">
-        <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
+        <img :src="deal.imageUrl" alt="" style="width: 100%; display: block;">
       </div>
       <div style="text-align:left; padding: 14px;" @click="dealDetail">
         <span class="title">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
@@ -74,7 +74,7 @@
   <div v-else style="text-align:center">
     <el-card :body-style="{ padding: '0px' }" shadow="hover">
       <div class="image-wrapper">
-        <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
+        <img :src="deal.imageUrl" alt="" style="width: 100%; display: block;">
       </div>
       <div style="text-align: left; padding: 14px;">
         <span class="title">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
@@ -196,9 +196,11 @@ export default {
   width: 100%;
   height: 190px;
 }
+
 .el-card .title {
   font-weight: bold;
 }
+
 .el-card .bottom .loginbottom {
   margin-top: 5px;
   display:-webkit-box;
@@ -211,6 +213,7 @@ export default {
 .custom-icon {
   font-size: 30px;
 }
+
 .custom-icon2 {
   font-size: 30px;
   position: absolute;

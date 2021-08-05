@@ -51,7 +51,7 @@
         </div>
       </el-form>
     </el-container>
-    <h1 v-if="info.recommend" style="text-align:left; margin-top:0; margin-bottom:30px;">이런 상품은 어떠세요?</h1>
+    <h1 v-if="info.recommend" style="text-align:left; margin-top:80px; margin-bottom:30px;">이런 상품은 어떠세요?</h1>
     <el-row style="text-align:center;">
       <ul v-for="deal in info.recommend" :key="deal.productId" @click="dealDetail(deal.productId)" >
         <recommend :deal="deal"/>
@@ -241,13 +241,7 @@ export default {
     }
 
     const dealDetail = function (id) {
-          router.push({
-            name: 'deal-detail',
-            params: {
-              productId: id
-            }
-          })
-
+      router.push(`/products/${id}`)
     }
 
     return { info, backHome, backKeep, backMy, deleteDeal, likeDeal, deletelikeDeal, updateDeal, dealDetail }
