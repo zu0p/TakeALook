@@ -138,9 +138,9 @@ export default {
         audio : true,
         video : {
           mandatory : {
-            maxWidth : 320,
-            maxFrameRate : 15,
-            minFrameRate : 15
+            maxWidth : 720,
+            maxFrameRate : 30,
+            minFrameRate : 24
           }
         }
       }
