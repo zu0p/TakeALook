@@ -28,14 +28,19 @@ public class ProductRepositorySupport {
         return Optional.ofNullable(product);
     }
 
-    public List<ProductListGetRes> findByUserId(String userId) {
-        List<ProductListGetRes> productList = jpaQueryFactory
+    public Page<ProductListGetRes> findByUserId(Pageable pageable, String userId) {
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
                 .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
                 qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
                 qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
-                .where(qProduct.user.userId.eq(userId)).fetch();
-         return (productList);
+                .where(qProduct.user.userId.eq(userId))
+                .orderBy(qProduct.registTime.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+         return new PageImpl<>(result.getResults(),pageable,result.getTotal());
     }
 
     public List<ProductListGetRes> findAll(){
