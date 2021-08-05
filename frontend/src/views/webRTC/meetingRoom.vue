@@ -37,6 +37,7 @@ import Participant from './js/participant'
 import ws from './js/webSocket.js'
 import PropseForm from './components/proposeForm.vue'
 import ChatForm from './components/chatForm.vue'
+import { useRouter } from 'vue-router'
 
 export default {
   name: 'meeting-detail-page',
@@ -46,6 +47,7 @@ export default {
   },
   setup(props, {emit}){
     const store = useStore()
+    const router = useRouter()
     const state = reactive({
       room:'',
       name:'',
@@ -181,7 +183,7 @@ export default {
     }
 
     const leaveRoom = function() {
-      alert("leave")
+      //alert("leave")
       sendMessage({
         id : 'leaveRoom'
       });
@@ -190,6 +192,8 @@ export default {
         state.participants[key].dispose()
       }
       ws.close()
+
+      router.push({name:'home'})
     }
 
     const onParticipantLeft = function(request) {
