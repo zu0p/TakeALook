@@ -13,6 +13,7 @@ public interface UserService {
 	User createUser(UserRegisterPostReq userRegisterInfo);
 	User getUserByUserId(String userId);
 	User updateUser(User user, UserUpdatePatchReq userUpdatePatchReq);
+
 	void deleteUser(String userId);
 	Boolean getUserExistMessage(String userId);
     Boolean checkAuthByUserId(String userId, String authId);

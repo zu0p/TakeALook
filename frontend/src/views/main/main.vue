@@ -12,6 +12,11 @@
       </el-aside>
       <el-main>
         <router-view></router-view>
+
+        <div style="text-align: end">
+          <MainDM/>
+          <ChatWindow/>
+        </div>
       </el-main>
     </el-container>
     <main-footer :height="`110px`"/>
@@ -23,11 +28,14 @@
     :open="signupDialogOpen"
     @closeSignupDialog="onCloseSignupDialog" />
 </template>
+
 <style>
   @import "https://unpkg.com/element-plus/lib/theme-chalk/index.css";
   @import './main.css';
   @import '../../common/css/common.css';
   @import '../../common/css/element-plus.css';
+
+  /* DM 아이콘 */
 
 </style>
 <script>
@@ -36,7 +44,11 @@ import SignupDialog from './components/signup-dialog'
 import MainHeader from './components/main-header'
 import MainSidebar from './components/main-sidebar'
 import MainFooter from './components/main-footer'
+import MainDM from './components/main-dm'
+import ChatWindow from './components/ChatWindow'
 import {mapActions} from 'vuex';
+// DM 아이콘
+
 
 export default {
   name: 'Main',
@@ -45,7 +57,9 @@ export default {
     MainSidebar,
     MainFooter,
     LoginDialog,
-    SignupDialog
+    SignupDialog,
+    MainDM,
+    ChatWindow,
   },
   data () {
     return {
@@ -80,6 +94,7 @@ export default {
       // const userData = JSON.parse(userToken)
       // requestUserInfo()
     }
-  }
+  },
+  // DM 아이콘
 }
 </script>
