@@ -1,5 +1,6 @@
 package com.ssafy.api.service.wish;
 
+import com.ssafy.api.request.paging.PageReq;
 import com.ssafy.api.request.wish.WishRegistPostReq;
 import com.ssafy.api.response.wish.WishListGetRes;
 import com.ssafy.api.service.user.UserService;
@@ -8,6 +9,9 @@ import com.ssafy.db.entity.WishProduct;
 import com.ssafy.db.repository.wish.WishRepository;
 import com.ssafy.db.repository.wish.WishRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +29,9 @@ public class WishServiceImpl implements WishService{
     UserService userService;
 
     @Override
-    public List<WishListGetRes> selectWishList(String userId) {
-        List<WishListGetRes> wlist = wishRepositorySupport.findByUserId(userId);
+    public Page<WishListGetRes> selectWishList(PageReq pageReq, String userId) {
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<WishListGetRes> wlist = wishRepositorySupport.findByUserId(pageable, userId);
         return wlist;
     }
 
