@@ -117,6 +117,7 @@ export default {
             router.push({name: 'home'})
             store.commit('root/setMenuActiveMenuName', 'home')
           } else{
+            console.log(res.data)
             info.productName = res.data.productName
             info.basePrice = res.data.basePrice
             info.categories = res.data.categories
