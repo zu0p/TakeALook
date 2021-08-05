@@ -9,8 +9,8 @@
         background
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
-        :page-size="pageSize"
-        :total="total">
+        :page-size="info.pageSize"
+        :total="info.total">
       </el-pagination>
     </ul>
   </div>
@@ -32,45 +32,36 @@ export default {
     Conference,
   },
 
-  data() {
-    //! pagination 데이터 설정
-    return {
-      filtered: [],
-      search: '',
-      page: 3,
-      pageSize: 4,
-      total: 20
-    }
-  },
-
   setup () {
+    const router = useRouter()
     const store = useStore()
     const info = reactive({
-      sellList:''
+      sellList:'',
+      pageSize: 10,
+      total: 0
     })
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'my-deal')
-      store.dispatch('root/requestSellList')
+      store.dispatch('root/requestSellList', {page:0, size:9})
         .then (res => {
           if (res.data.statusCode != 404) {
-            info.sellList = res.data
-          } else {
-            console.log(res)
-            console.log(5412)
+            info.sellList = res.data.content
+            info.total = res.data.totalElements
+            info.pageSize = res.data.size
           }
         })
     })
 
-    const router = useRouter()
-
-    const state = reactive({
-      count: 10
-    })
-
-    const load = function () {
-      state.count += 4
+    const handleCurrentChange = function (e) {
+      info.page = e-1
+      store.dispatch('root/requestSellList', {page:info.page, size:9})
+        .then(res => {
+          if (res.data.statusCode != 404) {
+            info.sellList = res.data.content
+          }
+        })
     }
 
     const clickDeal = function (id) {
@@ -82,7 +73,7 @@ export default {
       })
     }
 
-    return { info, state, load, clickDeal }
+    return { info, clickDeal, handleCurrentChange }
   }
 }
 </script>

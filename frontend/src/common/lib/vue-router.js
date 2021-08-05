@@ -52,6 +52,30 @@ function makeRoutesFromMenu () {
   })
 
   routes.push({
+    path: '/high-price',
+    name: 'price-high',
+    component: Home
+  })
+
+  routes.push({
+    path: '/low-price',
+    name: 'price-low',
+    component: Home
+  })
+
+  routes.push({
+    path: '/reserve-time',
+    name: 'reserve-time',
+    component: Home
+  })
+
+  routes.push({
+    path: '/:categories/:search',
+    name: 'search',
+    component: Home
+  })
+
+  routes.push({
     path: '/meeting/:meetingId/:userId',
     name: 'meeting-detail',
     component: MeetingDetail

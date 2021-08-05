@@ -28,14 +28,29 @@ public class ProductRepositorySupport {
         return Optional.ofNullable(product);
     }
 
-    public List<ProductListGetRes> findByUserId(String userId) {
-        List<ProductListGetRes> productList = jpaQueryFactory
+    public Page<ProductListGetRes> findByUserId(Pageable pageable, String userId) {
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
                 .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
                 qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
                 qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
-                .where(qProduct.user.userId.eq(userId)).fetch();
-         return (productList);
+                .where(qProduct.user.userId.eq(userId))
+                .orderBy(qProduct.registTime.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+
+         return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
+
+    public List<ProductListGetRes> findAll(){
+        List<ProductListGetRes> productList = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                .from(qProduct)
+                .fetch();
+        return productList;
     }
 
     public Page<ProductListGetRes> findAllList(Pageable pageable){
@@ -84,6 +99,77 @@ public class ProductRepositorySupport {
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
                 .orderBy(qProduct.basePrice.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
+
+    public Page<ProductListGetRes> searchDigital(Pageable pageable, String keyword){
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                .from(qProduct)
+                .where(qProduct.categories.eq("digital"), qProduct.productName.contains(keyword))
+                .orderBy(qProduct.registTime.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
+
+    public Page<ProductListGetRes> searchFurniture(Pageable pageable, String keyword){
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                .from(qProduct)
+                .where(qProduct.categories.eq("furniture"), qProduct.productName.contains(keyword))
+                .orderBy(qProduct.registTime.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+
+                .fetchResults();
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
+
+    public Page<ProductListGetRes> searchFashion(Pageable pageable, String keyword){
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                .from(qProduct)
+                .where(qProduct.categories.eq("fashion"), qProduct.productName.contains(keyword))
+                .orderBy(qProduct.registTime.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
+
+    public Page<ProductListGetRes> searchArt(Pageable pageable, String keyword){
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                .from(qProduct)
+                .where(qProduct.categories.eq("art"), qProduct.productName.contains(keyword))
+                .orderBy(qProduct.registTime.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetchResults();
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
+
+    public Page<ProductListGetRes> searchALL(Pageable pageable, String keyword){
+        QueryResults<ProductListGetRes> result = jpaQueryFactory
+                .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                .from(qProduct)
+                .where(qProduct.productName.contains(keyword))
+                .orderBy(qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
