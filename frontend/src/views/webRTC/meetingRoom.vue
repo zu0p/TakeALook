@@ -5,7 +5,9 @@
     <div id="participants">
     <el-row :gutter="40">
       <el-col id="seller" :span="16"></el-col>
-      <el-col id="chat" :span="8"><div class="grid-content bg-blue"></div></el-col>
+      <el-col id="chat" :span="8">
+        <propse-form />
+      </el-col>
     </el-row>
     <el-row id="buyer" :gutter="20">
     </el-row>
@@ -22,10 +24,13 @@ import { useStore } from 'vuex'
 import { onBeforeMount, onBeforeUnmount, onMounted } from '@vue/runtime-core'
 import Participant from './js/participant'
 import ws from './js/webSocket.js'
+import PropseForm from './components/proposeForm.vue'
 
 export default {
   name: 'meeting-detail-page',
-
+  components: {
+    PropseForm,
+  },
   setup(props, {emit}){
     const store = useStore()
     const state = reactive({
