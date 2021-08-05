@@ -1,21 +1,28 @@
 package com.ssafy.api.service.product;
 
+import com.ssafy.api.request.paging.PageReq;
 import com.ssafy.api.request.product.ProductRegisterPostReq;
+import com.ssafy.api.request.product.ProductSearchPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;
 import com.ssafy.api.response.product.ProductListGetRes;
+import com.ssafy.api.service.trade.TradeService;
 import com.ssafy.api.service.user.UserService;
+import com.ssafy.api.service.wish.WishService;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.user.UserRepository;
-import com.ssafy.db.repository.user.UserRepositorySupport;
 import com.ssafy.db.repository.product.ProductRepository;
 import com.ssafy.db.repository.product.ProductRepositorySupport;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.ssafy.db.repository.wish.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service("productService")
 public class ProductServiceImpl implements ProductService{
@@ -27,16 +34,69 @@ public class ProductServiceImpl implements ProductService{
     ProductRepositorySupport productRepositorySupport;
     @Autowired
     UserService userService;
+    @Autowired
+    WishService wishService;
+    @Autowired
+    WishRepository wishRepository;
+    @Autowired
+    TradeService tradeService;
 
     @Override
     public List<ProductListGetRes> getAllProduct(){
-        List<ProductListGetRes> productList = productRepositorySupport.findAllProduct();
+        List<ProductListGetRes> productList = productRepositorySupport.findAll();
         return productList;
     }
 
     @Override
-    public List<ProductListGetRes> getAllProductByUserId(String userId){
-        List<ProductListGetRes> productList = productRepositorySupport.findByUserId(userId);
+    public Page<ProductListGetRes> getList(PageReq pageReq){
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<ProductListGetRes> productList = productRepositorySupport.findAllList(pageable);
+        return productList;
+    }
+
+    @Override
+    public Page<ProductListGetRes> getListByReserveTime(PageReq pageReq){
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<ProductListGetRes> productList = productRepositorySupport.findAllReserveTime(pageable);
+        return productList;
+    }
+
+    @Override
+    public Page<ProductListGetRes> getListByHighPrice(PageReq pageReq){
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<ProductListGetRes> productList = productRepositorySupport.findAllHighPrice(pageable);
+        return productList;
+    }
+
+    @Override
+    public Page<ProductListGetRes> getListByLowPrice(PageReq pageReq){
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<ProductListGetRes> productList = productRepositorySupport.findAllLowPrice(pageable);
+        return productList;
+    }
+
+    @Override
+    public Page<ProductListGetRes> getAllProductByUserId(PageReq pageReq, String userId){
+        Pageable pageable = PageRequest.of(pageReq.getPage(),pageReq.getSize());
+        Page<ProductListGetRes> productList = productRepositorySupport.findByUserId(pageable, userId);
+        return productList;
+    }
+
+    @Override
+    public Page<ProductListGetRes> searchProduct(ProductSearchPostReq productSearchInfo){
+        Pageable pageable = PageRequest.of(productSearchInfo.getPage(),productSearchInfo.getSize());
+        String categories =  productSearchInfo.getCategories();
+        String keyword = productSearchInfo.getKeyword();
+        Page<ProductListGetRes> productList;
+
+        if(keyword==null) keyword="";
+        if(categories==null) productList= productRepositorySupport.searchALL(pageable, keyword);
+        else if(categories.equals("digital")) productList= productRepositorySupport.searchDigital(pageable, keyword);
+        else if(categories.equals("furniture")) productList= productRepositorySupport.searchFurniture(pageable, keyword);
+        else if(categories.equals("fashion")) productList= productRepositorySupport.searchFashion(pageable, keyword);
+        else if(categories.equals("art")) productList= productRepositorySupport.searchArt(pageable, keyword);
+        else productList = productRepositorySupport.searchALL(pageable, keyword);
+
         return productList;
     }
 
@@ -103,9 +163,12 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void deleteProduct(Long productIndexId) {
-        Product product = productRepositorySupport.findByProductId(productIndexId).get();
+    @Transactional
+    public void deleteProduct(Long productId) {
+        if(wishService.countWishProductByProductId(productId)>0) wishRepository.deleteAllByProductId(productId);
+        //if(tradeService.checkTradeHistory(productId))tradeService.deleteTradeInfo(productId);
+
+        Product product = productRepositorySupport.findByProductId(productId).get();
         productRepository.delete(product);
     }
-
 }
