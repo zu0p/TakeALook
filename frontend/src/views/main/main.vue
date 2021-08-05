@@ -12,11 +12,6 @@
       </el-aside>
       <el-main>
         <router-view></router-view>
-
-        <div style="text-align: end">
-          <MainDM/>
-          <ChatWindow/>
-        </div>
       </el-main>
     </el-container>
     <main-footer :height="`110px`"/>
@@ -44,8 +39,6 @@ import SignupDialog from './components/signup-dialog'
 import MainHeader from './components/main-header'
 import MainSidebar from './components/main-sidebar'
 import MainFooter from './components/main-footer'
-import MainDM from './components/main-dm'
-import ChatWindow from './components/ChatWindow'
 import {mapActions} from 'vuex';
 // DM 아이콘
 
@@ -58,8 +51,6 @@ export default {
     MainFooter,
     LoginDialog,
     SignupDialog,
-    MainDM,
-    ChatWindow,
   },
   data () {
     return {
