@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.paging.PageReq;
 import com.ssafy.api.request.product.ProductRegisterPostReq;
+import com.ssafy.api.request.product.ProductSearchPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;
 import com.ssafy.api.response.product.*;
 import com.ssafy.api.response.trade.TradeListGetRes;
@@ -69,6 +70,14 @@ public class ProductController {
     @ApiOperation(value = "판매 상품 목록 조회 (높은가격순)", notes = "전체 상품을 높은 가격 순으로 조회한다")
     public ResponseEntity<?> getProductListHighPrice(@RequestBody PageReq pageReq) {
         Page<ProductListGetRes> productList = productService.getListByHighPrice(pageReq);
+        if(productList.isEmpty()) return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
+        return ResponseEntity.status(200).body(productList);
+    }
+
+    @PostMapping("/search")
+    @ApiOperation(value = "카테고리별 상품 검색", notes = "카테고리별로 상품을 조회한다")
+    public ResponseEntity<?> getAllProduct(@RequestBody ProductSearchPostReq productSearchInfo) {
+        Page<ProductListGetRes> productList = productService.searchProduct(productSearchInfo);
         if(productList.isEmpty()) return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
         return ResponseEntity.status(200).body(productList);
     }

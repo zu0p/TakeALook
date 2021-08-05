@@ -88,8 +88,6 @@ export default {
     const state = reactive({
       productId: ''
     })
-    console.log(451)
-    console.log(document.referrer)
 
     const info = reactive({
       productName:'',

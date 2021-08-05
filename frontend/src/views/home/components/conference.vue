@@ -11,7 +11,7 @@
             <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
         </div>
       <div style="text-align:left; padding: 14px;">
-        <span class="title enddeal">{{ deal.productName }}</span>
+        <span class="title enddeal">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
         <div class="loginbottom">
           <p style="margin-bottom:0;">{{ deal.basePrice }}원⠀|⠀
               {{ deal.reserveTime.slice(5, 7) }}월 {{ deal.reserveTime.slice(8, 10) }}일
@@ -37,7 +37,7 @@
         <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
       </div>
       <div style="text-align:left; padding: 14px;" @click="dealDetail">
-        <span class="title">{{ deal.productName }} <span style="color:lightgray; font-size:11px;">{{deal.categories}}</span></span>
+        <span class="title">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
         <div class="loginbottom">
           <p style="margin-bottom:0;">{{ deal.basePrice }}원⠀|⠀
               {{ deal.reserveTime.slice(5, 7) }}월 {{ deal.reserveTime.slice(8, 10) }}일
@@ -77,7 +77,7 @@
         <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
       </div>
       <div style="text-align: left; padding: 14px;">
-        <span class="title">{{ deal.productName }}</span>
+        <span class="title">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
         <div class="bottom" style="margin-top:10px;">
           <p style="margin-bottom:0;">{{ deal.basePrice }}원⠀|⠀
               {{ deal.reserveTime.slice(5, 7) }}월 {{ deal.reserveTime.slice(8, 10) }}일

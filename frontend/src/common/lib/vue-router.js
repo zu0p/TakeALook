@@ -68,6 +68,12 @@ function makeRoutesFromMenu () {
     component: Home
   })
 
+  routes.push({
+    path: '/:categories/:search',
+    name: 'search',
+    component: Home
+  })
+
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(게시글 상세보기))
   return routes
 }

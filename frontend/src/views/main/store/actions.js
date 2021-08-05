@@ -165,3 +165,9 @@ export function requestAllDeal({state}){
   const url = BASE_URL+'/product/all'
   return instanceWithAuth.post(url)
 }
+
+export function requestSearch({state}, payload){
+  const url = BASE_URL+'/product/search'
+  let body = payload
+  return instanceWithAuth.post(url, body)
+}

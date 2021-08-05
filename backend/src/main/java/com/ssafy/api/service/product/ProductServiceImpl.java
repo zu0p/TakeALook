@@ -2,6 +2,7 @@ package com.ssafy.api.service.product;
 
 import com.ssafy.api.request.paging.PageReq;
 import com.ssafy.api.request.product.ProductRegisterPostReq;
+import com.ssafy.api.request.product.ProductSearchPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;
 import com.ssafy.api.response.product.ProductListGetRes;
 import com.ssafy.api.service.trade.TradeService;
@@ -16,10 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service("productService")
 public class ProductServiceImpl implements ProductService{
@@ -75,6 +78,24 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<ProductListGetRes> getAllProductByUserId(String userId){
         List<ProductListGetRes> productList = productRepositorySupport.findByUserId(userId);
+        return productList;
+    }
+
+    @Override
+    public Page<ProductListGetRes> searchProduct(ProductSearchPostReq productSearchInfo){
+        Pageable pageable = PageRequest.of(productSearchInfo.getPage(),productSearchInfo.getSize());
+        String categories =  productSearchInfo.getCategories();
+        String keyword = productSearchInfo.getKeyword();
+        Page<ProductListGetRes> productList;
+
+        if(keyword==null) keyword="";
+        if(categories==null) productList= productRepositorySupport.searchALL(pageable, keyword);
+        else if(categories.equals("digital")) productList= productRepositorySupport.searchDigital(pageable, keyword);
+        else if(categories.equals("furniture")) productList= productRepositorySupport.searchFurniture(pageable, keyword);
+        else if(categories.equals("fashion")) productList= productRepositorySupport.searchFashion(pageable, keyword);
+        else if(categories.equals("art")) productList= productRepositorySupport.searchArt(pageable, keyword);
+        else productList = productRepositorySupport.searchALL(pageable, keyword);
+
         return productList;
     }
 
