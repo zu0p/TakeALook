@@ -11,7 +11,7 @@ module.exports = {
     open: true,
     proxy: {
       '/api/v1': {
-        target: 'http://i5d101.p.ssafy.io:8080/',
+        target: 'https://i5d101.p.ssafy.io:8080/',
       }
     },
     // historyApiFallback: true,
@@ -23,13 +23,13 @@ module.exports = {
     // key: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/privkey.pem'),
     // cert: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/cert.pem'),
     // ca: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/chain.pem'),
-    port: 8083,
-    open: true,
-    proxy: {
-      '/api/v1': {
-        target: 'http://i5d101.p.ssafy.io:8080/',
-      }
-    },
+    // port: 8083,
+    // open: true,
+    // proxy: {
+    //   '/api/v1': {
+    //     target: 'https://i5d101.p.ssafy.io:8080/',
+    //   }
+    // },
     historyApiFallback: true,
     hot: true,
     disableHostCheck: true,

@@ -147,9 +147,7 @@ export default {
       store.commit('root/setMenuActive', 0)
       const MenuItems = store.getters['root/getMenus']
       let keys = Object.keys(MenuItems)
-      router.push({
-        name: keys[0]
-      })
+      window.location = '/'
     }
 
     const clickLogin = () => {

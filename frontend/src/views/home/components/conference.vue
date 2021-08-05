@@ -1,6 +1,6 @@
 <template>
   <!-- 로그인한 경우 -->
-  <div v-if="info.isLogin">
+  <div v-if="info.isLogin" style="text-align:center">
       <!-- 거래가 끝난 경우 -->
       <el-card :body-style="{ padding: '0px' }" v-if="info.isSold">
         <div class="image-wrapper enddeal">
@@ -8,12 +8,14 @@
             <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a>
             <!-- 찜한 거래인 경우 -->
             <a class="custom-icon2" v-else style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
-            <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
+            <img :src="deal.imageUrl" alt="" style="width: 100%; display: block;">
         </div>
       <div style="text-align:left; padding: 14px;">
-        <span class="title enddeal">{{ deal.productName }}</span>
+        <span class="title enddeal">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
         <div class="loginbottom">
-          <p style="margin-bottom:0;" class="enddeal">{{ deal.basePrice }}⠀|⠀{{ deal.reserveTime }}</p>
+          <p style="margin-bottom:0;">{{ deal.basePrice }}원⠀|⠀
+              {{ deal.reserveTime.slice(5, 7) }}월 {{ deal.reserveTime.slice(8, 10) }}일
+              {{ deal.reserveTime.slice(11, 13) }}시 {{ deal.reserveTime.slice(14, 16) }}분 </p>
           <div>
             <!-- 내가 생성한 거래인 경우 -->
             <div style="text-align:center" v-if="info.mine">
@@ -32,12 +34,14 @@
       <!-- 거래가 시작되지 않은 경우 -->
     <el-card :body-style="{ padding: '0px' }" shadow="hover" v-else>
       <div class="image-wrapper">
-        <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
+        <img :src="deal.imageUrl" alt="" style="width: 100%; display: block;">
       </div>
       <div style="text-align:left; padding: 14px;" @click="dealDetail">
-        <span class="title">{{ deal.productName }}</span>
+        <span class="title">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
         <div class="loginbottom">
-          <p style="margin-bottom:0;">{{ deal.basePrice }}⠀|⠀{{ deal.reserveTime }}</p>
+          <p style="margin-bottom:0;">{{ deal.basePrice }}원⠀|⠀
+              {{ deal.reserveTime.slice(5, 7) }}월 {{ deal.reserveTime.slice(8, 10) }}일
+              {{ deal.reserveTime.slice(11, 13) }}시 {{ deal.reserveTime.slice(14, 16) }}분 </p>
             <!-- 내가 생성한 거래인 경우 -->
           <div v-if="info.mine">
             <div style="text-align:right">
@@ -50,14 +54,14 @@
             <!-- 내가 생성한 거래가 아닌 경우 -->
           <div v-else>
               <!-- 찜한 경우 -->
-            <div style="text-align:right" v-if="info.wish">
+            <div style="text-align:right; margin-top:30px" v-if="info.wish">
               <span style="color:#ffd04b; margin-right:10px;">{{ info.wishCount }}</span>
-              <a class="custom-icon" @click="deletelikeDeal" style="color:#ffd04b; margin-top:30px"><i class="el-icon-message-solid"></i></a>
+              <a class="custom-icon" @click="deletelikeDeal" style="color:#ffd04b;"><i class="el-icon-message-solid"></i></a>
             </div>
               <!-- 찜하지 않은 경우 -->
-            <div style="text-align:right" v-else>
+            <div style="text-align:right; margin-top:30px" v-else>
               <span style="color:#ffd04b; margin-right:10px;">{{ info.wishCount }}</span>
-              <a class="custom-icon" @click="likeDeal" style="color:#ffd04b; margin-top:30px"><i class="el-icon-bell"></i></a>
+              <a class="custom-icon" @click="likeDeal" style="color:#ffd04b;"><i class="el-icon-bell"></i></a>
             </div>
           </div>
         </div>
@@ -67,15 +71,17 @@
 
 
   <!-- 로그인을 하지 않은 경우 -->
-  <div v-else>
+  <div v-else style="text-align:center">
     <el-card :body-style="{ padding: '0px' }" shadow="hover">
       <div class="image-wrapper">
-        <img :src="deal.imageUrl" alt="" style="width:auto; height:100%;">
+        <img :src="deal.imageUrl" alt="" style="width: 100%; display: block;">
       </div>
       <div style="text-align: left; padding: 14px;">
-        <span class="title">{{ deal.productName }}</span>
+        <span class="title">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
         <div class="bottom" style="margin-top:10px;">
-          <span>{{ deal.basePrice }}⠀|⠀{{ deal.reserveTime }}</span>
+          <p style="margin-bottom:0;">{{ deal.basePrice }}원⠀|⠀
+              {{ deal.reserveTime.slice(5, 7) }}월 {{ deal.reserveTime.slice(8, 10) }}일
+              {{ deal.reserveTime.slice(11, 13) }}시 {{ deal.reserveTime.slice(14, 16) }}분 </p>
         </div>
       </div>
     </el-card>
@@ -84,8 +90,7 @@
 
 <script>
 import { reactive } from '@vue/reactivity'
-import { useRouter, useRoute } from 'vue-router'
-import { onBeforeMount, onMounted } from '@vue/runtime-core'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 export default {
@@ -94,9 +99,10 @@ export default {
   props: ["deal"],
 
   setup (props) {
+    // console.log(props)
     const store = useStore()
     const router = useRouter()
-    const route = useRoute()
+
 
     const info = reactive({
       wishCount: 0,
@@ -106,17 +112,8 @@ export default {
       wish: false
     })
 
-    let reserveTime = ''
-    reserveTime = props.deal.reserveTime.replace('T',' ')
-    reserveTime = reserveTime.replace('-','/')
-    //2~15
-    reserveTime = reserveTime.substring(2, 16)
-    props.deal.reserveTime = reserveTime
-    console.log(reserveTime)
-
-    onBeforeMount(()=> {
-      if(localStorage.accessToken){
-        store.dispatch('root/requestUserInfo')
+    if(localStorage.accessToken){
+      store.dispatch('root/requestUserInfo')
         .then(res=>{
           info.isLogin = true
           if(res.data.userId == props.deal.seller){
@@ -134,11 +131,9 @@ export default {
               })
           })
       }
-    })
 
     const updateDeal = function (e) {
       e.stopPropagation()
-      console.log("거래 수정")
       router.push({
         name: 'update-deal-form',
         params: {
@@ -160,6 +155,7 @@ export default {
         store.dispatch('root/requestWishCount', props.deal.productId)
           .then(res=>{
             info.wishCount = res.data.wishCount
+            router.go()
           })
       })
     }
@@ -200,9 +196,11 @@ export default {
   width: 100%;
   height: 190px;
 }
+
 .el-card .title {
   font-weight: bold;
 }
+
 .el-card .bottom .loginbottom {
   margin-top: 5px;
   display:-webkit-box;
@@ -215,6 +213,7 @@ export default {
 .custom-icon {
   font-size: 30px;
 }
+
 .custom-icon2 {
   font-size: 30px;
   position: absolute;

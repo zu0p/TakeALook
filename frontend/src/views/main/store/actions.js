@@ -15,7 +15,7 @@ function createInstanceWithAuth(url) {
   return setInterceptors(instance)
 }
 
-const BASE_URL = 'http://i5d101.p.ssafy.io:8080/api/v1'
+const BASE_URL = 'https://i5d101.p.ssafy.io:8080/api/v1'
 // const BASE_URL = 'http://localhost:8080/api/v1'
 // const BASE_URL = 'https://soft-lizard-45.loca.lt/api/v1/'
 const instanceWithAuth = createInstance()
@@ -112,24 +112,28 @@ export function requestDeleteLikeDeal({state}, payload){
   return instanceWithAuth.delete(url)
 }
 
-export function requestWishList({state}){
-  const url = BASE_URL+'/wish'
-  return instanceWithAuth.get(url)
+export function requestWishList({state}, payload){
+  const url = BASE_URL+'/wish/list'
+  let body = payload
+  return instanceWithAuth.post(url, body)
 }
 
-export function requestSellList({state}){
+export function requestSellList({state}, payload){
   const url = BASE_URL+'/trade/sell'
-  return instanceWithAuth.get(url)
+  let body = payload
+  return instanceWithAuth.post(url, body)
 }
 
-export function requestBuyList({state}){
+export function requestBuyList({state}, payload){
   const url = BASE_URL+'/trade/buy'
-  return instanceWithAuth.get(url)
+  let body = payload
+  return instanceWithAuth.post(url, body)
 }
 
-export function requestDealList({state}){
+export function requestDealList({state}, payload){
   const url = BASE_URL+'/product/list'
-  return instanceWithAuth.get(url)
+  let body = payload
+  return instanceWithAuth.post(url, body)
 }
 
 export function requestCheckWish({state}, payload){
@@ -140,4 +144,33 @@ export function requestCheckWish({state}, payload){
 export function requestWishCount({state}, payload){
   const url = BASE_URL+`/wish/count/${payload}`
   return instanceWithAuth.get(url)
+}
+
+export function requestPriceHigh({state}, payload){
+  const url = BASE_URL+'/product/highprice'
+  let body = payload
+  return instanceWithAuth.post(url, body)
+}
+
+export function requestPriceLow({state}, payload){
+  const url = BASE_URL+'/product/lowprice'
+  let body = payload
+  return instanceWithAuth.post(url, body)
+}
+
+export function requestReserveTime({state}, payload){
+  const url = BASE_URL+'/product/reservetime'
+  let body = payload
+  return instanceWithAuth.post(url, body)
+}
+
+export function requestAllDeal({state}){
+  const url = BASE_URL+'/product/all'
+  return instanceWithAuth.post(url)
+}
+
+export function requestSearch({state}, payload){
+  const url = BASE_URL+'/product/search'
+  let body = payload
+  return instanceWithAuth.post(url, body)
 }
