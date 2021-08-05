@@ -7,7 +7,6 @@
       @openSignupDialog="onOpenSignupDialog"/>
     <el-container class="main-container">
       <el-aside class="hide-on-small" width="240px">
-        <span>사이드바</span>
         <main-sidebar
           :width="`240px`"/>
       </el-aside>
@@ -24,11 +23,14 @@
     :open="signupDialogOpen"
     @closeSignupDialog="onCloseSignupDialog" />
 </template>
+
 <style>
   @import "https://unpkg.com/element-plus/lib/theme-chalk/index.css";
   @import './main.css';
   @import '../../common/css/common.css';
   @import '../../common/css/element-plus.css';
+
+  /* DM 아이콘 */
 
 </style>
 <script>
@@ -38,6 +40,8 @@ import MainHeader from './components/main-header'
 import MainSidebar from './components/main-sidebar'
 import MainFooter from './components/main-footer'
 import {mapActions} from 'vuex';
+// DM 아이콘
+
 
 export default {
   name: 'Main',
@@ -46,7 +50,7 @@ export default {
     MainSidebar,
     MainFooter,
     LoginDialog,
-    SignupDialog
+    SignupDialog,
   },
   data () {
     return {
@@ -81,6 +85,7 @@ export default {
       // const userData = JSON.parse(userToken)
       // requestUserInfo()
     }
-  }
+  },
+  // DM 아이콘
 }
 </script>
