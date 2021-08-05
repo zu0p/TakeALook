@@ -4,15 +4,50 @@
     "hidden" : false,
     "path" : "/",
     "icon" : "el-icon-s-home",
+    "children" : []
+  },
+  "create-deal-form" : {
+    "name" : "거래 생성",
+    "hidden" : true,
+    "path" : "/create-deal-form",
+    "icon" : "el-icon-edit",
     "children" : [],
     "show": "all"
   },
-  "history" : {
-    "name" : "지난 회의 이력",
-    "hidden" : false,
-    "path" : "/history",
-    "icon" : "el-icon-s-order",
-    "children" : [],
-    "show": "user"
+  "order-deal" : {
+    "name" : "나의 구매 목록",
+    "hidden" : true,
+    "path" : "/orderdeal",
+    "icon" : "el-icon-s-goods",
+    "children" : []
+  },
+  "my-deal" : {
+    "name" : "나의 판매 목록",
+    "hidden" : true,
+    "path" : "/mydeal",
+    "icon" : "el-icon-user-solid",
+    "children" : []
+  },
+  "keep-deal" : {
+    "name" : "나의 관심 목록",
+    "hidden" : true,
+    "path" : "/keepdeal",
+    "icon" : "el-icon-message-solid",
+    "children" : []
+  },
+  "user-info":{
+    "name": "회원 정보 수정",
+    "hidden": true,
+    "path": "/userInfo",
+    "icon": "el-icon-user",
+    "children": []
+  },
+  "webRTC":{
+    "name": "webRTC test",
+    "hidden": true,
+    "path": "/webRTC",
+    "icon": "el-icon-user",
+    "children": []
   }
 }
+
