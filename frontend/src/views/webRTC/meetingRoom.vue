@@ -3,14 +3,25 @@
     <h2 id="room-header"></h2>
 
     <div id="participants">
-    <el-row :gutter="40">
-      <el-col id="seller" :span="16"></el-col>
-      <el-col id="chat" :span="8">
-        <propse-form />
-      </el-col>
-    </el-row>
-    <el-row id="buyer" :gutter="20">
-    </el-row>
+      <el-container>
+        <el-header><h1>거래 세션</h1></el-header>
+        <el-divider></el-divider>
+        <el-container>
+          <el-main>
+            <el-row :gutter="40">
+              <el-col id="seller" :span="16"></el-col>
+              <el-col id="propse" :span="8">
+                <propse-form />
+              </el-col>
+            </el-row>
+            <el-row id="buyer" :gutter="20">
+            </el-row>
+          </el-main>
+          <el-aside id="chat" width="30%">
+            <chat-form />
+          </el-aside>
+        </el-container>
+      </el-container>
     </div>
     <!-- <input type="button" id="button-leave" @click="leaveRoom"
       value="Leave room"> -->
@@ -25,11 +36,13 @@ import { onBeforeMount, onBeforeUnmount, onMounted } from '@vue/runtime-core'
 import Participant from './js/participant'
 import ws from './js/webSocket.js'
 import PropseForm from './components/proposeForm.vue'
+import ChatForm from './components/chatForm.vue'
 
 export default {
   name: 'meeting-detail-page',
   components: {
     PropseForm,
+    ChatForm
   },
   setup(props, {emit}){
     const store = useStore()
@@ -138,9 +151,9 @@ export default {
         audio : true,
         video : {
           mandatory : {
-            maxWidth : 320,
-            maxFrameRate : 15,
-            minFrameRate : 15
+            maxWidth : 720,
+            maxFrameRate : 30,
+            minFrameRate : 24
           }
         }
       }
