@@ -1,6 +1,9 @@
 package com.ssafy.api.service.user;
 
 import com.ssafy.api.request.user.UserUpdatePatchReq;
+import com.ssafy.api.service.wish.WishService;
+import com.ssafy.db.repository.product.ProductRepository;
+import com.ssafy.db.repository.wish.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,7 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.user.UserRepository;
 import com.ssafy.db.repository.user.UserRepositorySupport;
 
+import javax.transaction.Transactional;
 import java.util.NoSuchElementException;
 
 /**
@@ -23,6 +27,10 @@ public class UserServiceImpl implements UserService {
 	UserRepositorySupport userRepositorySupport;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	WishRepository wishRepository;
+	@Autowired
+	ProductRepository productRepository;
 
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
@@ -56,7 +64,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteUser(String userId) {
+		wishRepository.deleteAllByUserId(userId);
+		productRepository.deleteAllByUserId(userId);
+
 		User user = userRepositorySupport.findUserByUserId(userId).get();
 		userRepository.delete(user);
 	}
