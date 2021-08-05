@@ -3,10 +3,7 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.paging.PageReq;
 import com.ssafy.api.request.product.ProductRegisterPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;
-import com.ssafy.api.response.product.ProductDeleteRes;
-import com.ssafy.api.response.product.ProductListGetRes;
-import com.ssafy.api.response.product.ProductRegistPostRes;
-import com.ssafy.api.response.product.ProductUpdatePatchRes;
+import com.ssafy.api.response.product.*;
 import com.ssafy.api.response.trade.TradeListGetRes;
 import com.ssafy.api.service.product.ProductService;
 import com.ssafy.api.service.user.UserService;
@@ -35,6 +32,14 @@ public class ProductController {
     UserService userService;
     @Autowired
     ProductService productService;
+
+    @PostMapping("/all")
+    @ApiOperation(value = "전체 판매 상품 목록", notes = "전체 상품을 조회한다")
+    public ResponseEntity<?> getAllProduct() {
+        List<ProductListGetRes> productList = productService.getAllProduct();
+        if(productList.isEmpty()) return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
+        return ResponseEntity.status(200).body(productList);
+    }
 
     @PostMapping("/list")
     @ApiOperation(value = "판매 상품 목록 (신상품순)", notes = "전체 상품을 등록일 순서로 조회한다")

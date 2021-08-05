@@ -160,3 +160,8 @@ export function requestReserveTime({state}, payload){
   let body = payload
   return instanceWithAuth.post(url, body)
 }
+
+export function requestAllDeal({state}){
+  const url = BASE_URL+'/product/all'
+  return instanceWithAuth.post(url)
+}

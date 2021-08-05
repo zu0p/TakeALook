@@ -1,32 +1,37 @@
 <template>
-  <!-- 사진 업로드 -->
   <el-container class="update-deal-form">
-    <el-upload
-      class="avatar-uploader"
-      action="https://jsonplaceholder.typicode.com/posts/"
-      :show-file-list="false"
-      :on-success="handleAvatarSuccess"
-      :before-upload="beforeAvatarUpload">
-      <img v-if="state.src.imageUrl" :src="state.src.imageUrl" class="avatar">
-      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
+    <!-- 이미지 업로드 폼 -->
+    <form class="image-upload-form" method="post" enctype="multipart/form-data">
+      <img class="wrapper" :src="state.src.imageUrl" alt="">
+      <div class="button">
+          <label for="chooseFile">
+              👉 이곳을 눌러 사진을 업로드 하세요 👈
+              <br>
+              (다시 눌러 사진을 변경할 수 있습니다.)
+          </label>
+      </div>
+      <input type="file" id="chooseFile" name="chooseFile" accept="image/*" :onchange="loadFile">
+    </form>
 
     <!-- 거래 작성 폼 -->
-    <el-form v-if="!state.loading" v-model="state.form" :rules="state.rules" ref="updateDealForm" :label-position="state.form.align">
+    <el-form v-if="!state.loading" :model="state.form" :rules="state.rules" ref="updateDealForm" :label-position="state.form.align">
       <!-- 게시글 제목 -->
       <el-form-item prop="productName" label="제목" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.productName" maxlength="16" placeholder="제목을 입력하세요" autocomplete="off"></el-input>
+        <el-input v-model="state.form.productName" placeholder="제목을 입력하세요" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item prop="categories" label="상품 분류" :label-width="state.formLabelWidth">
         <el-select v-model="state.form.categories" placeholder="카테고리를 선택해주세요">
+          <el-option label="선택하세요" value=""></el-option>
           <el-option label="전자기기" value="electronics"></el-option>
           <el-option label="의류" value="clothing"></el-option>
+          <el-option label="음식" value="food"></el-option>
+          <el-option label="화장품" value="cosmetic"></el-option>
         </el-select>
       </el-form-item>
       <!-- 가격 -->
       <!-- 숫자만 입력가능하다. -->
       <el-form-item prop="basePrice" label="가격" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.basePrice" placeholder="가격을 입력하세요 (단위: 원)" maxlength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off"></el-input>
+        <el-input v-model="state.form.basePrice" placeholder="가격을 입력하세요 (단위: 원)" maxlength="12" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off"></el-input>
       </el-form-item>
       <!-- 제품 판매 예약시간 -->
       <el-form-item prop="reserveTime" label="제품 판매 예약시간" :label-width="state.formLabelWidth">
@@ -38,6 +43,7 @@
             placeholder="날자를 선택하세요"
             style="width: 100%;"
             :disabled-date="disabledDate"
+
             >
           </el-date-picker>
         </el-col>
@@ -52,7 +58,7 @@
   <!-- 작성, 취소버튼 -->
   <hr>
   <el-form-item>
-    <el-button type="primary" @click="clickUpdate">수정</el-button>
+    <el-button type="primary" @click="clickUpdate">작성</el-button>
     <el-button type="danger" @click="clickCancel">취소</el-button>
   </el-form-item>
 </template>
@@ -119,9 +125,16 @@ export default {
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       // mutations의 setMenuActiveMenuName을 호출하고 setMenuActiveMenuName의 create-deal-form 인자를 받아온다.
-      store.commit('root/setMenuActiveMenuName', 'create-deal-form')
+      store.commit('root/setMenuActiveMenuName', 'update-deal-form')
       //
     })
+
+        // 이미지 파일 처리
+    const loadFile = function (res) {
+      const imgUrl = URL.createObjectURL(res.path[0].files[0])
+      // console.log(imgUrl)
+      state.src.imageUrl = imgUrl
+    }
 
     const clickUpdate = function () {
       // console.log(state.form.categories)
@@ -163,25 +176,10 @@ export default {
       window.location='/'
     }
 
-    return { updateDealForm, state, clickUpdate, clickCancel, }
+    return { updateDealForm, state, clickUpdate, clickCancel, loadFile,  }
   },
   // imageUrl, el-date-picker 관련 method
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('Avatar picture must be JPG format!');
-      }
-      if (!isLt2M) {
-        this.$message.error('사진 크기는 2MB를 초과할 수 없습니다!');
-      }
-      return isJPG && isLt2M;
-    },
     disabledDate(time) {
       return time && time.valueOf() < Date.now();
       // return time.getTime() < Date.now() - 8.64e7

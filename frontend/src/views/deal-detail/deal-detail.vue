@@ -1,9 +1,9 @@
 <template>
-  <div style="margin-left: 50px; margin-right: 50px;">
-    <el-container>
-      <img :src="info.imageUrl" alt="" style="max-width:50%; margin-left:5%;">
+  <div style="margin-left: 30px; margin-right: 50px;">
+    <el-container style="text-align:center;">
+      <img :src="info.imageUrl" alt="" style="max-width:700px; max-height:700px;">
       <el-form ref="form" label-width="120px" style="text-align:left; margin-left:10%;" label-position="left">
-        <h1 style="font-size:28px; margin-bottom:5px;">상품 이름</h1>
+        <h1 style="font-size:28px; margin-bottom:5px;">{{ info.productName }}</h1>
         <div style="text-align:right;" v-if="info.mine">
           <i class="el-icon-message-solid" style="color:#ffd04b; margin-right:10px;"></i>
           <span style="color:#ffd04b;">{{ info.wishCount }}</span>
@@ -15,10 +15,11 @@
           <span style="margin-top:0; margin-left:20px; font-weight: 900;">{{ info.categories }}</span>
         </el-form-item>
         <el-form-item label="기준가">
-         <span style="margin-top:0; margin-left:20px; font-weight: 900;">{{ info.basePrice }}</span>
+         <span style="margin-top:0; margin-left:20px; font-weight: 900;">{{ info.basePrice }}원</span>
         </el-form-item>
         <el-form-item label="거래 시간">
-         <span style="margin-top:0; margin-left:20px; font-weight: 900;">{{ info.reserveTime }}</span>
+         <span style="margin-top:0; margin-left:20px; font-weight: 900;">{{ info.reserveTime.slice(5, 7) }}월 {{ info.reserveTime.slice(8, 10) }}일
+              {{ info.reserveTime.slice(11, 13) }}시 {{ info.reserveTime.slice(14, 16) }}분</span>
         </el-form-item>
         <el-form-item label="상세 설명">
          <span style="margin-top:0; margin-left:20px; font-weight: 900;">{{ info.description }}</span>
@@ -35,30 +36,50 @@
               <el-button @click="updateDeal" type="primary" style="width:95px;" icon="el-icon-edit">수정</el-button>
               <el-button @click="deleteDeal" type="danger" style="width:95px;" icon="el-icon-delete">삭제</el-button>
               <br>
+              <el-button @click="backMy" type="info" style="width:95px; margin-top:5px;" icon="el-icon-sell">판매</el-button>
+              <el-button @click="backHome" type="info" style="width:95px; margin-top:5px;" icon="el-icon-menu">목록</el-button>
             </div>
             <!-- 내가 작성한 거래가 아닌 경우 -->
             <div v-else style="text-align:center">
               <el-button v-if="info.like" @click="deletelikeDeal" type="danger" style="width: 200px" icon="el-icon-message-solid">찜 취소 {{ info.wishCount }}</el-button>
               <el-button v-else @click="likeDeal" type="danger" style="width: 200px;" icon="el-icon-bell">찜 {{ info.wishCount }}</el-button>
               <br>
+              <el-button @click="backKeep" type="info" style="width:95px; margin-top:5px;" icon="el-icon-message-solid">찜</el-button>
+              <el-button @click="backHome" type="info" style="width:95px; margin-top:5px;" icon="el-icon-menu">목록</el-button>
             </div>
           </div>
         </div>
-        <div style="text-align:center">
-          <el-button @click="backHome" type="info" style="width: 200px; margin-top:5px;" icon="el-icon-menu">목록</el-button>
-        </div>
       </el-form>
     </el-container>
+    <h1 v-if="info.recommend" style="text-align:left; margin-top:0; margin-bottom:30px;">이런 상품은 어떠세요?</h1>
+    <el-row style="text-align:center;">
+      <ul v-for="deal in info.recommend" :key="deal.productId" @click="dealDetail(deal.productId)" >
+        <recommend :deal="deal"/>
+      </ul>
+    </el-row>
   </div>
 </template>
 
 <script>
+import Recommend from './components/recommend'
 import { reactive, onBeforeMount } from '@vue/runtime-core'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 
 export default {
   name: "Deal-detail",
+
+  components: {
+    Recommend,
+  },
+
+  watch: {
+    '$route' (to, from) {
+      if (to.path != from.path) {
+        this.$router.go()
+      }
+    }
+  },
 
   setup () {
     const store = useStore()
@@ -67,6 +88,8 @@ export default {
     const state = reactive({
       productId: ''
     })
+    console.log(451)
+    console.log(document.referrer)
 
     const info = reactive({
       productName:'',
@@ -74,12 +97,13 @@ export default {
       categories: '',
       description: '',
       reserveTime: '',
-      productId:'',
       imageUrl: '',
       seller: '',
+      recommend: '',
       registTime: '',
       recommend: '',
       wishCount: 0,
+      myId: '',
       mine: false,
       like: false,
       isSold: false,
@@ -101,7 +125,6 @@ export default {
             info.description = res.data.description
             info.reserveTime = res.data.reserveTime
             info.seller = res.data.seller
-            info.productId = res.data.productId
             info.imageUrl = res.data.imageUrl
             info.isSold = res.data.isSold
             info.registTime = res.data.registTime
@@ -110,6 +133,7 @@ export default {
             store.dispatch('root/requestUserInfo')
             .then(res=>{
               info.isLogin = true
+              info.myId = res.data.userId
               if (info.seller == res.data.userId) {
                 info.mine = true
                 store.dispatch('root/requestWishCount', state.productId)
@@ -132,6 +156,26 @@ export default {
               })
             }
           })
+
+          // 같은 카테고리 추천
+          store.dispatch('root/requestAllDeal')
+            .then (res => {
+              if (res.data.statusCode != 404) {
+                var temp = res.data.sort(()=>Math.random()-0.5)
+                info.recommend = []
+                for (var deal in temp) {
+                  if (info.recommend.length < 4 && temp[deal].productId != state.productId) {
+                    if (temp[deal].categories == info.categories) {
+                      if (temp[deal].seller != info.myId) {
+                        info.recommend.push(temp[deal])
+                      }
+                    }
+                  }
+                } if (info.recommend.length == 0) {
+                  info.recommend = false
+                }
+              }
+            })
           }
         })
         .catch(err => {
@@ -142,7 +186,15 @@ export default {
     })
 
     const backHome = function () {
-      router.go(-1)
+      router.push({name: 'home'})
+    }
+
+    const backKeep = function () {
+      router.push({name: 'keep-deal'})
+    }
+
+    const backMy = function () {
+      router.push({name: 'my-deal'})
     }
 
     const deleteDeal = function () {
@@ -189,7 +241,18 @@ export default {
         props: state.productId
       })
     }
-    return { info, backHome, deleteDeal, likeDeal, deletelikeDeal, updateDeal }
+
+    const dealDetail = function (id) {
+          router.push({
+            name: 'deal-detail',
+            params: {
+              productId: id
+            }
+          })
+
+    }
+
+    return { info, backHome, backKeep, backMy, deleteDeal, likeDeal, deletelikeDeal, updateDeal, dealDetail }
   }
 }
 </script>

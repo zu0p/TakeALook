@@ -26,8 +26,9 @@
     </div>
   </el-row>
 
-  <ul class="infinite-list">
-    <li v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId" >
+  <ul class="infinite-list" >
+    <price-high v-if="info.current == 1" :dealList="info.dealList"/>
+    <li v-else v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId" >
       <conference :deal="deal"/>
     </li>
     <h2 v-if="!info.searchResult" style="margin-top:200px; margin-bottom:200px; text-align:center;">검색어에 해당하는 거래가 존재하지 않습니다</h2>
@@ -40,6 +41,7 @@
       @current-change="handleCurrentChange"
       :page-size="info.pageSize"
       :total="info.total"
+      :current-page="info.currentpage"
       v-if="info.searchResult"
       style=" text-align:center;">
     </el-pagination>
@@ -49,39 +51,43 @@
 
 <script>
 import Conference from './components/conference'
+import PriceHigh from './components/price-high'
+import PriceLow from './components/price-low'
 import { onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 export default {
   name: 'Home',
 
   components: {
     Conference,
+    PriceHigh,
+    PriceLow
   },
   data() {
-    //! pagination 데이터 설정
+    // !임시 카테고리
     return {
       options: [{
         value: '',
         label: '전체'
       },{
-        value: '디지털/가전',
+        value: 'electronics',
         label: '디지털/가전'
       }, {
-        value: '가구/인테리어',
+        value: '1',
         label: '가구/인테리어'
       }, {
-        value: '여성패션/잡화',
+        value: '2',
         label: '여성패션/잡화'
       }, {
-        value: '남성패션/잡화',
+        value: 'clothing',
         label: '남성패션/잡화'
       }, {
-        value: '뷰티/미용',
+        value: '4',
         label: '뷰티/미용'
       }, {
-        value: '미술품',
+        value: '5',
         label: '미술품'
       }],
     }
@@ -90,36 +96,75 @@ export default {
   setup () {
     const router = useRouter()
     const store = useStore()
+    const route = useRoute()
+
+    // console.log(52)
+    // console.log(route.path)
 
     const info = reactive({
       dealList: '',
       search: '',
       value: '',
       current: 0,
+      currentpage:0,
       page: 0,
       // 한 페이지에 뜨는 상품 수
       pageSize: 10,
-      // 페이지네이션 총 페이지
+      // 총 상품 수
       total: 0,
+      totalPage:0,
       searchResult: true
     })
 
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'home')
-      store.dispatch('root/requestDealList', {page: 0, size: 10})
-        .then (res => {
-          info.total = res.data.totalElements
-          if (res.data.statusCode != 404) {
-            info.dealList = res.data.content
-          }
-        })
-
+      if (route.path == "/high-price") {
+        info.current = 1
+        store.dispatch('root/requestPriceHigh', {page: 0, size: 10})
+          .then (res => {
+            if (res.data.statusCode != 404) {
+              info.total = res.data.totalElements
+              info.pageSize = res.data.size
+              info.dealList = res.data.content
+            }
+          })
+      } else if (route.path == "/low-price") {
+        info.current = 2
+        store.dispatch('root/requestPriceLow', {page: 0, size: 10})
+          .then (res => {
+            if (res.data.statusCode != 404) {
+              info.total = res.data.totalElements
+              info.pageSize = res.data.size
+              info.dealList = res.data.content
+            }
+          })
+      } else if (route.path == "/reserve-time") {
+        info.current = 3
+        store.dispatch('root/requestReserveTime', {page: 0, size: 10})
+          .then (res => {
+            if (res.data.statusCode != 404) {
+              info.total = res.data.totalElements
+              info.pageSize = res.data.size
+              info.dealList = res.data.content
+            }
+          })
+      } else {
+        info.current = 0
+        store.dispatch('root/requestDealList', {page: 0, size: 10})
+          .then (res => {
+            if (res.data.statusCode != 404) {
+              console.log(res.data)
+              info.total = res.data.totalElements
+              info.pageSize = res.data.size
+              info.dealList = res.data.content
+            }
+          })
+      }
     })
 
     const handleCurrentChange = function (e) {
       info.page = e-1
-      console.log(info.page)
-
+      info.currentpage = e
       // 신상품순
       if (info.current == 0) {
         store.dispatch('root/requestDealList', {page: info.page, size: 10})
@@ -162,7 +207,8 @@ export default {
     }
 
     const searchDeal = function () {
-      store.dispatch('root/requestDealList',)
+      info.current = 0
+      store.dispatch('root/requestAllDeal')
         .then (res => {
           if (res.data.statusCode != 404) {
             info.dealList = []
@@ -190,21 +236,35 @@ export default {
 
     const priceHigh = function () {
       info.current = 1
+      router.push({
+        name: "price-high"
+      })
+      info.search = ''
+      info.value = ''
       handleCurrentChange()
     }
 
     const newDeal = function () {
       info.current = 0
+      router.push({
+        name: "home"
+      })
       handleCurrentChange()
     }
 
     const priceLow = function () {
       info.current = 2
+      router.push({
+        name: "price-low"
+      })
       handleCurrentChange()
     }
 
     const reserveTime = function () {
       info.current = 3
+      router.push({
+        name: "reserve-time"
+      })
       handleCurrentChange()
     }
 

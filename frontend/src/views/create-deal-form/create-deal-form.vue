@@ -1,32 +1,37 @@
 <template>
-  <!-- 사진 업로드 -->
   <el-container class="create-deal-form">
-    <!-- 이미지 -->
-    <form method="post" enctype="multipart/form-data">
+    <!-- 이미지 업로드 폼 -->
+    <form class="image-upload-form" method="post" enctype="multipart/form-data">
+      <img class="wrapper" :src="state.src.imageUrl" alt="">
       <div class="button">
           <label for="chooseFile">
-              👉 CLICK HERE! 👈
+              👉 이곳을 눌러 사진을 업로드 하세요 👈
+              <br>
+              (다시 눌러 사진을 변경할 수 있습니다.)
           </label>
       </div>
       <input type="file" id="chooseFile" name="chooseFile" accept="image/*" :onchange="loadFile">
     </form>
 
     <!-- 거래 작성 폼 -->
-    <el-form v-if="!state.loading" v-model="state.form" ref="createDealForm" :label-position="state.form.align">
+    <el-form v-if="!state.loading" :model="state.form" :rules="state.rules" ref="createDealForm" :label-position="state.form.align">
       <!-- 게시글 제목 -->
       <el-form-item prop="productName" label="제목" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.productName" maxlength="16" placeholder="제목을 입력하세요" autocomplete="off"></el-input>
+        <el-input v-model="state.form.productName" placeholder="제목을 입력하세요" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item prop="categories" label="상품 분류" :label-width="state.formLabelWidth">
         <el-select v-model="state.form.categories" placeholder="카테고리를 선택해주세요">
+          <el-option label="선택하세요" value=""></el-option>
           <el-option label="전자기기" value="electronics"></el-option>
           <el-option label="의류" value="clothing"></el-option>
+          <el-option label="음식" value="food"></el-option>
+          <el-option label="화장품" value="cosmetic"></el-option>
         </el-select>
       </el-form-item>
       <!-- 가격 -->
       <!-- 숫자만 입력가능하다. -->
       <el-form-item prop="basePrice" label="가격" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.basePrice" placeholder="가격을 입력하세요 (단위: 원)" maxlength="10" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off"></el-input>
+        <el-input v-model="state.form.basePrice" placeholder="가격을 입력하세요 (단위: 원)" maxlength="12" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off"></el-input>
       </el-form-item>
       <!-- 제품 판매 예약시간 -->
       <el-form-item prop="reserveTime" label="제품 판매 예약시간" :label-width="state.formLabelWidth">
@@ -75,22 +80,41 @@ export default {
     const router = useRouter()
     const state = reactive({
       form: {
-        basePrice:0,
-        categories:'',
-        description:'',
-        productName:'',
-        registTime:'',
-        reserveTime:'',
-        restrictTime:'',
-        state:'',
+        productName: '',
+        categories: '',
+        reserveTime: '',
+        basePrice: '',
+        description: '',
+        registTime: new Date(),
+        restrictTime: '',
+        state: '',
       },
       src: {
         imageUrl:'',
+      },
+      rules: {
+        productName:[
+          {required: true, message: '필수 입력 항목입니다.', trigger: 'blur'},
+          {max:16, message: '최대 16자까지 입력 가능합니다.'}
+        ],
+        categories:[
+          {required: true, message: '필수 선택 항목입니다.', trigger: 'blur'},
+        ],
+        basePrice:[
+          {required: true, message: '필수 입력 항목입니다.', trigger: 'blur'},
+        ],
+        reserveTime:[
+          {required: true, message: '필수 선택 항목입니다.', trigger: 'blur'},
+        ],
+        description:[
+          {required: true, message: '필수 입력 항목입니다.', trigger: 'blur'},
+        ],
       },
       formValicate: false,
       loading: false,
       formLabelWidth: '140px',
       date:'',
+      date1:'',
     })
     // 페이지 진입시 불리는 훅
     onMounted (() => {
@@ -99,34 +123,19 @@ export default {
     })
 
     // 이미지 파일 처리
-    // const loadFile = function (res) {
-    //   const imgUrl = URL.createObjectURL(res.path[0].files[0])
-    //   state.src.imageUrl = imgUrl
-    // }
-    const loadFile = function (e) {
-      console.log(e.target.files[0])
-      // let img = e.target.files[0]
-
-      // let fd = new FormData()
-      // fd.append('image', img)
-      // console.log(fd)
-
+    const loadFile = function (res) {
+      const imgUrl = URL.createObjectURL(res.path[0].files[0])
+      // console.log(imgUrl)
+      state.src.imageUrl = imgUrl
     }
 
-    const showImage = function () {
-      //이미지는 화면에 나타나고
-      newImage.style.visibility = "visible";
-
-      //이미지 업로드 버튼은 숨겨진다
-      document.getElementById('image-upload').style.visibility = 'hidden';
-
-      document.getElementById('fileName').textContent = null;     //기존 파일 이름 지우기
-    }
-
-    // reserveTime1 의 타입은 String이다.
+    // reserveTime 의 타입은 String이다.
     const dateTimeToString = function () {
       // 단어별로 구분
+      // reserveTime
       const array = state.form.reserveTime.toString().split(' ')
+      // registTime
+      const array1 = state.form.registTime.toString().split(' ')
       // 그 단어의 1,2,3,4번째 배열만 쓸거다
       const month = ["","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
       let res = `${array[3]}-`
@@ -135,17 +144,30 @@ export default {
           if(i<10)
             res+=`0${i}-`
           else
-            res += `i-`
+            res += `${i}-`
+          break;
+        }
+      }
+      let res1 = `${array1[3]}-`
+      for(let i = 1; i<=12; i++){
+        if(array1[1]==month[i]){
+          if(i<10)
+            res1+=`0${i}-`
+          else
+            res1 += `${i}-`
           break;
         }
       }
       res += `${array[2]}T${array[4]}.000+00:00`
+      res1 += `${array1[2]}T${array1[4]}.000+00:00`
       state.date = res
+      state.date1 = res1
     }
 
-
     const clickCreate = function () {
-      //
+      // console.log(state.form.basePrice)
+      // console.log(state.date1)
+      // backend에서 원하는 형식으로 주기 위해 현재시간과 예약시간의 형태를 변경하는 함수
       dateTimeToString()
       //console.log(state.date)
       //console.log(typeof state.date)
@@ -157,17 +179,21 @@ export default {
           description: state.form.description,
           imageUrl: state.src.imageUrl,
           productName: state.form.productName,
-          // registTime: state.form.registTime,
+          registTime: state.date1,
           reserveTime: state.date,
           // restrictTime: state.form.restrictTime,
           // state: state.form.state,
       }
-      console.log(body)
       // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
       store.dispatch('root/createPost', body)
       .then(res=>{
         console.log(res)
         router.push({name: 'home'})
+      })
+      .catch(err=>{
+        state.loading = false
+        alert('필수 항목을 입력하세요.')
+        console.log(err)
       })
       // createDealForm.value.validate((valid) => {
       //   if (valid) {
@@ -203,7 +229,7 @@ export default {
       window.location='/'
     }
 
-    return { createDealForm, state, clickCreate, clickCancel, loadFile, showImage }
+    return { createDealForm, state, clickCreate, clickCancel, loadFile, }
   },
   // imageUrl, el-date-picker 관련 method
   methods: {
@@ -217,8 +243,13 @@ export default {
 </script>
 <style>
   .create-deal-form {
-    /* justify-content: center; */
+    justify-content: center;
   }
+  /* 이미지 업로드 폼 */
+    .image-upload-form {
+      max-width: 500px;
+      max-height: 500px;
+    }
   /* label 스타일 조정 */
   .button {
     display: flex;
@@ -233,4 +264,17 @@ export default {
   #chooseFile {
     visibility: hidden;
   }
+  /* 이미지 태그 비율 맞추기 */
+  .wrapper {
+
+    width: 400px;
+    height: 400px;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+    /* 업로드 이미지 가로세로 비율 맞춰주기 */
+    object-fit: cover;
+  }
+
 </style>

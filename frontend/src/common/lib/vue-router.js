@@ -50,6 +50,24 @@ function makeRoutesFromMenu () {
     props: true,
   })
 
+  routes.push({
+    path: '/high-price',
+    name: 'price-high',
+    component: Home
+  })
+
+  routes.push({
+    path: '/low-price',
+    name: 'price-low',
+    component: Home
+  })
+
+  routes.push({
+    path: '/reserve-time',
+    name: 'reserve-time',
+    component: Home
+  })
+
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(게시글 상세보기))
   return routes
 }
