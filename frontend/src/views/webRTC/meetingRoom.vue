@@ -1,10 +1,20 @@
 <template>
-
   <div id="room">
-				<h2 id="room-header"></h2>
-				<div id="participants"></div>
-				<input type="button" id="button-leave" @click="leaveRoom"
-					value="Leave room">
+    <h2 id="room-header"></h2>
+
+    <div id="participants">
+    <el-row :gutter="40">
+      <el-col id="seller" :span="16"></el-col>
+      <el-col id="chat" :span="8">
+        <propse-form />
+      </el-col>
+    </el-row>
+    <el-row id="buyer" :gutter="20">
+    </el-row>
+    </div>
+    <!-- <input type="button" id="button-leave" @click="leaveRoom"
+      value="Leave room"> -->
+    <el-button @click="leaveRoom" >Leave Room</el-button>
 	</div>
 </template>
 
@@ -13,10 +23,14 @@ import { reactive } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { onBeforeMount, onBeforeUnmount, onMounted } from '@vue/runtime-core'
 import Participant from './js/participant'
+import ws from './js/webSocket.js'
+import PropseForm from './components/proposeForm.vue'
 
 export default {
   name: 'meeting-detail-page',
-
+  components: {
+    PropseForm,
+  },
   setup(props, {emit}){
     const store = useStore()
     const state = reactive({
@@ -25,9 +39,11 @@ export default {
       participants:{}
     })
     const kurentoUtils = require('kurento-utils')
-    const ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
+    // const ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
     ws.onmessage = function(message) {
       var parsedMessage = JSON.parse(message.data)
+      console.log(parsedMessage.name)
+      console.log(state.participants[parsedMessage.name])
       console.info('Received message: ' + message.data)
 
       switch (parsedMessage.id) {
@@ -44,7 +60,7 @@ export default {
         receiveVideoResponse(parsedMessage)
         break
       case 'iceCandidate':
-        participants[parsedMessage.name].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
+        state.participants[parsedMessage.name].rtcPeer.addIceCandidate(parsedMessage.candidate, function (error) {
               if (error) {
               console.error("Error adding candidate: " + error)
               return
@@ -74,13 +90,14 @@ export default {
     })
 
     const onNewParticipant = function(request){
-      console.log("누가 들어옴!!")
+      // console.log("누가 들어옴!!")
       receiveVideo(request.name)
     }
 
     const receiveVideo = function(sender) {
+      console.log("sender: "+sender)
       var participant = new Participant(sender)
-      state.participants[sender] = participant
+      // state.participants[sender] = participant
       var video = participant.getVideoElement()
 
       var options = {
@@ -95,6 +112,8 @@ export default {
             }
             this.generateOffer (participant.offerToReceiveVideo.bind(participant))
       })
+
+      state.participants[sender] = participant
     }
 
     const receiveVideoResponse = function(result){
@@ -127,7 +146,7 @@ export default {
       }
       console.log(state.name + " registered in room " + state.room)
       var participant = new Participant(state.name)
-      participants[state.name] = participant
+      // participants[state.name] = participant
       var video = participant.getVideoElement()
 
       var options = {
@@ -142,6 +161,8 @@ export default {
           }
           this.generateOffer (participant.offerToReceiveVideo.bind(participant))
       })
+      state.participants[state.name] = participant
+      console.log("1. "+state.participants[state.name])
 
       msg.data.forEach(receiveVideo)
     }
@@ -160,9 +181,9 @@ export default {
 
     const onParticipantLeft = function(request) {
       console.log('Participant ' + request.name + ' left')
-      var participant = participants[request.name]
+      var participant = state.participants[request.name]
       participant.dispose()
-      delete participants[request.name]
+      delete state.participants[request.name]
     }
 
     const sendMessage = function(message) {
@@ -196,5 +217,17 @@ export default {
 </script>
 
 <style>
-
+.bg-blue {
+  background: #F0F8FF;
+}
+.grid-content {
+  border-radius: 4px;
+  min-height: 500px;
+}
+.participant video {
+  border-radius: 4px;
+}
+#seller.participant video{
+  height: 500px;
+}
 </style>
