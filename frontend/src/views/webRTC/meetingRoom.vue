@@ -4,9 +4,9 @@
 
     <div id="participants">
       <el-container>
-        <el-header><h1>거래 세션</h1></el-header>
+        <!-- <el-header><h1>거래 세션</h1></el-header>
         <el-divider></el-divider>
-        <el-container>
+        <el-container> -->
           <el-main>
             <el-row :gutter="40">
               <el-col id="seller" :span="16"></el-col>
@@ -20,7 +20,7 @@
           <el-aside id="chat" width="30%">
             <chat-form />
           </el-aside>
-        </el-container>
+        <!-- </el-container> -->
       </el-container>
     </div>
     <!-- <input type="button" id="button-leave" @click="leaveRoom"
