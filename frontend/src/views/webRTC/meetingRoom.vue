@@ -153,12 +153,14 @@ export default {
         audio : true,
         video : {
           mandatory : {
-            maxWidth : 720,
+            maxWidth : 360,
             maxFrameRate : 30,
             minFrameRate : 24
           }
         }
       }
+      if(state.name==seller)
+        constraints.video.mandatory.maxWidth = 720
       console.log(state.name + " registered in room " + state.room)
       var participant = new Participant(state.name)
       // participants[state.name] = participant
