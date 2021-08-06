@@ -22,10 +22,10 @@
       <el-form-item prop="categories" label="상품 분류" :label-width="state.formLabelWidth">
         <el-select v-model="state.form.categories" placeholder="카테고리를 선택해주세요">
           <el-option label="선택하세요" value=""></el-option>
-          <el-option label="전자기기" value="electronics"></el-option>
-          <el-option label="의류" value="clothing"></el-option>
-          <el-option label="음식" value="food"></el-option>
-          <el-option label="화장품" value="cosmetic"></el-option>
+          <el-option label="디지털/가전" value="digital"></el-option>
+          <el-option label="가구인테리어" value="furniture"></el-option>
+          <el-option label="패션잡화" value="fashion"></el-option>
+          <el-option label="미술품" value="art"></el-option>
         </el-select>
       </el-form-item>
       <!-- 가격 -->
@@ -50,7 +50,7 @@
       </el-form-item>
       <!-- 제품 설명 -->
       <el-form-item prop="description" label="제품 설명" :label-width="state.formLabelWidth">
-        <el-input type="textarea" resize="none" :rows="5" v-model.trim="state.form.description" placeholder="내용을 입력하세요" show-word-limit maxlength="300" autocomplete="off"></el-input>
+        <el-input type="textarea" resize="none" :rows="5" v-model="state.form.description" placeholder="내용을 입력하세요" show-word-limit maxlength="300" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
   </el-container>
