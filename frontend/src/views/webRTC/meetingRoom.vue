@@ -4,9 +4,9 @@
 
     <div id="participants">
       <el-container>
-        <el-header><h1>거래 세션</h1></el-header>
+        <!-- <el-header><h1>거래 세션</h1></el-header>
         <el-divider></el-divider>
-        <el-container>
+        <el-container> -->
           <el-main>
             <el-row :gutter="40">
               <el-col id="seller" :span="16"></el-col>
@@ -20,7 +20,7 @@
           <el-aside id="chat" width="30%">
             <chat-form />
           </el-aside>
-        </el-container>
+        <!-- </el-container> -->
       </el-container>
     </div>
     <!-- <input type="button" id="button-leave" @click="leaveRoom"
@@ -153,12 +153,14 @@ export default {
         audio : true,
         video : {
           mandatory : {
-            maxWidth : 720,
+            maxWidth : 360,
             maxFrameRate : 30,
             minFrameRate : 24
           }
         }
       }
+      if(state.name==seller)
+        constraints.video.mandatory.maxWidth = 720
       console.log(state.name + " registered in room " + state.room)
       var participant = new Participant(state.name)
       // participants[state.name] = participant
