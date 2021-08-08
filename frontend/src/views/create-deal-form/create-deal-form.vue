@@ -50,7 +50,7 @@
       </el-form-item>
       <!-- 제품 설명 -->
       <el-form-item prop="description" label="제품 설명" :label-width="state.formLabelWidth">
-        <el-input type="textarea" resize="none" :rows="5" v-model.trim="state.form.description" placeholder="내용을 입력하세요" show-word-limit maxlength="300" autocomplete="off"></el-input>
+        <el-input type="textarea" resize="none" :rows="5" v-model="state.form.description" placeholder="내용을 입력하세요" show-word-limit maxlength="300" autocomplete="off"></el-input>
       </el-form-item>
     </el-form>
   </el-container>
@@ -172,28 +172,34 @@ export default {
       //console.log(state.date)
       //console.log(typeof state.date)
       state.loading = true
-
-      const body ={
-          basePrice: parseInt(state.form.basePrice),
-          categories: state.form.categories,
-          description: state.form.description,
-          imageUrl: state.src.imageUrl,
-          productName: state.form.productName,
-          registTime: state.date1,
-          reserveTime: state.date,
-          // restrictTime: state.form.restrictTime,
-          // state: state.form.state,
-      }
-      // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
-      store.dispatch('root/createPost', body)
-      .then(res=>{
-        console.log(res)
-        router.push({name: 'home'})
-      })
-      .catch(err=>{
-        state.loading = false
-        alert('필수 항목을 입력하세요.')
-        console.log(err)
+      createDealForm.value.validate((valid) => {
+        if (valid) {
+          const body ={
+              basePrice: parseInt(state.form.basePrice),
+              categories: state.form.categories,
+              description: state.form.description,
+              imageUrl: state.src.imageUrl,
+              productName: state.form.productName,
+              registTime: state.date1,
+              reserveTime: state.date,
+              // restrictTime: state.form.restrictTime,
+              // state: state.form.state,
+          }
+          // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
+          store.dispatch('root/createPost', body)
+          .then(res=>{
+            console.log(res)
+            router.push({name: 'home'})
+          })
+          .catch(err=>{
+            state.loading = false
+            alert('게시글 작성에 실패하였습니다.')
+            console.log(err)
+          })
+        } else if(!valid){
+          state.loading = false
+          alert('필수 항목을 입력하세요.')
+        }
       })
       // createDealForm.value.validate((valid) => {
       //   if (valid) {
