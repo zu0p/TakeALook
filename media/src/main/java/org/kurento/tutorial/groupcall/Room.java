@@ -84,7 +84,7 @@ public class Room implements Closeable {
   public void broadCastMessages(String name, String newMessage) throws IOException{
     final JsonObject newBroadCastMessage = new JsonObject();
     newBroadCastMessage.addProperty("id", "broadCastNewMessage");
-    newBroadCastMessage.addProperty("newMessage", newMessage);
+    newBroadCastMessage.addProperty("message", newMessage);
     newBroadCastMessage.addProperty("name", name);
     System.out.println("함수안에 들어옴");
     System.out.println(participants.values() + "를 못받아옴");

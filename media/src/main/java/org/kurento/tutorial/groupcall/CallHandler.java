@@ -90,7 +90,7 @@ public class CallHandler extends TextWebSocketHandler {
           broadCastMessage(jsonMessage, session);
           System.out.println(jsonMessage.get("id").getAsString());
           System.out.println(jsonMessage.get("name").getAsString());
-          System.out.println(jsonMessage.get("newMessage").getAsString());
+          System.out.println(jsonMessage.get("message").getAsString());
         break;
       default:
         break;
