@@ -87,9 +87,13 @@ public class Room implements Closeable {
     newBroadCastMessage.addProperty("newMessage", newMessage);
     newBroadCastMessage.addProperty("name", name);
 
-    for (final UserSession participant : this.getParticipants()) {
+    for (final UserSession participant : participants.values()) {
+      try {
         System.out.println(participant.getName());
         participant.sendMessage(newBroadCastMessage);
+      } catch (final IOException e) {
+        log.debug(e.getMessage());
+      }
     }
   }
 
