@@ -249,4 +249,7 @@ export default {
 #seller.participant video{
   height: 500px;
 }
+.el-aside{
+  overflow: hidden;
+}
 </style>

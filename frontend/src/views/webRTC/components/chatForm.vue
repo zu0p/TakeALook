@@ -1,30 +1,41 @@
 <template>
 
-  <el-row>
-    <el-scrollbar class="chat-scrollbar" height="600px" ref="scrollbar">
-      <el-card shadow="never" style="width: 90%" v-for="i in state.chats" :key="i">
-        <div class="messages">
-          <el-tag type="info" style="margin-right:10px"><span>{{i.userId}}</span></el-tag>
-          <span>{{i.message}}</span>
-        </div>
-      </el-card>
-    </el-scrollbar>
-  </el-row>
-  <el-row>
-    <el-input v-model="state.inputMessage" style="width: 70%; margin: 0 3% 0 6px"></el-input>
-    <el-button @click="clickSend">전송</el-button>
-  </el-row>
+  <!-- <el-row> -->
+    <!-- <el-scrollbar class="chat-scrollbar" height="600px" ref="scrollbar"> -->
+  <div id="container">
+    <div id="chat-container">
+      <ul id="chat">
+        <li class="chats" v-for="i in state.chats" :key="i">
+          <el-card shadow="never" style="width: 90%">
+            <div class="messages">
+              <el-tag type="info"><span>{{i.userId}}</span></el-tag>
+              <span>{{i.message}}</span>
+            </div>
+          </el-card>
+        </li>
+      </ul>
+    </div>
+      <!-- </el-scrollbar> -->
+    <!-- </el-row> -->
+    <div id="send-container">
+      <el-input v-model="state.inputMessage" style="width: 70%; margin: 0 3% 0 6px"  @keyup.enter="clickSend"></el-input>
+      <el-button @click="clickSend">전송</el-button>
+    </div>
+  </div>
 
 </template>
 
 <script>
 import { reactive, ref } from '@vue/reactivity'
-import { onUpdated } from '@vue/runtime-core'
+import { onMounted, onUpdated } from '@vue/runtime-core'
+import { useStore } from 'vuex'
 export default {
   name: 'chat-form',
   setup(props, {emit}){
+    const store = useStore()
     const scrollbar = ref(null)
     let state = reactive({
+      curUserId:'',
       chats:[
         {
           userId: 'zu0p',
@@ -51,19 +62,29 @@ export default {
     })
 
     const clickSend = function(){
+      if(state.inputMessage=='') return
       const newMessage ={
-        userId: 'zu0p',
+        userId: state.curUserId,
         message: state.inputMessage
       }
 
       state.chats.push(newMessage)
       state.inputMessage =''
-
     }
 
+    onMounted(()=>{
+      store.dispatch('root/requestUserInfo')
+        .then(res=>{
+          console.log(res)
+          state.curUserId= res.data.userId
+          console.log(state.curUserId)
+        })
+    })
+
     onUpdated(()=>{
-      console.log(scrollbar)
-      scrollbar.setScrollTop(600)
+      let scroll = document.getElementById("chat-container")
+      console.log("updated"+scroll.scrollTop)
+      scroll.scrollTop = scroll.scrollHeight
     })
 
     return {state, clickSend}
@@ -74,8 +95,24 @@ export default {
 <style>
 .messages{
   text-align: left;
+  margin-right:5px;
 }
 .chat-scrollbar{
   width: 100%!important;
+}
+#chat{
+  /* display: flex; */
+  /* overflow: scroll; */
+  /* flex-direction: column-reverse; */
+  /* overflow-y: auto; */
+  /* height: 500px; */
+  list-style-type: none;
+}
+#chat-container{
+  overflow-y: scroll;
+  height: 70vh;
+}
+#send-container{
+  height: 30vh;
 }
 </style>
