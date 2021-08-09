@@ -23,10 +23,7 @@
   <signup-dialog
     :open="signupDialogOpen"
     @closeSignupDialog="onCloseSignupDialog"/>
-  <div class="sc-launcher">
-    <chat-window/>
-    <img class="sc-open-icon" :src="icons.open.img" :alt="icons.open.name" />
-  </div>
+
 </template>
 
 <style>
@@ -58,11 +55,9 @@ import MainSidebar from './components/main-sidebar'
 import MainFooter from './components/main-footer'
 import MainDm from './components/main-dm'
 import {mapActions} from 'vuex';
-import MainDm from './components/main-dm'
 // DM 아이콘
 import CloseIcon from '@/assets/images/close-icon.png'
 import OpenIcon from '@/assets/images/chat-icon.svg'
-import ChatWindow from './components/chat-window.vue'
 
 
 export default {
@@ -74,7 +69,6 @@ export default {
     LoginDialog,
     SignupDialog,
     MainDm,
-    ChatWindow,
   },
   props: {
     icons: {

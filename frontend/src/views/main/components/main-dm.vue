@@ -18,19 +18,21 @@
         {{ newMessagesCount }}
       </div>
       <img v-if="info.isOpen" class="sc-closed-icon" :src="icons.close.img" :alt="icons.close.name" />
-      <img v-else class="sc-open-icon" :src="icons.open.img" :alt="icons.open.name" />
+      <img v-else class="sc-open-icon" :src="icons.open.img" :alt="icons.open.name" style="size:10px"/>
     </div>
+    <chat-window v-if="info.isOpen" style="z-index:1"/>
 </template>
 
 <script>
 
 import CloseIcon from '@/assets/images/close-icon.png'
 import OpenIcon from '@/assets/images/logo-no-bg.svg'
+import ChatWindow from './chat-window.vue'
 import { reactive } from '@vue/reactivity'
 
 export default {
   components: {
-    // ChatWindow
+    ChatWindow
   },
   props: {
     icons: {
@@ -241,5 +243,9 @@ export default {
 </script>
 
 <style>
-
+.sc-open-icon{
+  margin-top: 25%;
+  width: 50%;
+  height: 50%;
+}
 </style>
