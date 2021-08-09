@@ -2,17 +2,24 @@
   <div class="sc-chat-window" :class="{opened: isOpen, closed: !isOpen}" style="text-align: end">
     <el-button style="margin-right:100px">거래 11111생성</el-button>
 
-    <div
+    <!-- <div
       v-if="showLauncher"
       class="sc-launcher"
       :class="{opened: isOpen}"
       :style="{backgroundColor: colors.launcher.bg}"
       @click.prevent="isOpen ? close() : openAndFocus()"
+    > -->
+    <div
+      v-if="showLauncher"
+      class="sc-launcher"
+      :class="{opened: isOpen}"
+      :style="{backgroundColor: colors.launcher.bg}"
+      @click.prevent="isOpen"
     >
       <div v-if="newMessagesCount > 0 && !isOpen" class="sc-new-messsages-count">
         {{ newMessagesCount }}
       </div>
-      <img v-if="isOpen" class="sc-closed-icon" :src="icons.close.img" :alt="icons.close.name" />
+      <img v-if="info.isOpen" class="sc-closed-icon" :src="icons.close.img" :alt="icons.close.name" />
       <img v-else class="sc-open-icon" :src="icons.open.img" :alt="icons.open.name" />
     </div>
   </div>
@@ -22,6 +29,7 @@
 
 import CloseIcon from '@/assets/images/close-icon.png'
 import OpenIcon from '@/assets/images/logo-no-bg.svg'
+import { reactive } from '@vue/reactivity'
 
 export default {
   components: {
@@ -199,8 +207,38 @@ export default {
     openAndFocus() {
       // this.open()
       this.$root.$emit('focusUserInput')
-    }
+    },
   },
+
+  setup(){
+    const info = reactive({
+      isOpen: false,
+      close: false
+    })
+
+    const isOpen = function () {
+      if (info.isOpen == false) {
+        info.isOpen = true
+        check()
+      } else {
+        info.isOpen = false
+        close()
+      } console.log(info.isOpen)
+    }
+
+    const close = function () {
+      console.log("close")
+      if (info.close == false) {
+        info.close = true
+      }
+      info.close = false
+    }
+
+    const check = function () {
+      console.log("check")
+    }
+    return {info, isOpen, close, check}
+  }
 
 }
 </script>

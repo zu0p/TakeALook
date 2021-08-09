@@ -11,6 +11,7 @@
           :width="`240px`"/>
       </el-aside>
       <el-main>
+        <main-dm/>
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -39,6 +40,7 @@ import SignupDialog from './components/signup-dialog'
 import MainHeader from './components/main-header'
 import MainSidebar from './components/main-sidebar'
 import MainFooter from './components/main-footer'
+import MainDm from './components/main-dm'
 import {mapActions} from 'vuex';
 // DM 아이콘
 
@@ -51,6 +53,7 @@ export default {
     MainFooter,
     LoginDialog,
     SignupDialog,
+    MainDm
   },
   data () {
     return {
