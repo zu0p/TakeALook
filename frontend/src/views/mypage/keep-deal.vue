@@ -1,5 +1,5 @@
 <template>
-  <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 관심 목록</h1>
+  <h1 style="font-size:30px; text-align:left; margin-left:100px" v-loading.fullscreen.lock="state.isLoading">나의 관심 목록</h1>
   <div v-if="info.wishList">
     <ul class="infinite-list">
       <li v-for="wish in info.wishList" @click="clickDeal(wish.productId)" class="infinite-list-item" :key="wish.productId" >
@@ -15,12 +15,22 @@
     </ul>
   </div>
   <div v-else>
-    <b>찜한 거래가 없습니다</b>
+    <div v-if="!info.searchResult" >
+      <h2 style="margin-top:200px; text-align:center;"><i class="el-icon-warning-outline" style="margin-left:5px;"></i>
+        찜한 거래가 없습니다</h2>
+      <span style="font-size:20;">이런 상품은 어떠세요?</span>
+      <el-row justify="center" style="margin-top:10px">
+        <ul v-for="deal in info.recommend" :key="deal.productId" @click="dealDetail(deal.productId)">
+          <recommend :deal="deal"/>
+        </ul>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script>
 import Conference from '@/views/home/components/conference'
+import Recommend from '../deal-detail/components/recommend'
 import { onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
@@ -30,6 +40,7 @@ export default {
 
   components: {
     Conference,
+    Recommend
   },
 
   setup () {
@@ -38,7 +49,12 @@ export default {
     const info = reactive({
       wishList:'',
       pageSize: 10,
-      total: 0
+      total: 0,
+      recommend: ''
+    })
+
+    const state = reactive({
+      isLoading: true
     })
 
     // 페이지 진입시 불리는 훅
@@ -50,6 +66,22 @@ export default {
             info.total = res.data.totalElements
             info.pageSize = res.data.size
           })
+          .catch(err => {
+            store.dispatch('root/requestAllDeal')
+            .then (res => {
+              if (res.data.statusCode != 404) {
+                var temp = res.data.sort(()=>Math.random()-0.5)
+                info.recommend = []
+                for (var deal in temp) {
+                  if (info.recommend.length < 4){
+                    info.recommend.push(temp[deal])
+                  }
+                }
+                console.log(info.recommend)
+              }
+            })
+          })
+        state.isLoading = false
     })
 
     const handleCurrentChange = function (e) {
@@ -71,7 +103,7 @@ export default {
       })
     }
 
-    return { info, clickDeal, handleCurrentChange }
+    return { info, state, clickDeal, handleCurrentChange }
   }
 }
 </script>

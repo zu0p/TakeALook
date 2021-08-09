@@ -53,7 +53,7 @@
     </el-container>
     <div style="text-align:center;">
       <h1 v-if="info.recommend" style="text-align:left; margin-top:80px; margin-bottom:30px;">이런 상품은 어떠세요?</h1>
-      <el-row style="text-align:center;">
+      <el-row style="text-align:center; display:inline-flex" justify="space-evenly">
         <ul v-for="deal in info.recommend" :key="deal.productId" @click="dealDetail(deal.productId)" >
           <recommend :deal="deal"/>
         </ul>
@@ -88,7 +88,7 @@ export default {
     const router = useRouter()
     const route = useRoute()
     const state = reactive({
-      productId: ''
+      productId: '',
     })
 
     const info = reactive({
@@ -247,7 +247,7 @@ export default {
       router.push(`/products/${id}`)
     }
 
-    return { info, backHome, backKeep, backMy, deleteDeal, likeDeal, deletelikeDeal, updateDeal, dealDetail }
+    return { info, state, backHome, backKeep, backMy, deleteDeal, likeDeal, deletelikeDeal, updateDeal, dealDetail }
   }
 }
 </script>

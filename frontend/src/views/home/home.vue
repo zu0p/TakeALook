@@ -1,5 +1,5 @@
 <template>
-  <el-row type="flex" class="row-bg" justify="space-between" align="middle">
+  <el-row type="flex" class="row-bg" justify="space-between" align="middle" v-loading.fullscreen.lock="state.isLoading" >
     <div class="uppermenu" style="margin-left:15px" v-if="!info.searched">
       <span @click="newDeal" v-if="info.current == 0" style="color:#58ACFA; font-weight:bold;">신상품순</span><span @click="newDeal" v-else>신상품순</span>
       | <span @click="priceHigh" v-if="info.current == 1" style="color:#58ACFA; font-weight:bold;">높은 가격순</span> <span @click="priceHigh" v-else>높은 가격순</span>
@@ -35,7 +35,7 @@
     <div v-else>
       <div v-if="!info.searchResult" >
         <h2 style="margin-top:200px; text-align:center;"><i class="el-icon-warning-outline" style="margin-left:5px;"></i>
-          검색하신 "{{info.search}}"에 해당하는 거래가 존재하지 않습니다</h2>
+          검색하신 "{{ info.preSearch }}"에 해당하는 거래가 존재하지 않습니다</h2>
           <span style="font-size:20;">입력하신 검색어를 확인하시고 다시 검색해 주세요</span>
       </div>
       <li v-else v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId">
@@ -102,11 +102,16 @@ export default {
     const router = useRouter()
     const store = useStore()
     const route = useRoute()
+    // console.log(route.params.search)
 
+    const state = reactive({
+      isLoading: true
+    })
     const info = reactive({
       dealList: '',
       search: null,
       searched: false,
+      preSearch: '',
       value: '',
       current: 0,
       currentpage:0,
@@ -118,6 +123,11 @@ export default {
       searchResult: true
     })
 
+    if (route.params.search) {
+      info.preSearch = route.params.search
+    }
+
+    // state.isLoading = true
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'home')
       if (route.path == "/high-price") {
@@ -278,6 +288,7 @@ export default {
               info.dealList = res.data.content
             }
           })
+          state.isLoading = false
         router.push({
           name: "price-high"
         })
@@ -293,6 +304,7 @@ export default {
               info.dealList = res.data.content
             }
           })
+          state.isLoading = false
       router.push({
         name: "home"
       })
@@ -308,6 +320,7 @@ export default {
               info.dealList = res.data.content
             }
           })
+          state.isLoading = false
       router.push({
         name: "price-low"
       })
@@ -323,12 +336,13 @@ export default {
               info.dealList = res.data.content
             }
           })
+          state.isLoading = false
       router.push({
         name: "reserve-time"
       })
     }
 
-    return { info, clickDeal, searchDeal, handleCurrentChange, priceHigh, newDeal, priceLow, reserveTime }
+    return { info, state, clickDeal, searchDeal, handleCurrentChange, priceHigh, newDeal, priceLow, reserveTime }
   }
 }
 </script>
