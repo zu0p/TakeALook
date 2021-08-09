@@ -81,6 +81,18 @@ public class Room implements Closeable {
     user.close();
   }
 
+  public void broadCastMessages(String name, String newMessage) throws IOException{
+    final JsonObject newBroadCastMessage = new JsonObject();
+    newBroadCastMessage.addProperty("id", "broadCastNewMessage");
+    newBroadCastMessage.addProperty("newMessage", newMessage);
+    newBroadCastMessage.addProperty("name", name);
+
+    for (final UserSession participant : this.getParticipants()) {
+        System.out.println(participant.getName());
+        participant.sendMessage(newBroadCastMessage);
+    }
+  }
+
   private Collection<String> joinRoom(UserSession newParticipant) throws IOException {
     final JsonObject newParticipantMsg = new JsonObject();
     newParticipantMsg.addProperty("id", "newParticipantArrived");

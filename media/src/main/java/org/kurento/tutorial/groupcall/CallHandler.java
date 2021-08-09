@@ -85,8 +85,12 @@ public class CallHandler extends TextWebSocketHandler {
         }
         break;
       case "sendChatMessage":
-        log.debug(jsonMessage.get("id").getAsString());
-        System.out.println(jsonMessage.get("id").getAsString());
+//        log.debug(jsonMessage.get("id").getAsString());
+//        System.out.println(jsonMessage.get("id").getAsString());
+          broadCastMessage(jsonMessage, session);
+          System.out.println(jsonMessage.get("id").getAsString());
+          System.out.println(jsonMessage.get("name").getAsString());
+          System.out.println(jsonMessage.get("newMessage").getAsString());
         break;
       default:
         break;
@@ -107,6 +111,17 @@ public class CallHandler extends TextWebSocketHandler {
     Room room = roomManager.getRoom(roomName);
     final UserSession user = room.join(name, session);
     registry.register(user);
+  }
+
+  private void broadCastMessage(JsonObject params, WebSocketSession session) throws IOException{
+    final String roomName = params.get("room").getAsString();
+    final String name = params.get("name").getAsString();
+    final String newMessage = params.get("message").getAsString();
+    log.info("Message broadcasting {} {} {}",roomName, name, newMessage);
+
+    Room room = roomManager.getRoom(roomName);
+    System.out.println(room);
+    room.broadCastMessages(name, newMessage);
   }
 
   private void leaveRoom(UserSession user) throws IOException {
