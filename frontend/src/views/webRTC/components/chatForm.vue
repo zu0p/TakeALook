@@ -8,7 +8,7 @@
         <li class="chats" v-for="i in state.chats" :key="i">
           <el-card shadow="never" style="width: 90%">
             <div class="messages">
-              <el-tag type="info"><span>{{i.userId}}</span></el-tag>
+              <el-tag type="info"><span>{{i.name}}</span></el-tag>
               <span>{{i.message}}</span>
             </div>
           </el-card>
@@ -27,60 +27,63 @@
 
 <script>
 import { reactive, ref } from '@vue/reactivity'
-import { onMounted, onUpdated } from '@vue/runtime-core'
+import { onBeforeUpdate, onMounted, onUpdated } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import ws from '../js/webSocket'
 
 export default {
   name: 'chat-form',
-  setup(props, {emit}){
-    ws.onmessage = function(message) {
-      var parsedMessage = JSON.parse(message.data)
-      console.log(parsedMessage.name)
-      console.log(state.participants[parsedMessage.name])
-      console.info('Received message: ' + message.data)
 
-      switch (parsedMessage.id) {
-      case 'broadCastNewMessage':
-        onReceiveMessage(parsedMessage)
-        break
-      default:
-        console.error('Unrecognized message', parsedMessage)
-      }
-    }
+  props: ["room", "receiveMessage"],
+  setup(props, {emit}){
+    //console.log(props)
+    // ws.onmessag = function(msg) {
+    //   var parsedMessage = JSON.parse(msg.data)
+    //   //console.log(parsedMessage.name)
+    //   //console.log(state.participants[parsedMessage.name])
+    //   //console.info('Received message: ' + msg.newMessage)
+
+    //   switch (parsedMessage.id) {
+    //   case 'broadCastNewMessage':
+    //     onReceiveMessage(parsedMessage)
+    //     break
+    //   default:
+    //     console.error('Unrecognized message', parsedMessage)
+    //   }
+    // }
     const store = useStore()
     const scrollbar = ref(null)
     let state = reactive({
       curUserId:'',
-      roomId: 1,
+      roomId: props.room,
       chats:[
         {
-          userId: 'zu0p',
+          name: 'zu0p',
           message: '생활기스 없나요??'
         },
         {
-          userId: 'zu0p',
+          name: 'zu0p',
           message: '뒷면도 보여주세요!'
         },
         {
-          userId: 'test2',
+          name: 'test2',
           message: '거래 시작 언제하나요?'
         },
         {
-          userId: 'test1',
+          name: 'test1',
           message: '잘안보여요..'
         },
         {
-          userId: 'test3',
+          name: 'test3',
           message: '좀 더 가까이서 보여주실 수 있나요?'
         },
       ],
       inputMessage : ''
     })
 
-    const onReceiveMessage = function(msg){
-      console.log(msg)
-    }
+    // const onReceiveMessage = function(msg){
+    //   console.log(msg)
+    // }
 
     const clickSend = function(){
       if(state.inputMessage=='') return
@@ -91,7 +94,8 @@ export default {
         message: state.inputMessage
       }
 
-      state.chats.push(newMessage)
+      //state.chats.push(newMessage)
+      //console.log(state.roomId)
       ws.send(JSON.stringify(newMessage))
       state.inputMessage =''
 
@@ -102,7 +106,7 @@ export default {
         .then(res=>{
           console.log(res)
           state.curUserId= res.data.userId
-          console.log(state.curUserId)
+          //console.log(state.curUserId)
         })
     })
 
@@ -112,7 +116,23 @@ export default {
       scroll.scrollTop = scroll.scrollHeight
     })
 
-    return {state, clickSend, onReceiveMessage}
+    onBeforeUpdate(()=>{
+      let msg = props.receiveMessage
+      console.log(props)
+      console.log(msg)
+
+      if(msg.flag && msg.message.id == 'broadCastNewMessage'){
+        const received = {
+          name: msg.message.name,
+          message: msg.message.message
+        }
+        state.chats.push(received)
+        console.log(state.chats)
+        this.$forceUpdate()
+        $emit('endReceiveMsg')
+      }
+    })
+    return {state, clickSend}
   }
 }
 </script>

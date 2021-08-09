@@ -18,7 +18,7 @@
             </el-row>
           </el-main>
           <el-aside id="chat" width="30%">
-            <chat-form />
+            <chat-form :room="state.room" :receiveMessage="receiveMsg" :endReceiveMsg="onReceiveMessageEnded"/>
           </el-aside>
         <!-- </el-container> -->
       </el-container>
@@ -51,7 +51,11 @@ export default {
     const state = reactive({
       room:'',
       name:'',
-      participants:{}
+      participants:{},
+    })
+    const receiveMsg = reactive({
+      flag: false,
+      message:{}
     })
     const kurentoUtils = require('kurento-utils')
     // const ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
@@ -82,6 +86,9 @@ export default {
               }
           })
           break
+      case 'broadCastNewMessage':
+        onReceiveMessage(message.data)
+        break
       default:
         console.error('Unrecognized message', parsedMessage)
       }
@@ -229,7 +236,17 @@ export default {
       }
     }
 
-    return {ws, state, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
+    const onReceiveMessage = function(msg){
+      console.log("meetinRoom: "+msg)
+      receiveMsg.flag = true
+      receiveMsg.message = msg
+    }
+
+    const onReceiveMessageEnded = function(){
+      console.log("flag: true -> false")
+      receiveMsg.flag = false
+    }
+    return {ws, state, receiveMsg, onReceiveMessageEnded, onReceiveMessage, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
   }
 
 }
