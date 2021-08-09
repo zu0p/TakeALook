@@ -54,3 +54,11 @@ bin
 build
 .project
 .classpath
+
+# backend
+backend/*.gz
+
+# frontend
+frontend/package-lock.json
+
+# media

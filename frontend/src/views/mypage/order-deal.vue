@@ -33,41 +33,34 @@ export default {
     Conference,
   },
 
-  data() {
-    //! pagination 데이터 설정
-    return {
-      filtered: [],
-      search: '',
-      page: 3,
-      pageSize: 4,
-      total: 20
-    }
-  },
-
   setup () {
     const store = useStore()
     const router = useRouter()
     const info = reactive({
-      buyList:''
+      buyList:'',
+      pageSize: 10,
+      total: 0
     })
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'order-deal')
-      if (store.dispatch('root/requestBuyList')){
-        store.dispatch('root/requestBuyList')
-          .then (res => {
-            info.buyList = res.data
-          })
-      }
+      store.dispatch('root/requestBuyList', {page:0, size:9})
+        .then (res => {
+          info.buyList = res.data.content
+          info.total = res.data.totalElements
+          info.pageSize = res.data.size
+        })
     })
 
-    const state = reactive({
-      count: 10
-    })
-
-    const load = function () {
-      state.count += 4
+    const handleCurrentChange = function (e) {
+      info.page = e-1
+      store.dispatch('root/requestBuyList', {page:info.page, size:9})
+        .then(res => {
+          if (res.data.statusCode != 404) {
+            info.nutList = res.data.content
+          }
+        })
     }
 
     const clickDeal = function (id) {
@@ -79,7 +72,7 @@ export default {
       })
     }
 
-    return { state, load, clickDeal }
+    return { clickDeal, handleCurrentChange }
   }
 }
 </script>
