@@ -21,7 +21,11 @@
     @closeLoginDialog="onCloseLoginDialog"/>
   <signup-dialog
     :open="signupDialogOpen"
-    @closeSignupDialog="onCloseSignupDialog" />
+    @closeSignupDialog="onCloseSignupDialog"/>
+  <div class="sc-launcher">
+    <chat-window/>
+    <img class="sc-open-icon" :src="icons.open.img" :alt="icons.open.name" />
+  </div>
 </template>
 
 <style>
@@ -31,7 +35,19 @@
   @import '../../common/css/element-plus.css';
 
   /* DM 아이콘 */
-
+.sc-launcher {
+  width: 60px;
+  height: 60px;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  border-radius: 50%;
+  box-shadow: none;
+  transition: box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+}
 </style>
 <script>
 import LoginDialog from './components/login-dialog'
@@ -40,7 +56,11 @@ import MainHeader from './components/main-header'
 import MainSidebar from './components/main-sidebar'
 import MainFooter from './components/main-footer'
 import {mapActions} from 'vuex';
+import MainDm from './components/main-dm'
 // DM 아이콘
+import CloseIcon from '@/assets/images/close-icon.png'
+import OpenIcon from '@/assets/images/chat-icon.svg'
+import ChatWindow from './components/chat-window.vue'
 
 
 export default {
@@ -51,6 +71,25 @@ export default {
     MainFooter,
     LoginDialog,
     SignupDialog,
+    MainDm,
+    ChatWindow,
+  },
+  props: {
+    icons: {
+      type: Object,
+      default: function () {
+        return {
+          open: {
+            img: OpenIcon,
+            name: 'default'
+          },
+          close: {
+            img: CloseIcon,
+            name: 'default'
+          }
+        }
+      }
+    },
   },
   data () {
     return {

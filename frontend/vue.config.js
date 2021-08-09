@@ -14,9 +14,9 @@ module.exports = {
         target: 'https://i5d101.p.ssafy.io:8080/',
       }
     },
-    // historyApiFallback: true,
-    // hot: true,
-    // disableHostCheck: true,
+    historyApiFallback: true,
+    hot: true,
+    disableHostCheck: true,
 
     // 서버 실행시
     // https: true,
