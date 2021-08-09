@@ -18,14 +18,14 @@
 import Header from './chat-header.vue'
 import MessageList from './chat-message-list.vue'
 import UserInput from './chat-user-input.vue'
-import UserList from './chat-user-list.vue'
+import ChatList from './chat-list.vue'
 
 export default {
   components: {
     Header,
     MessageList,
     UserInput,
-    UserList
+    ChatList,
   },
 }
 </script>
