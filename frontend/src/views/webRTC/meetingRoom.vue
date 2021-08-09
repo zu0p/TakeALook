@@ -86,7 +86,7 @@ export default {
         console.error('Unrecognized message', parsedMessage)
       }
     }
-    sessionStorage.setItem('ws', ws)
+    // sessionStorage.setItem('ws', ws)
 
     onBeforeMount(()=> {
       let curUrl = document.location.href.split('/').reverse()

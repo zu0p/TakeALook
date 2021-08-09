@@ -34,10 +34,25 @@ import ws from '../js/webSocket'
 export default {
   name: 'chat-form',
   setup(props, {emit}){
+    ws.onmessage = function(message) {
+      var parsedMessage = JSON.parse(message.data)
+      console.log(parsedMessage.name)
+      console.log(state.participants[parsedMessage.name])
+      console.info('Received message: ' + message.data)
+
+      switch (parsedMessage.id) {
+      case 'broadCastNewMessage':
+        onReceiveMessage(parsedMessage)
+        break
+      default:
+        console.error('Unrecognized message', parsedMessage)
+      }
+    }
     const store = useStore()
     const scrollbar = ref(null)
     let state = reactive({
       curUserId:'',
+      roomId: 1,
       chats:[
         {
           userId: 'zu0p',
@@ -63,17 +78,23 @@ export default {
       inputMessage : ''
     })
 
+    const onReceiveMessage = function(msg){
+      console.log(msg)
+    }
+
     const clickSend = function(){
       if(state.inputMessage=='') return
       const newMessage ={
         id: 'sendChatMessage',
-        userId: state.curUserId,
+        name: state.curUserId,
+        room: state.roomId,
         message: state.inputMessage
       }
 
       state.chats.push(newMessage)
       ws.send(JSON.stringify(newMessage))
       state.inputMessage =''
+
     }
 
     onMounted(()=>{
@@ -91,7 +112,7 @@ export default {
       scroll.scrollTop = scroll.scrollHeight
     })
 
-    return {state, clickSend}
+    return {state, clickSend, onReceiveMessage}
   }
 }
 </script>
