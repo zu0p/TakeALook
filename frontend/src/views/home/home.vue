@@ -38,9 +38,9 @@
         <conference :deal="deal"/>
       </li>
     </div>
-    <div style="text-align: end">
+    <!-- <div style="text-align: end">
       <el-button type="info" style="margin-right:100px" @click="createDeal">거래 생성</el-button>
-    </div>
+    </div> -->
     <el-pagination
       background
       layout="prev, pager, next"
