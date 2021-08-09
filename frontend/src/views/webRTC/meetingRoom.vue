@@ -18,7 +18,7 @@
             </el-row>
           </el-main>
           <el-aside id="chat" width="30%">
-            <chat-form :room="state.room" :receiveMessage="receiveMsg" :endReceiveMsg="onReceiveMessageEnded"/>
+            <chat-form :room="state.room" :receiveMessage="receiveMsg" @endReceiveMsg="onReceiveMessageEnded"/>
           </el-aside>
         <!-- </el-container> -->
       </el-container>
@@ -61,8 +61,8 @@ export default {
     // const ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
     ws.onmessage = function(message) {
       var parsedMessage = JSON.parse(message.data)
-      console.log(parsedMessage.name)
-      console.log(state.participants[parsedMessage.name])
+      //console.log(parsedMessage.name)
+      //console.log(state.participants[parsedMessage.name])
       console.info('Received message: ' + message.data)
 
       switch (parsedMessage.id) {
@@ -168,9 +168,9 @@ export default {
       }
       if(state.name==seller)
         constraints.video.mandatory.maxWidth = 720
-      console.log(state.name + " registered in room " + state.room)
+      //console.log(state.name + " registered in room " + state.room)
       var participant = new Participant(state.name)
-      // participants[state.name] = participant
+
       var video = participant.getVideoElement()
 
       var options = {
@@ -186,13 +186,12 @@ export default {
           this.generateOffer (participant.offerToReceiveVideo.bind(participant))
       })
       state.participants[state.name] = participant
-      console.log("1. "+state.participants[state.name])
+      //console.log("1. "+state.participants[state.name])
 
       msg.data.forEach(receiveVideo)
     }
 
     const leaveRoom = function() {
-      //alert("leave")
       sendMessage({
         id : 'leaveRoom'
       });
@@ -237,7 +236,7 @@ export default {
     }
 
     const onReceiveMessage = function(msg){
-      console.log("meetinRoom: "+msg)
+      //console.log("meetinRoom receive message: "+msg)
       receiveMsg.flag = true
       receiveMsg.message = msg
     }

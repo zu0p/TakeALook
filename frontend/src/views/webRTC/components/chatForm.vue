@@ -27,7 +27,7 @@
 
 <script>
 import { reactive, ref } from '@vue/reactivity'
-import { onBeforeUpdate, onMounted, onUpdated } from '@vue/runtime-core'
+import { onBeforeUpdate, onMounted, onUpdated, watch, watchEffect } from '@vue/runtime-core'
 import { useStore } from 'vuex'
 import ws from '../js/webSocket'
 
@@ -35,55 +35,30 @@ export default {
   name: 'chat-form',
 
   props: ["room", "receiveMessage"],
-  setup(props, {emit}){
-    //console.log(props)
-    // ws.onmessag = function(msg) {
-    //   var parsedMessage = JSON.parse(msg.data)
-    //   //console.log(parsedMessage.name)
-    //   //console.log(state.participants[parsedMessage.name])
-    //   //console.info('Received message: ' + msg.newMessage)
 
-    //   switch (parsedMessage.id) {
-    //   case 'broadCastNewMessage':
-    //     onReceiveMessage(parsedMessage)
-    //     break
-    //   default:
-    //     console.error('Unrecognized message', parsedMessage)
-    //   }
-    // }
+  setup(props, {emit}){
     const store = useStore()
-    const scrollbar = ref(null)
     let state = reactive({
       curUserId:'',
       roomId: props.room,
-      chats:[
-        {
-          name: 'zu0p',
-          message: '생활기스 없나요??'
-        },
-        {
-          name: 'zu0p',
-          message: '뒷면도 보여주세요!'
-        },
-        {
-          name: 'test2',
-          message: '거래 시작 언제하나요?'
-        },
-        {
-          name: 'test1',
-          message: '잘안보여요..'
-        },
-        {
-          name: 'test3',
-          message: '좀 더 가까이서 보여주실 수 있나요?'
-        },
-      ],
+      chats: [],
       inputMessage : ''
     })
 
-    // const onReceiveMessage = function(msg){
-    //   console.log(msg)
-    // }
+    const propsMsg = watchEffect(()=>{
+      console.log(props.receiveMessage)
+      if(props.receiveMessage.flag){
+        const jsoned = JSON.parse(props.receiveMessage.message)
+        const received = {
+          name: jsoned.name,
+          message: jsoned.message
+        }
+        state.chats.push(received)
+        console.log(state.chats)
+
+        emit('endReceiveMsg')
+      }
+    })
 
     const clickSend = function(){
       if(state.inputMessage=='') return
@@ -94,8 +69,6 @@ export default {
         message: state.inputMessage
       }
 
-      //state.chats.push(newMessage)
-      //console.log(state.roomId)
       ws.send(JSON.stringify(newMessage))
       state.inputMessage =''
 
@@ -104,34 +77,15 @@ export default {
     onMounted(()=>{
       store.dispatch('root/requestUserInfo')
         .then(res=>{
-          console.log(res)
           state.curUserId= res.data.userId
-          //console.log(state.curUserId)
         })
     })
 
     onUpdated(()=>{
       let scroll = document.getElementById("chat-container")
-      console.log("updated"+scroll.scrollTop)
       scroll.scrollTop = scroll.scrollHeight
     })
 
-    onBeforeUpdate(()=>{
-      let msg = props.receiveMessage
-      console.log(props)
-      console.log(msg)
-
-      if(msg.flag && msg.message.id == 'broadCastNewMessage'){
-        const received = {
-          name: msg.message.name,
-          message: msg.message.message
-        }
-        state.chats.push(received)
-        console.log(state.chats)
-        this.$forceUpdate()
-        $emit('endReceiveMsg')
-      }
-    })
     return {state, clickSend}
   }
 }
