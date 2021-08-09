@@ -86,6 +86,7 @@ public class CallHandler extends TextWebSocketHandler {
         break;
       case "sendChatMessage":
         log.debug(jsonMessage.get("id").getAsString());
+        System.out.println(jsonMessage.get("id").getAsString());
         break;
       default:
         break;
