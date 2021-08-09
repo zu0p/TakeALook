@@ -1,12 +1,12 @@
 <template>
   <el-row type="flex" class="row-bg" justify="space-between" align="middle">
     <div class="uppermenu" style="margin-left:15px" v-if="!info.searched">
-      <span @click="newDeal" v-if="info.current == 0" style="color:#ffd04b">신상품순</span><span @click="newDeal" v-else>신상품순</span>
-      | <span @click="priceHigh" v-if="info.current == 1" style="color:#ffd04b">높은 가격순</span> <span @click="priceHigh" v-else>높은 가격순</span>
-      | <span @click="priceLow" v-if="info.current == 2" style="color:#ffd04b">낮은 가격순</span><span @click="priceLow" v-else>낮은 가격순</span>
-      | <span @click="reserveTime" v-if="info.current == 3" style="color:#ffd04b">거래 시간순</span><span @click="reserveTime" v-else>거래 시간순</span>
+      <span @click="newDeal" v-if="info.current == 0" style="color:#58ACFA; font-weight:bold;">신상품순</span><span @click="newDeal" v-else>신상품순</span>
+      | <span @click="priceHigh" v-if="info.current == 1" style="color:#58ACFA; font-weight:bold;">높은 가격순</span> <span @click="priceHigh" v-else>높은 가격순</span>
+      | <span @click="priceLow" v-if="info.current == 2" style="color:#58ACFA; font-weight:bold;">낮은 가격순</span><span @click="priceLow" v-else>낮은 가격순</span>
+      | <span @click="reserveTime" v-if="info.current == 3" style="color:#58ACFA; font-weight:bold;">거래 시간순</span><span @click="reserveTime" v-else>거래 시간순</span>
     </div>
-    <div >
+    <div>
       <el-select class="category" v-model="info.value" placeholder="카테고리" style="width:140px; margin-right:10px;">
         <el-option
           v-for="item in options"
@@ -33,14 +33,15 @@
       </li>
     </div>
     <div v-else>
-      <h2 v-if="!info.searchResult" style="margin-top:200px; margin-bottom:200px; text-align:center;">검색어에 해당하는 거래가 존재하지 않습니다</h2>
+      <div v-if="!info.searchResult" >
+        <h2 style="margin-top:200px; text-align:center;"><i class="el-icon-warning-outline" style="margin-left:5px;"></i>
+          검색하신 "{{info.search}}"에 해당하는 거래가 존재하지 않습니다</h2>
+          <span style="font-size:20;">입력하신 검색어를 확인하시고 다시 검색해 주세요</span>
+      </div>
       <li v-else v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId">
         <conference :deal="deal"/>
       </li>
     </div>
-    <!-- <div style="text-align: end">
-      <el-button type="info" style="margin-right:100px" @click="createDeal">거래 생성</el-button>
-    </div> -->
     <el-pagination
       background
       layout="prev, pager, next"
@@ -367,7 +368,7 @@ export default {
 }
 
 .uppermenu span:hover{
-  color: #ffd04b;
+  color: #58ACFA;
   pointer-events: stroke;
 }
 </style>
