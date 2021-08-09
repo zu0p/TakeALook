@@ -89,7 +89,7 @@ public class Room implements Closeable {
 
     for (final UserSession participant : participants.values()) {
       try {
-        System.out.println(participant.getName());
+        System.out.println("hihi~!!!" + participant.getName());
         participant.sendMessage(newBroadCastMessage);
       } catch (final IOException e) {
         log.debug(e.getMessage());
