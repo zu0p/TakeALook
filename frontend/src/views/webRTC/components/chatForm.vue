@@ -29,6 +29,8 @@
 import { reactive, ref } from '@vue/reactivity'
 import { onMounted, onUpdated } from '@vue/runtime-core'
 import { useStore } from 'vuex'
+import ws from '../js/webSocket'
+
 export default {
   name: 'chat-form',
   setup(props, {emit}){
@@ -64,11 +66,13 @@ export default {
     const clickSend = function(){
       if(state.inputMessage=='') return
       const newMessage ={
+        id: 'sendChatMessage',
         userId: state.curUserId,
         message: state.inputMessage
       }
 
       state.chats.push(newMessage)
+      ws.send(JSON.stringify(newMessage))
       state.inputMessage =''
     }
 
