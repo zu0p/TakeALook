@@ -86,8 +86,11 @@ public class Room implements Closeable {
     newBroadCastMessage.addProperty("id", "broadCastNewMessage");
     newBroadCastMessage.addProperty("newMessage", newMessage);
     newBroadCastMessage.addProperty("name", name);
-
+    System.out.println("함수안에 들어옴");
+    System.out.println(participants.values() + "를 못받아옴");
+    System.out.println(this.getParticipants() + "를 받아올까?");
     for (final UserSession participant : participants.values()) {
+      System.out.println("for문안에 들어옴" + participant.getName());
       try {
         System.out.println("hihi~!!!" + participant.getName());
         participant.sendMessage(newBroadCastMessage);
