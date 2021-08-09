@@ -87,12 +87,31 @@ export default {
       form: {
         productName: '',
         categories: '',
-        basePrice: '',
         reserveTime: '',
+        basePrice: '',
         description: '',
+        state: '',
       },
       src: {
         imageUrl: '',
+      },
+      rules: {
+        productName:[
+          {required: true, message: '필수 입력 항목입니다.', trigger: 'blur'},
+          {max:16, message: '최대 16자까지 입력 가능합니다.'}
+        ],
+        categories:[
+          {required: true, message: '필수 선택 항목입니다.', trigger: 'blur'},
+        ],
+        basePrice:[
+          {required: true, message: '필수 입력 항목입니다.', trigger: 'blur'},
+        ],
+        reserveTime:[
+          {required: true, message: '필수 선택 항목입니다.', trigger: 'blur'},
+        ],
+        description:[
+          {required: true, message: '필수 입력 항목입니다.', trigger: 'blur'},
+        ],
       },
       formValicate: false,
       loading: false,
@@ -136,13 +155,36 @@ export default {
       state.src.imageUrl = imgUrl
     }
 
+        // reserveTime 의 타입은 String이다.
+    const dateTimeToString = function () {
+      // 단어별로 구분
+      // reserveTime
+      const array = state.form.reserveTime.toString().split(' ')
+      // 그 단어의 1,2,3,4번째 배열만 쓸거다
+      const month = ["","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      let res = `${array[3]}-`
+      for(let i = 1; i<=12; i++){
+        if(array[1]==month[i]){
+          if(i<10)
+            res+=`0${i}-`
+          else
+            res += `${i}-`
+          break;
+        }
+      }
+      res += `${array[2]}T${array[4]}.000+00:00`
+      state.date = res
+    }
+
+
     const clickUpdate = function () {
       // console.log(state.form.categories)
       // console.log(state.form.reserveTime)
+      dateTimeToString()
       state.loading = true
       // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
-      // updateDealForm.value.validate((valid) => {
-      //   if (valid) {
+      updateDealForm.value.validate((valid) => {
+        if (valid) {
           console.log('submit')
           store.dispatch('root/updatePost', {
             productId: props.productId,
@@ -161,14 +203,14 @@ export default {
             })
             .catch(err=>{
               state.loading = false
+              alert("게시글 수정에 실패하였습니다.")
               console.log(err)
-              alert("양식이 올바르지 않습니다!")
             })
-      //   } else {
-      //     state.loading = false
-      //     alert('Validate error!')
-      //   }
-      // });
+        } else if(!valid){
+          state.loading = false
+          alert('필수 항목을 입력하세요.')
+        }
+      })
     }
 
     const clickCancel = function () {
