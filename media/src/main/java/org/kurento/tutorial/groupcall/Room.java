@@ -51,6 +51,10 @@ public class Room implements Closeable {
   private final MediaPipeline pipeline;
   private final String name;
 
+  private int currentPrice;
+  private String buyer;
+  private String seller;
+
   public String getName() {
     return name;
   }
@@ -86,14 +90,43 @@ public class Room implements Closeable {
     newBroadCastMessage.addProperty("id", "broadCastNewMessage");
     newBroadCastMessage.addProperty("message", newMessage);
     newBroadCastMessage.addProperty("name", name);
-    System.out.println("함수안에 들어옴");
-    System.out.println(participants.values() + "를 못받아옴");
-    System.out.println(this.getParticipants() + "를 받아올까?");
     for (final UserSession participant : participants.values()) {
-      System.out.println("for문안에 들어옴" + participant.getName());
       try {
-        System.out.println("hihi~!!!" + participant.getName());
         participant.sendMessage(newBroadCastMessage);
+      } catch (final IOException e) {
+        log.debug(e.getMessage());
+      }
+    }
+  }
+
+  // 실시간 가격 제안
+  public void realTimeProposals(String name, int price) throws IOException{
+    if(price < this.currentPrice) return;
+
+    final JsonObject newProposal = new JsonObject();
+    newProposal.addProperty("id","updatePrice");
+    newProposal.addProperty("currentPrice",this.currentPrice);
+    this.buyer = name;
+    log.info("Message return {} {}","updatePrice", this.currentPrice);
+    for (final UserSession participant : participants.values()) {
+      try {
+        participant.sendMessage(newProposal);
+      } catch (final IOException e) {
+        log.debug(e.getMessage());
+      }
+    }
+  }
+
+  // 실시간 가격 제안
+  public void tradeNowClosed() throws IOException{
+    final JsonObject finalProposal = new JsonObject();
+    finalProposal.addProperty("id", "success");
+    finalProposal.addProperty("sellerId", "seller");
+    finalProposal.addProperty("buyerId", this.buyer);
+    log.info("Message return {} {} {}","success", "seller", this.buyer);
+    for (final UserSession participant : participants.values()) {
+      try {
+        participant.sendMessage(finalProposal);
       } catch (final IOException e) {
         log.debug(e.getMessage());
       }
