@@ -1,9 +1,6 @@
 <template>
   <div class="chat-window">
     <Header>
-      <template>
-        <span>헤더리스트</span>
-      </template>
     </Header>
     <MessageList>
       <template>

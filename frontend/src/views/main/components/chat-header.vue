@@ -1,12 +1,13 @@
 <template>
   <div class="chat-header" >
-    <span>헤더</span>
     <slot>
-      <img class="chat-header--img" src="" alt="" />
-      <div class="chat-header--title enabled">hello</div>
+      <el-button type="primary" icon="el-icon-back"></el-button>
+      <div class="chat-header--title enabled">
+        Fuxxing CSS
+      </div>
     </slot>
     <div class="chat-header--close-button">
-      <img :src="icons.close.img" :alt="icons.close.name" />
+      <el-button type="primary" icon="el-icon-close"></el-button>
     </div>
   </div>
 </template>
@@ -43,6 +44,10 @@ export default {
   display: flex;
 }
 
+.chat-header .back {
+
+}
+
 .chat-header--img {
   border-radius: 50%;
   align-self: center;
@@ -75,7 +80,6 @@ export default {
   cursor: pointer;
   border-radius: 5px;
   margin-left: auto;
-  background-image: url('../../../assets/images/ssafy-logo.png');
 }
 
 .chat-header--close-button:hover {

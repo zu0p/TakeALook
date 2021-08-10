@@ -1,6 +1,7 @@
 <template>
   <div class="chat-message-list" @scroll="handleScroll">
     <span>메세지리스트</span>
+    <font-awesome-icon icon="phone"/>
   </div>
 </template>
 

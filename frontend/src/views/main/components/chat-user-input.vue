@@ -10,17 +10,11 @@
     </div>
     <form class="chat-user-input">
       <div class="chat-user-input--text">
-        <span>채팅창</span>
+        <el-input placeholder="Please input" v-model="state.form.message"></el-input>
       </div>
       <div class="chat-user-input--buttons">
         <div class="chat-user-input--button">
-          <span>이모지</span>
-        </div>
-        <div class="chat-user-input--button">
-          <span>파일</span>
-        </div>
-        <div class="chat-user-input--button">
-          <span>전송</span>
+          <el-button type="primary" icon="el-icon-s-promotion" circle=""></el-button>
         </div>
       </div>
     </form>
@@ -28,9 +22,23 @@
 </template>
 
 <script>
+import { ref, reactive, } from 'vue'
+
 export default {
-  components: {
-  }
+  name: 'UserInputForm',
+
+  setup () {
+    // 독립적인 반응형 값 생성 ref()
+    const userInputForm = ref(null)
+    const state = reactive({
+      form: {
+        message: '',
+      },
+    })
+
+    return { userInputForm, state }
+  },
+
 }
 </script>
 
