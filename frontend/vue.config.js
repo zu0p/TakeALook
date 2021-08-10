@@ -1,6 +1,6 @@
 
 // // 서버 실행 시
-// const fs = require('fs');
+const fs = require('fs');
 
 // Vue3 관련 설정 파일
 module.exports = {
@@ -10,9 +10,9 @@ module.exports = {
     port: 8083,
     open: true,
     proxy: {
-      '/api/v1': {
-        target: 'https://i5d101.p.ssafy.io:8080/',
-      }
+     '/api/v1': {
+       target: 'https://i5d101.p.ssafy.io:8080/',
+    }
     },
     historyApiFallback: true,
     hot: true,
@@ -26,13 +26,13 @@ module.exports = {
     // port: 8083,
     // open: true,
     // proxy: {
-    //   '/api/v1': {
-    //     target: 'https://i5d101.p.ssafy.io:8080/',
-    //   }
+    //    '/api/v1': {
+    //      target: 'https://i5d101.p.ssafy.io:8080/',
+    //    }
     // },
-    historyApiFallback: true,
-    hot: true,
-    disableHostCheck: true,
+    // historyApiFallback: true,
+    // hot: true,
+    // disableHostCheck: true,
 
   },
   css: {

@@ -28,6 +28,14 @@ export default {
       }
     },
   },
+
+  setup() {
+    const close = function () {
+      console.log("close")
+    }
+
+    return {close}
+  }
 }
 </script>
 

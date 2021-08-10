@@ -1,7 +1,19 @@
 <template>
-  <div class="chat-window">
-    <Header>
-    </Header>
+  <div class="chat-window" style="z-index:2">
+    <div class="chat-header">
+      <slot>
+        <el-button type="primary" icon="el-icon-back" @click="$emit('back')"></el-button>
+        <div class="chat-header--title enabled">
+        </div>
+      </slot>
+      <div class="chat-header--close-button">
+        <el-button type="primary" icon="el-icon-close" @click="$emit('close')"></el-button>
+      </div>
+    </div>
+      <!-- <template>
+        <span>헤더리스트</span>
+      </template>
+    </Header> -->
     <MessageList>
       <template>
         <span>메세지리스트</span>
