@@ -157,35 +157,35 @@ export default {
       info.page = e-1
       // 신상품순
       if (info.current == 0) {
-        store.dispatch('root/requestDealList', {page: info.page, size:9})
+        store.dispatch('root/requestDealList', {page: info.page, size:info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.dealList = res.data.content
             }
           })
       } else if (info.current == 1) { // 높은 가격순
-          store.dispatch('root/requestPriceHigh', {page: info.page, size:9})
+          store.dispatch('root/requestPriceHigh', {page: info.page, size:info.pageSize})
             .then (res => {
               if (res.data.statusCode != 404) {
                 info.dealList = res.data.content
               }
             })
       } else if (info.current == 2) { // 낮은 가격순
-          store.dispatch('root/requestPriceLow', {page: info.page, size:9})
+          store.dispatch('root/requestPriceLow', {page: info.page, size:info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.dealList = res.data.content
             }
           })
       } else if (info.current == 3) { // 거래 시간순
-          store.dispatch('root/requestReserveTime', {page: info.page, size:9})
+          store.dispatch('root/requestReserveTime', {page: info.page, size:info.pageSize})
             .then (res => {
               if (res.data.statusCode != 404) {
                 info.dealList = res.data.content
               }
             })
       } else if (info.current == 4) { // 검색 중인 경우
-          store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:info.page, size:9})
+          store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:info.page, size:info.pageSize})
 
       }
     }
@@ -204,7 +204,7 @@ export default {
       if (!info.search && !info.value) {
         info.searched = false
         info.current = 0
-        store.dispatch('root/requestDealList', {page: 0, size: 9})
+        store.dispatch('root/requestDealList', {page: 0, size: info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404){
               info.total = res.data.totalElements
@@ -214,7 +214,7 @@ export default {
             }
           })
       } else {
-        store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:0, size:9})
+        store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:0, size:info.pageSize})
         .then(res=> {
           info.searched = true
           if (res.data.statusCode != 404){
@@ -276,11 +276,12 @@ export default {
           }
         })
       }
+      state.isLoading = false
     }
 
     const priceHigh = function () {
       info.current = 1
-        store.dispatch('root/requestPriceHigh', {page: 0, size: 9})
+        store.dispatch('root/requestPriceHigh', {page: 0, size: info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -296,7 +297,7 @@ export default {
 
     const newDeal = function () {
       info.current = 0
-        store.dispatch('root/requestDealList', {page: 0, size: 9})
+        store.dispatch('root/requestDealList', {page: 0, size: info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -312,7 +313,7 @@ export default {
 
     const priceLow = function () {
       info.current = 2
-        store.dispatch('root/requestPriceLow', {page: 0, size: 9})
+        store.dispatch('root/requestPriceLow', {page: 0, size: info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -328,7 +329,7 @@ export default {
 
     const reserveTime = function () {
       info.current = 3
-        store.dispatch('root/requestReserveTime', {page: 0, size: 9})
+        store.dispatch('root/requestReserveTime', {page: 0, size: info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements

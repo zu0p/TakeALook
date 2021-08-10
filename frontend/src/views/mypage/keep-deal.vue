@@ -40,7 +40,7 @@ export default {
 
   components: {
     Conference,
-    Recommend
+    Recommend,
   },
 
   setup () {
@@ -60,7 +60,7 @@ export default {
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'keep-deal')
-      store.dispatch('root/requestWishList', {page:0, size:9})
+      store.dispatch('root/requestWishList', {page:0, size:info.pageSize})
           .then (res => {
             info.wishList = res.data.content
             info.total = res.data.totalElements
@@ -86,7 +86,7 @@ export default {
 
     const handleCurrentChange = function (e) {
       info.page = e-1
-      store.dispatch('root/requestWishList', {page:info.page, size:9})
+      store.dispatch('root/requestWishList', {page:info.page, size:info.pageSize})
         .then(res => {
           if (res.data.statusCode != 404) {
             info.wishList = res.data.content

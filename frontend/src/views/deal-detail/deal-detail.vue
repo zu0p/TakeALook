@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="margin-left:20px; margin-right:20px">
     <el-container style="text-align:center; justify-content:center">
       <img :src="info.imageUrl" alt="" style="max-width:700px; max-height:700px;">
       <el-form ref="form" label-width="120px" style="text-align:left; margin-left:10%;" label-position="left">
@@ -52,7 +52,7 @@
       </el-form>
     </el-container>
     <div style="text-align:center;">
-      <h1 v-if="info.recommend" style="text-align:left; margin-top:80px; margin-bottom:30px;">이런 상품은 어떠세요?</h1>
+      <h1 v-if="info.recommend" style="text-align:left; margin-top:80px; margin-bottom:30px; margin-left:5%;">이런 상품은 어떠세요?</h1>
       <el-row style="text-align:center; display:inline-flex" justify="space-evenly">
         <ul v-for="deal in info.recommend" :key="deal.productId" @click="dealDetail(deal.productId)" >
           <recommend :deal="deal"/>
@@ -84,6 +84,8 @@ export default {
   },
 
   setup () {
+
+
     const store = useStore()
     const router = useRouter()
     const route = useRoute()

@@ -16,7 +16,8 @@
     </ul>
   </div>
   <div v-else>
-    <b>내가 구매한 상품이 없습니다</b>
+    <h2 style="margin-top:200px; text-align:center;"><i class="el-icon-warning-outline" style="margin-left:5px;"></i>
+        구매한 상품이 없습니다</h2>
   </div>
 </template>
 
@@ -45,7 +46,7 @@ export default {
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'order-deal')
-      store.dispatch('root/requestBuyList', {page:0, size:9})
+      store.dispatch('root/requestBuyList', {page:0, size:info.pageSize})
         .then (res => {
           info.buyList = res.data.content
           info.total = res.data.totalElements
@@ -55,7 +56,7 @@ export default {
 
     const handleCurrentChange = function (e) {
       info.page = e-1
-      store.dispatch('root/requestBuyList', {page:info.page, size:9})
+      store.dispatch('root/requestBuyList', {page:info.page, size:info.pageSize})
         .then(res => {
           if (res.data.statusCode != 404) {
             info.nutList = res.data.content
