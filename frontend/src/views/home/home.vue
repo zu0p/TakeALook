@@ -1,12 +1,12 @@
 <template>
-  <el-row type="flex" class="row-bg" justify="space-between" align="middle">
+  <el-row type="flex" class="row-bg" justify="space-between" align="middle" v-loading.fullscreen.lock="state.isLoading" >
     <div class="uppermenu" style="margin-left:15px" v-if="!info.searched">
-      <span @click="newDeal" v-if="info.current == 0" style="color:#ffd04b">신상품순</span><span @click="newDeal" v-else>신상품순</span>
-      | <span @click="priceHigh" v-if="info.current == 1" style="color:#ffd04b">높은 가격순</span> <span @click="priceHigh" v-else>높은 가격순</span>
-      | <span @click="priceLow" v-if="info.current == 2" style="color:#ffd04b">낮은 가격순</span><span @click="priceLow" v-else>낮은 가격순</span>
-      | <span @click="reserveTime" v-if="info.current == 3" style="color:#ffd04b">거래 시간순</span><span @click="reserveTime" v-else>거래 시간순</span>
+      <span @click="newDeal" v-if="info.current == 0" style="color:#58ACFA; font-weight:bold;">신상품순</span><span @click="newDeal" v-else>신상품순</span>
+      | <span @click="priceHigh" v-if="info.current == 1" style="color:#58ACFA; font-weight:bold;">높은 가격순</span> <span @click="priceHigh" v-else>높은 가격순</span>
+      | <span @click="priceLow" v-if="info.current == 2" style="color:#58ACFA; font-weight:bold;">낮은 가격순</span><span @click="priceLow" v-else>낮은 가격순</span>
+      | <span @click="reserveTime" v-if="info.current == 3" style="color:#58ACFA; font-weight:bold;">거래 시간순</span><span @click="reserveTime" v-else>거래 시간순</span>
     </div>
-    <div >
+    <div>
       <el-select class="category" v-model="info.value" placeholder="카테고리" style="width:140px; margin-right:10px;">
         <el-option
           v-for="item in options"
@@ -33,14 +33,15 @@
       </li>
     </div>
     <div v-else>
-      <h2 v-if="!info.searchResult" style="margin-top:200px; margin-bottom:200px; text-align:center;">검색어에 해당하는 거래가 존재하지 않습니다</h2>
+      <div v-if="!info.searchResult" >
+        <h2 style="margin-top:200px; text-align:center;"><i class="el-icon-warning-outline" style="margin-left:5px;"></i>
+          검색하신 "{{ info.preSearch }}"에 해당하는 거래가 존재하지 않습니다</h2>
+          <span style="font-size:20;">입력하신 검색어를 확인하시고 다시 검색해 주세요</span>
+      </div>
       <li v-else v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId">
         <conference :deal="deal"/>
       </li>
     </div>
-    <!-- <div style="text-align: end">
-      <el-button type="info" style="margin-right:100px" @click="createDeal">거래 생성</el-button>
-    </div> -->
     <el-pagination
       background
       layout="prev, pager, next"
@@ -101,11 +102,16 @@ export default {
     const router = useRouter()
     const store = useStore()
     const route = useRoute()
+    // console.log(route.params.search)
 
+    const state = reactive({
+      isLoading: true
+    })
     const info = reactive({
       dealList: '',
       search: null,
       searched: false,
+      preSearch: '',
       value: '',
       current: 0,
       currentpage:0,
@@ -117,6 +123,11 @@ export default {
       searchResult: true
     })
 
+    if (route.params.search) {
+      info.preSearch = route.params.search
+    }
+
+    // state.isLoading = true
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'home')
       if (route.path == "/high-price") {
@@ -146,35 +157,35 @@ export default {
       info.page = e-1
       // 신상품순
       if (info.current == 0) {
-        store.dispatch('root/requestDealList', {page: info.page, size:9})
+        store.dispatch('root/requestDealList', {page: info.page, size:info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.dealList = res.data.content
             }
           })
       } else if (info.current == 1) { // 높은 가격순
-          store.dispatch('root/requestPriceHigh', {page: info.page, size:9})
+          store.dispatch('root/requestPriceHigh', {page: info.page, size:info.pageSize})
             .then (res => {
               if (res.data.statusCode != 404) {
                 info.dealList = res.data.content
               }
             })
       } else if (info.current == 2) { // 낮은 가격순
-          store.dispatch('root/requestPriceLow', {page: info.page, size:9})
+          store.dispatch('root/requestPriceLow', {page: info.page, size:info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.dealList = res.data.content
             }
           })
       } else if (info.current == 3) { // 거래 시간순
-          store.dispatch('root/requestReserveTime', {page: info.page, size:9})
+          store.dispatch('root/requestReserveTime', {page: info.page, size:info.pageSize})
             .then (res => {
               if (res.data.statusCode != 404) {
                 info.dealList = res.data.content
               }
             })
       } else if (info.current == 4) { // 검색 중인 경우
-          store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:info.page, size:9})
+          store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:info.page, size:info.pageSize})
 
       }
     }
@@ -193,7 +204,7 @@ export default {
       if (!info.search && !info.value) {
         info.searched = false
         info.current = 0
-        store.dispatch('root/requestDealList', {page: 0, size: 9})
+        store.dispatch('root/requestDealList', {page: 0, size: info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404){
               info.total = res.data.totalElements
@@ -203,7 +214,7 @@ export default {
             }
           })
       } else {
-        store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:0, size:9})
+        store.dispatch('root/requestSearch', {categories: info.value, keyword: info.search, page:0, size:info.pageSize})
         .then(res=> {
           info.searched = true
           if (res.data.statusCode != 404){
@@ -265,11 +276,12 @@ export default {
           }
         })
       }
+      state.isLoading = false
     }
 
     const priceHigh = function () {
       info.current = 1
-        store.dispatch('root/requestPriceHigh', {page: 0, size: 9})
+        store.dispatch('root/requestPriceHigh', {page: 0, size: info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -277,6 +289,7 @@ export default {
               info.dealList = res.data.content
             }
           })
+          state.isLoading = false
         router.push({
           name: "price-high"
         })
@@ -284,7 +297,7 @@ export default {
 
     const newDeal = function () {
       info.current = 0
-        store.dispatch('root/requestDealList', {page: 0, size: 9})
+        store.dispatch('root/requestDealList', {page: 0, size: info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -292,6 +305,7 @@ export default {
               info.dealList = res.data.content
             }
           })
+          state.isLoading = false
       router.push({
         name: "home"
       })
@@ -299,7 +313,7 @@ export default {
 
     const priceLow = function () {
       info.current = 2
-        store.dispatch('root/requestPriceLow', {page: 0, size: 9})
+        store.dispatch('root/requestPriceLow', {page: 0, size: info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -307,6 +321,7 @@ export default {
               info.dealList = res.data.content
             }
           })
+          state.isLoading = false
       router.push({
         name: "price-low"
       })
@@ -314,7 +329,7 @@ export default {
 
     const reserveTime = function () {
       info.current = 3
-        store.dispatch('root/requestReserveTime', {page: 0, size: 9})
+        store.dispatch('root/requestReserveTime', {page: 0, size: info.pageSize})
           .then (res => {
             if (res.data.statusCode != 404) {
               info.total = res.data.totalElements
@@ -322,12 +337,13 @@ export default {
               info.dealList = res.data.content
             }
           })
+          state.isLoading = false
       router.push({
         name: "reserve-time"
       })
     }
 
-    return { info, clickDeal, searchDeal, handleCurrentChange, priceHigh, newDeal, priceLow, reserveTime }
+    return { info, state, clickDeal, searchDeal, handleCurrentChange, priceHigh, newDeal, priceLow, reserveTime }
   }
 }
 </script>
@@ -367,7 +383,7 @@ export default {
 }
 
 .uppermenu span:hover{
-  color: #ffd04b;
+  color: #58ACFA;
   pointer-events: stroke;
 }
 </style>

@@ -6,7 +6,7 @@
     <div class="hide-on-small">
       <el-menu
         :default-active="String(state.activeIndex)"
-        active-text-color="#ffd04b"
+        active-text-color="#58ACFA"
         class="el-menu-vertical-demo"
         @select="menuSelect">
         <el-menu-item v-for="(item, index) in state.menuItems" :key="index" :index="index.toString()">
