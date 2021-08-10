@@ -1,16 +1,26 @@
 package com.ssafy.api.controller;
 
-import lombok.extern.log4j.Log4j2;
+import com.ssafy.api.request.chat.ChatMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@Log4j2
+@RequiredArgsConstructor
 public class ChatController {
 
-    @GetMapping("/chat")
-    public void chatGET(){
+    private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
-        log.info("@ChatController, chat GET()");
+    @MessageMapping(value = "/chat/enter")
+    public void enter(ChatMessage message){
+        message.setMessage(message.getWriter() + "님이 채팅방에 참여하였습니다.");
+        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
+    }
+
+    @MessageMapping(value = "/chat/message")
+    public void message(ChatMessage message){
+        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 }
