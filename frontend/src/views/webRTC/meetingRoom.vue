@@ -11,14 +11,14 @@
             <el-row :gutter="40">
               <el-col id="seller" :span="16"></el-col>
               <el-col id="propse" :span="8">
-                <propse-form />
+                <propse-form :name="state.name" :room="state.room" :updatePrice="updatePrice" :successTrade="successTrade" @onSellerOrBuyer="matchingTrade" @onUser="failTrade"/>
               </el-col>
             </el-row>
             <el-row id="buyer" :gutter="20">
             </el-row>
           </el-main>
           <el-aside id="chat" width="30%">
-            <chat-form :room="state.room" :receiveMessage="receiveMsg" @endReceiveMsg="onReceiveMessageEnded"/>
+            <chat-form :name="state.name" :room="state.room" :receiveMessage="receiveMsg" @endReceiveMsg="onReceiveMessageEnded"/>
           </el-aside>
         <!-- </el-container> -->
       </el-container>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { reactive } from '@vue/reactivity'
+import { reactive, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { onBeforeMount, onBeforeUnmount, onMounted } from '@vue/runtime-core'
 import Participant from './js/participant'
@@ -56,6 +56,14 @@ export default {
     const receiveMsg = reactive({
       flag: false,
       message:{}
+    })
+    const updatePrice = reactive({
+      curPrice: 0
+    })
+    const successTrade = reactive({
+      flag: false,
+      sellerId: '',
+      buyerId: ''
     })
     const kurentoUtils = require('kurento-utils')
     // const ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
@@ -89,6 +97,13 @@ export default {
       case 'broadCastNewMessage':
         onReceiveMessage(message.data)
         break
+      case 'updatePrice':
+        //console.log(message.data)
+        onUpdatePrice(message.data)
+        break
+      case 'success':
+        onSuccess(message.data)
+        break
       default:
         console.error('Unrecognized message', parsedMessage)
       }
@@ -98,7 +113,13 @@ export default {
     onBeforeMount(()=> {
       let curUrl = document.location.href.split('/').reverse()
       state.room = curUrl[1]
-      state.name = curUrl[0]
+      //state.name = curUrl[0]
+
+      store.dispatch('root/requestUserInfo')
+        .then(res=>{
+          state.name = res.data.userId
+      })
+
       const message = {
         id : 'joinRoom',
         name : state.name,
@@ -245,7 +266,33 @@ export default {
       console.log("flag: true -> false")
       receiveMsg.flag = false
     }
-    return {ws, state, receiveMsg, onReceiveMessageEnded, onReceiveMessage, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
+
+    const onUpdatePrice = function(msg){
+      //console.log(msg.currentPrice)
+      const jsoned = JSON.parse(msg)
+      //console.log(jsoned.currentPrice)
+      updatePrice.curPrice = jsoned.currentPrice
+      console.log(updatePrice.curPrice)
+    }
+
+    const onSuccess = function(msg){
+      const jsoned = JSON.parse(msg)
+      successTrade.flag = true
+      successTrade.sellerId = jsoned.sellerId
+      successTrade.buyerId = jsoned.buyerId
+    }
+
+    const matchingTrade = function(){
+      //DM으로 보내주기
+      console.log("매칭 성공")
+    }
+
+    const failTrade = function(){
+      //낙찰 실패한 유저들
+      router.push({name:'home'})
+    }
+
+    return {ws, state, receiveMsg, updatePrice, successTrade, matchingTrade, failTrade, onSuccess, onUpdatePrice, onReceiveMessageEnded, onReceiveMessage, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
   }
 
 }

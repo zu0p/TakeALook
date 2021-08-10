@@ -15,7 +15,6 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="countDown">카운트 시작</el-button>
-        <el-button @click="resetCount" >카운트 리셋</el-button>
         <el-button @click="propose">가격 제안</el-button>
       </el-form-item>
     </el-form>
@@ -23,19 +22,52 @@
 </template>
 
 <script>
-import { reactive } from '@vue/reactivity';
+import { reactive } from '@vue/reactivity'
+import ws from '../js/webSocket'
+import {watchEffect} from '@vue/runtime-core'
+
 export default {
   name: 'propose-form',
+  props: ['name', 'room', 'updatePrice', 'successTrade'],
   setup(props, {emit}){
     const state = reactive({
       curPrice: 0,
       proposePrice: 0,
       gap: 10,
-      count: 30
+      count: 3
     });
+
+    const updated = watchEffect(()=>{
+      if(!props.successTrade.flag){
+        console.log(props.updatePrice)
+        state.curPrice = props.updatePrice.curPrice
+        state.proposePrice = state.curPrice
+
+        // count reset
+        state.count = 3
+      }
+      else{
+        // 낙찰성공
+        if(props.name == props.successTrade.sellerId || props.name == props.successTrade.buyerId){
+          emit('onSellerOrBuyer')
+        }
+        else{
+          emit('onUser')
+        }
+      }
+    })
 
     const countDown = function(){
       if(state.count == 0){
+        if(props.name=='zu0p'){ //seller인 경우
+        console.log(props.name)
+          const req = {
+            id: 'tradeClosed',
+            room: props.room
+          }
+          console.log(req)
+          ws.send(JSON.stringify(req))
+        }
         alert("낙찰!!")
       }
       if(state.count>0){
@@ -46,19 +78,23 @@ export default {
       }
     }
 
-    const resetCount = function(){
-      state.count = 30
-    }
-
     const handleChange = function(value) {
-      console.log(value);
+      //console.log(value);
     }
 
     const propose = function(){
       state.curPrice = state.proposePrice
+      const req = {
+        id: 'proposePrice',
+        room: props.room,
+        name: props.name,
+        price: state.proposePrice
+      }
+      console.log(req)
+      ws.send(JSON.stringify(req))
     }
 
-    return {state, handleChange, countDown, resetCount, propose}
+    return {state, handleChange, countDown, propose}
   }
 }
 </script>

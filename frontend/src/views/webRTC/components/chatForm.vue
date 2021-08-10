@@ -34,19 +34,19 @@ import ws from '../js/webSocket'
 export default {
   name: 'chat-form',
 
-  props: ["room", "receiveMessage"],
+  props: ['name', 'room', 'receiveMessage'],
 
   setup(props, {emit}){
     const store = useStore()
     let state = reactive({
-      curUserId:'',
+      curUserId: props.name,
       roomId: props.room,
       chats: [],
       inputMessage : ''
     })
 
     const propsMsg = watchEffect(()=>{
-      console.log(props.receiveMessage)
+      //console.log(props.receiveMessage)
       if(props.receiveMessage.flag){
         const jsoned = JSON.parse(props.receiveMessage.message)
         const received = {
