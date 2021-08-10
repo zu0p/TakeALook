@@ -119,7 +119,7 @@ public class Room implements Closeable {
     }
   }
 
-  // 실시간 가격 제안
+  // 최종 낙찰의 경우
   public void tradeNowClosed() throws IOException{
     final JsonObject finalProposal = new JsonObject();
     finalProposal.addProperty("id", "success");
