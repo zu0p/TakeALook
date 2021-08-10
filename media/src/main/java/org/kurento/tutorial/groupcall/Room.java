@@ -102,11 +102,13 @@ public class Room implements Closeable {
   // 실시간 가격 제안
   public void realTimeProposals(String name, int price) throws IOException{
     if(price < this.currentPrice) return;
+    this.buyer = name;
+    this.currentPrice = price;
 
     final JsonObject newProposal = new JsonObject();
     newProposal.addProperty("id","updatePrice");
     newProposal.addProperty("currentPrice",this.currentPrice);
-    this.buyer = name;
+
     log.info("Message return {} {}","updatePrice", this.currentPrice);
     for (final UserSession participant : participants.values()) {
       try {
