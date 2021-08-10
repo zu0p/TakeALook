@@ -20,19 +20,19 @@
       <img v-if="info.isOpen" class="sc-closed-icon" :src="icons.close.img" :alt="icons.close.name" />
       <img v-else class="sc-open-icon" :src="icons.open.img" :alt="icons.open.name" style="size:10px"/>
     </div>
-    <chat-window v-if="info.isOpen" style="z-index:1"/>
+    <chat-list v-if="info.isOpen"/>
 </template>
 
 <script>
 
 import CloseIcon from '@/assets/images/close-icon.png'
 import OpenIcon from '@/assets/images/logo-no-bg.svg'
-import ChatWindow from './chat-window.vue'
+import ChatList from './chat-list.vue'
 import { reactive } from '@vue/reactivity'
 
 export default {
   components: {
-    ChatWindow
+    ChatList
   },
   props: {
     icons: {
@@ -48,7 +48,7 @@ export default {
             name: 'default'
           }
         }
-      }
+      },
     },
     showEmoji: {
       type: Boolean,
@@ -209,7 +209,8 @@ export default {
     },
   },
 
-  setup(){
+  setup(props){
+    console.log(props)
     const info = reactive({
       isOpen: false,
       close: false
@@ -218,25 +219,12 @@ export default {
     const isOpen = function () {
       if (info.isOpen == false) {
         info.isOpen = true
-        check()
       } else {
         info.isOpen = false
-        close()
-      } console.log(info.isOpen)
-    }
-
-    const close = function () {
-      console.log("close")
-      if (info.close == false) {
-        info.close = true
       }
-      info.close = false
     }
 
-    const check = function () {
-      console.log("check")
-    }
-    return {info, isOpen, close, check}
+    return { info, isOpen }
   }
 
 }

@@ -1,10 +1,11 @@
 <template>
-  <div class="chat-window">
-    <Header>
-      <template>
+  <div class="chat-window" style="z-index:2">
+    <Header/>
+    <button @click="$emit('close')">뒤로</button>
+      <!-- <template>
         <span>헤더리스트</span>
       </template>
-    </Header>
+    </Header> -->
     <MessageList>
       <template>
         <span>메세지리스트</span>

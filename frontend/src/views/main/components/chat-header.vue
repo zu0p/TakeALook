@@ -1,10 +1,12 @@
 <template>
   <div class="chat-header" >
     <span>헤더</span>
-    <slot>
+    <!-- <button @click="$emit('close')">뒤로</button> -->
+    <button @click="close" :close="close">뒤로</button>
+    <!-- <slot>
       <img class="chat-header--img" src="" alt="" />
       <div class="chat-header--title enabled">hello</div>
-    </slot>
+    </slot> -->
     <div class="chat-header--close-button">
       <img :src="icons.close.img" :alt="icons.close.name" />
     </div>
@@ -27,6 +29,14 @@ export default {
       }
     },
   },
+
+  setup() {
+    const close = function () {
+      console.log("close")
+    }
+
+    return {close}
+  }
 }
 </script>
 
