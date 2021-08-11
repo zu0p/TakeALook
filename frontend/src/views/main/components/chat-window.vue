@@ -50,6 +50,7 @@ import MessageList from './chat-message-list.vue'
 import UserInput from './chat-user-input.vue'
 import ChatList from './chat-list.vue'
 import { reactive } from '@vue/reactivity'
+import { useStore } from 'vuex'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 
@@ -60,10 +61,14 @@ export default {
     UserInput,
     ChatList,
   },
-  setup(){
+  //! 변경
+  props:["roomId"],
+
+  setup(props){
+    const store = useStore()
     const info = reactive({
       msg:'',
-      roomId:1,
+      roomId:props.roomId,
       chatList: [],
       connected: false,
       nickname: "dd"
