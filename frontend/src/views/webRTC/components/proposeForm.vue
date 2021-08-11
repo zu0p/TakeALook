@@ -86,6 +86,7 @@ export default {
           ws.send(JSON.stringify(req))
         }
         alert("낙찰!!")
+        ws.close()
         return
       }
       if(state.count>0){
@@ -102,11 +103,11 @@ export default {
         id: 'startRequestCount',
         room: props.state.room
       }
-      console.log(req)
-      ws.send(JSON.stringify(req))
+      console.log(reqWS)
+      ws.send(JSON.stringify(reqWS))
 
       const reqBE = props.state.room
-      // store.dispatch('/root/requestSetStarted', reqBE)
+      store.dispatch('root/requestSetStarted', reqBE)
     }
 
     const handleChange = function(value) {
