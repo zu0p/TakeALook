@@ -2,6 +2,8 @@
   <div class="chat-window" style="z-index:2">
     <Header/>
     <button @click="$emit('close')">뒤로</button>
+    <button @click=connect>connect</button>
+    <button @click=disconnect>disconnect</button>
       <!-- <template>
         <span>헤더리스트</span>
       </template>
@@ -11,7 +13,10 @@
         <span>메세지리스트</span>
       </template>
     </MessageList>
-    <UserInput/>
+    <!-- <UserInput/> -->
+    <form @submit.prevent="send" action="#">
+      <input v-model="info.message"><button type="submmit">전송</button>
+    </form>
   </div>
 </template>
 
@@ -20,6 +25,10 @@ import Header from './chat-header.vue'
 import MessageList from './chat-message-list.vue'
 import UserInput from './chat-user-input.vue'
 import ChatList from './chat-list.vue'
+import { reactive } from '@vue/reactivity'
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
+
 
 export default {
   components: {
@@ -28,6 +37,53 @@ export default {
     UserInput,
     ChatList,
   },
+  setup(){
+    const stomp = Stomp
+    const SocketJS = SockJS
+    const info = reactive({
+      message:'',
+      logs: []
+    })
+    // const socket = new SocketJS ("ws://localhost:8080/stomp/chat")
+    const connect = function () {
+      const serverURL = "http://localhost:8080/stomp/chat"
+      let socket = new SocketJS(serverURL)
+      const stompClient = stomp.over(socket)
+      console.log(`연결 시도, ${serverURL}`)
+      stompClient.connect(
+        {},
+        frame => {
+          console.log("연결 성공", frame)
+        },
+        err => {
+          console.log("연결 실패", err)
+        }
+      )
+
+      // socket.onopen = function () {
+      //   info.logs.push({ event: "connect", data:"ws://localhost:8080/stomp/chat"})
+      //   socket.onmessage = function (data) {
+      //     info.logs.push({ event: "수신", data})
+      //     console.log(data)
+      //   }
+      // }
+      // console.log(socket)
+      // console.log(info.logs)
+    }
+
+    const disconnect = function () {
+      socket.close()
+      console.log(socket)
+    }
+
+    const send = function () {
+      socket.send(info.message)
+      info.logs.push({ event: "전송", data: info.message})
+      info.message = ''
+      console.log(socket)
+    }
+    return {info, connect, disconnect, send}
+  }
 }
 </script>
 
