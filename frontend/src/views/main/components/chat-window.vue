@@ -1,41 +1,37 @@
 <template>
   <div class="chat-window" style="z-index:2">
-    <div class="chat-header">
-      <slot>
-        <el-button type="primary" icon="el-icon-back" @click="$emit('back')"></el-button>
-        <div class="chat-header--title enabled">
-        </div>
-      </slot>
-      <div class="chat-header--close-button">
+    <div class="chat-window-header">
+      <el-button type="primary" icon="el-icon-back" @click="$emit('back')"></el-button>
+      <div class="chat-window-header-title">
+        hellow
+      </div>
+      <div class="chat-window-header-close-button">
         <el-button type="primary" icon="el-icon-close" @click="$emit('close')"></el-button>
       </div>
     </div>
-      <!-- <template>
-        <span>헤더리스트</span>
-      </template>
-    </Header> -->
-    <MessageList>
-      <template>
-        <span>메세지리스트</span>
-      </template>
-    </MessageList>
+    <div class="chat-window-body">
+      <WebSocket/>
+    </div>
+    <!-- 메세지 리스트 -->
     <UserInput/>
   </div>
 </template>
 
 <script>
-import Header from './chat-header.vue'
 import MessageList from './chat-message-list.vue'
 import UserInput from './chat-user-input.vue'
 import ChatList from './chat-list.vue'
+import WebSocket from './web-socket.vue'
+
 
 export default {
   components: {
-    Header,
     MessageList,
     UserInput,
     ChatList,
+    WebSocket,
   },
+
 }
 </script>
 
@@ -60,12 +56,42 @@ export default {
   animation-timing-function: ease-in-out;
 }
 
+.chat-window-header {
+  background-color: cornflowerblue;
+  min-height: 75px;
+  text-align: center;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+  padding: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+}
+
+.chat-window-header-title {
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.chat-window-header-close-button {
+  width: 40px;
+  align-self: center;
+  height: 40px;
+  margin-right: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: auto;
+}
+
 .chat-window.closed {
   opacity: 0;
   display: none;
   bottom: 90px;
 }
 
+/* chat-list에서 chat-window로 넘어갈 때 fadeIn */
 @keyframes fadeIn {
   0% {
     display: none;

@@ -125,6 +125,7 @@ export default {
         url: `/product/${props.productId}`
       })
       .then(res=>{
+        console.log(1111111111)
         console.log(res)
         state.form.productName = res.data.productName
         state.form.categories = res.data.categories

@@ -1,12 +1,4 @@
 <template>
-
-    <!-- <div
-      v-if="showLauncher"
-      class="sc-launcher"
-      :class="{opened: isOpen}"
-      :style="{backgroundColor: colors.launcher.bg}"
-      @click.prevent="isOpen ? close() : openAndFocus()"
-    > -->
     <div
       class="chat-launcher"
       :class="{opened: isOpen}"
@@ -54,74 +46,17 @@ export default {
     colors: {
       type: Object,
       validator: (c) =>
-        'header' in c &&
-        'bg' in c.header &&
-        'text' in c.header &&
         'launcher' in c &&
-        'bg' in c.launcher &&
-        'messageList' in c &&
-        'bg' in c.messageList &&
-        'sentMessage' in c &&
-        'bg' in c.sentMessage &&
-        'text' in c.sentMessage &&
-        'receivedMessage' in c &&
-        'bg' in c.receivedMessage &&
-        'text' in c.receivedMessage &&
-        'userInput' in c &&
-        'bg' in c.userInput &&
-        'text' in c.userInput,
+        'bg' in c.launcher,
       default: function () {
         return {
-          header: {
-            bg: '#4e8cff',
-            text: '#ffffff'
-          },
           launcher: {
             bg: '#4e8cff'
           },
-          messageList: {
-            bg: '#ffffff'
-          },
-          sentMessage: {
-            bg: '#4e8cff',
-            text: '#ffffff'
-          },
-          receivedMessage: {
-            bg: '#f4f7f9',
-            text: '#ffffff'
-          },
-          userInput: {
-            bg: '#f4f7f9',
-            text: '#565867'
-          }
         }
       }
     },
-    alwaysScrollToBottom: {
-      type: Boolean,
-      default: () => false
-    },
-    messageStyling: {
-      type: Boolean,
-      default: () => false
-    },
-    disableUserListToggle: {
-      type: Boolean,
-      default: false
-    }
   },
-  // computed: {
-  //   chatWindowTitle() {
-  //     if (this.title !== '') return this.title
-
-  //     if (this.participants.length === 0) return 'You'
-  //     if (this.participants.length > 1) return 'You, ' + this.participants[0].name + ' & others'
-
-  //     return 'You & ' + this.participants[0].name
-  //   }
-  // },
-
-
   setup(props){
     console.log(props)
     const info = reactive({
