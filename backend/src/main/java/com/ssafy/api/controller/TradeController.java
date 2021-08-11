@@ -127,13 +127,13 @@ public class TradeController {
             if (!tradeSection.getIsActive()) {
                 tradeSectionCreateRes.setRoom("none");
             }
-            if (tradeSection.getIsStarted()){
+            if (tradeSection.getIsStarted()!=null && tradeSection.getIsStarted()){
                 tradeSectionCreateRes.setRoom("alreadyStarted");
             }
             return ResponseEntity.status(200).body(tradeSectionCreateRes);
         }catch (Exception e){
             TradeSectionCreateRes tradeSectionCreateRes = TradeSectionCreateRes.of(null, null);
-            tradeSectionCreateRes.setRoom("none");
+            tradeSectionCreateRes.setRoom("null");
             return ResponseEntity.status(200).body(tradeSectionCreateRes);
         }
     }
