@@ -11,8 +11,11 @@
     </div>
     <div class="chat-list-body">
     <!-- <tr v-for="가장 최근 메세지 in 메세지 방 리스트" :key="메세지 방.id"> -->
+      <div v-for="chat in info.chatList[0]" :key="chat.roomId">
+        {{ chat.roomId}}
+      </div>
       <!-- 유저 이름 클릭 시 chat-window창으로 이동 -->
-      <hr>
+      <!-- <hr>
       <el-button @click="chatWindow">zu0p</el-button>
       <hr>
       <el-button @click="chatWindow">nahyeon</el-button>
@@ -21,7 +24,7 @@
       <hr>
       <el-button @click="chatWindow">jihyun</el-button>
       <hr>
-      <el-button @click="chatWindow">junsung</el-button>
+      <el-button @click="chatWindow">junsung</el-button> -->
     </div>
   </div>
   <chat-window v-if="info.chatWindow" @back="chatWindow()" @close="$emit('close')"/>
@@ -29,6 +32,7 @@
 
 <script>
 import { reactive } from '@vue/reactivity'
+import { useStore } from 'vuex'
 import ChatWindow from './chat-window.vue'
 
 export default {
@@ -39,11 +43,19 @@ export default {
   props: ['back', 'close'],
 
   setup () {
-    console.log(541)
+    const store = useStore()
+
     const info = reactive({
       chatWindow: false,
+      chatList: []
     })
 
+    store.dispatch('root/requestChatList')
+      .then(res=> {
+        console.log(res.data)
+        info.chatList.push(res.data)
+        console.log(info.chatList[0])
+      })
 
     const chatWindow = function () {
       if (info.chatWindow) {
