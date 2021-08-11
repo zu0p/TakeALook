@@ -17,7 +17,7 @@
     </div>
     <div class="chat-window-body">
       <div v-for="(chat, idx) in info.chatList" :key="idx">
-        <p>{{chat.message}}</p>
+        <span>{{chat.writer}} : {{chat.message}}</span>
       </div>
     </div>
     <!-- 메세지 리스트 -->
@@ -43,6 +43,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import MessageList from './chat-message-list.vue'
@@ -109,6 +110,7 @@ export default {
   }
 }
 </script>
+
 
 <style scoped>
 .chat-window {

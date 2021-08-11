@@ -6,7 +6,7 @@
         <span>대화 리스트</span>
       </div>
       <div class="chat-list-header-close-button">
-        <el-button type="primary" icon="el-icon-close"></el-button>
+        <el-button type="primary" icon="el-icon-close" @click="$emit('close')"></el-button>
       </div>
     </div>
     <div class="chat-list-body">
@@ -24,7 +24,7 @@
       <el-button @click="chatWindow">junsung</el-button>
     </div>
   </div>
-  <chat-window v-if="info.chatWindow" @back="chatWindow()"/>
+  <chat-window v-if="info.chatWindow" @back="chatWindow()" @close="$emit('close')"/>
 </template>
 
 <script>
@@ -38,17 +38,12 @@ export default {
 
   props: ['back', 'close'],
 
-  setup (props, {emit}) {
+  setup () {
     console.log(541)
-    console.log(props)
-    if(props.back == "back"){
-      info.chatWindow = false
-    }
-    console.log(emit)
-
     const info = reactive({
-      chatWindow: false
+      chatWindow: false,
     })
+
 
     const chatWindow = function () {
       if (info.chatWindow) {
