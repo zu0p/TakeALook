@@ -11,14 +11,14 @@
             <el-row :gutter="40">
               <el-col id="seller" :span="16"></el-col>
               <el-col id="propse" :span="8">
-                <propse-form />
+                <propse-form :name="state.name" :room="state.room" :updatePrice="updatePrice" :successTrade="successTrade" @onSellerOrBuyer="matchingTrade" @onUser="failTrade"/>
               </el-col>
             </el-row>
             <el-row id="buyer" :gutter="20">
             </el-row>
           </el-main>
           <el-aside id="chat" width="30%">
-            <chat-form />
+            <chat-form :name="state.name" :room="state.room" :receiveMessage="receiveMsg" @endReceiveMsg="onReceiveMessageEnded"/>
           </el-aside>
         <!-- </el-container> -->
       </el-container>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { reactive } from '@vue/reactivity'
+import { reactive, ref } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import { onBeforeMount, onBeforeUnmount, onMounted } from '@vue/runtime-core'
 import Participant from './js/participant'
@@ -51,14 +51,26 @@ export default {
     const state = reactive({
       room:'',
       name:'',
-      participants:{}
+      participants:{},
+    })
+    const receiveMsg = reactive({
+      flag: false,
+      message:{}
+    })
+    const updatePrice = reactive({
+      curPrice: 0
+    })
+    const successTrade = reactive({
+      flag: false,
+      sellerId: '',
+      buyerId: ''
     })
     const kurentoUtils = require('kurento-utils')
     // const ws = new WebSocket(`wss://i5d101.p.ssafy.io:8443/groupcall`)
     ws.onmessage = function(message) {
       var parsedMessage = JSON.parse(message.data)
-      console.log(parsedMessage.name)
-      console.log(state.participants[parsedMessage.name])
+      //console.log(parsedMessage.name)
+      //console.log(state.participants[parsedMessage.name])
       console.info('Received message: ' + message.data)
 
       switch (parsedMessage.id) {
@@ -82,16 +94,32 @@ export default {
               }
           })
           break
+      case 'broadCastNewMessage':
+        onReceiveMessage(message.data)
+        break
+      case 'updatePrice':
+        //console.log(message.data)
+        onUpdatePrice(message.data)
+        break
+      case 'success':
+        onSuccess(message.data)
+        break
       default:
         console.error('Unrecognized message', parsedMessage)
       }
     }
-    sessionStorage.setItem('ws', ws)
+    // sessionStorage.setItem('ws', ws)
 
     onBeforeMount(()=> {
       let curUrl = document.location.href.split('/').reverse()
       state.room = curUrl[1]
-      state.name = curUrl[0]
+      //state.name = curUrl[0]
+
+      store.dispatch('root/requestUserInfo')
+        .then(res=>{
+          state.name = res.data.userId
+      })
+
       const message = {
         id : 'joinRoom',
         name : state.name,
@@ -161,9 +189,9 @@ export default {
       }
       if(state.name==seller)
         constraints.video.mandatory.maxWidth = 720
-      console.log(state.name + " registered in room " + state.room)
+      //console.log(state.name + " registered in room " + state.room)
       var participant = new Participant(state.name)
-      // participants[state.name] = participant
+
       var video = participant.getVideoElement()
 
       var options = {
@@ -179,13 +207,12 @@ export default {
           this.generateOffer (participant.offerToReceiveVideo.bind(participant))
       })
       state.participants[state.name] = participant
-      console.log("1. "+state.participants[state.name])
+      //console.log("1. "+state.participants[state.name])
 
       msg.data.forEach(receiveVideo)
     }
 
     const leaveRoom = function() {
-      //alert("leave")
       sendMessage({
         id : 'leaveRoom'
       });
@@ -229,7 +256,43 @@ export default {
       }
     }
 
-    return {ws, state, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
+    const onReceiveMessage = function(msg){
+      //console.log("meetinRoom receive message: "+msg)
+      receiveMsg.flag = true
+      receiveMsg.message = msg
+    }
+
+    const onReceiveMessageEnded = function(){
+      console.log("flag: true -> false")
+      receiveMsg.flag = false
+    }
+
+    const onUpdatePrice = function(msg){
+      //console.log(msg.currentPrice)
+      const jsoned = JSON.parse(msg)
+      //console.log(jsoned.currentPrice)
+      updatePrice.curPrice = jsoned.currentPrice
+      console.log(updatePrice.curPrice)
+    }
+
+    const onSuccess = function(msg){
+      const jsoned = JSON.parse(msg)
+      successTrade.flag = true
+      successTrade.sellerId = jsoned.sellerId
+      successTrade.buyerId = jsoned.buyerId
+    }
+
+    const matchingTrade = function(){
+      //DM으로 보내주기
+      console.log("매칭 성공")
+    }
+
+    const failTrade = function(){
+      //낙찰 실패한 유저들
+      router.push({name:'home'})
+    }
+
+    return {ws, state, receiveMsg, updatePrice, successTrade, matchingTrade, failTrade, onSuccess, onUpdatePrice, onReceiveMessageEnded, onReceiveMessage, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
   }
 
 }
@@ -248,5 +311,8 @@ export default {
 }
 #seller.participant video{
   height: 500px;
+}
+.el-aside{
+  overflow: hidden;
 }
 </style>
