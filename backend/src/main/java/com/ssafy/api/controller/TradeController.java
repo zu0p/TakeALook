@@ -1,9 +1,11 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.paging.PageReq;
+import com.ssafy.api.request.trade.TradeRegistPatchReq;
 import com.ssafy.api.request.trade.TradeSectionCreateReq;
 import com.ssafy.api.request.trade.TradeSectionEnterReq;
 import com.ssafy.api.response.product.ProductListGetRes;
+import com.ssafy.api.response.trade.TradeCompleteRes;
 import com.ssafy.api.response.trade.TradeListGetRes;
 import com.ssafy.api.response.trade.TradeRes;
 import com.ssafy.api.response.trade.TradeSectionCreateRes;
@@ -23,6 +25,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -63,6 +66,41 @@ public class TradeController {
         return ResponseEntity.status(200).body(sellList);
     }
 
+    @GetMapping("/chatroom")
+    @ApiOperation(value = "거래 상품 목록 조회(채팅방 목록)", notes = "로그인한 회원의 거래 목록을 반환한다.")
+    public ResponseEntity<?> getChatList(@ApiIgnore Authentication authentication) {
+        SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+        String authId = userDetails.getUsername();
+        if(!userService.getUserExistMessage(authId))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
+
+        List<TradeCompleteRes> chatList = tradeService.getChatList(authId);
+       if(chatList.isEmpty()) return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
+        return ResponseEntity.status(200).body(chatList);
+    }
+
+    @PostMapping("/history")
+    @ApiOperation(value = "거래 히스토리 등록", notes = "상품 거래를 등록한다.")
+    public ResponseEntity<?> registBuyProduct(@RequestBody @ApiParam(value="거래 상품 정보", required = true) TradeRegistPatchReq tradeRegistInfo) {
+        if(!productService.checkProductAuth(tradeRegistInfo.getSeller(),tradeRegistInfo.getProductId()))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(401,"Fail"));
+
+        if(tradeService.checkTradeHistory(tradeRegistInfo.getProductId()))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(409,"Exist"));
+
+        TradeHistory tradeHistory = tradeService.createTradeHistory(tradeRegistInfo);
+        return ResponseEntity.status(200).body(TradeRes.of(tradeRegistInfo.getProductId()));
+    }
+
+    @DeleteMapping("history/{productId}")
+    @ApiOperation(value = "거래 히스토리 삭제", notes = "거래 목록을 삭제한다.")
+    public ResponseEntity<?> deleteBuyProduct(@PathVariable Long productId) {
+        if(!tradeService.checkTradeHistory(productId))
+            return ResponseEntity.status(200).body(BaseResponseBody.of(404,"Not found"));
+
+        tradeService.deleteTradeInfo(productId);
+        return ResponseEntity.status(200).body(TradeRes.of(productId));
+    }
 
     @PostMapping("/section/create")
     @ApiOperation(value = "거래 방 생성", notes = "거래 방을 생성한다.")
@@ -95,15 +133,5 @@ public class TradeController {
             tradeSectionCreateRes.setRoom("none");
             return ResponseEntity.status(200).body(tradeSectionCreateRes);
         }
-    }
-
-    @DeleteMapping("/{productId}")
-    @ApiOperation(value = "거래 목록 삭제", notes = "거래 목록을 삭제한다.")
-    public ResponseEntity<?> deleteBuyProduct(@PathVariable Long productId) {
-        if(!tradeService.checkTradeHistory(productId))
-            return ResponseEntity.status(200).body(BaseResponseBody.of(404,"Not found"));
-
-        tradeService.deleteTradeInfo(productId);
-        return ResponseEntity.status(200).body(TradeRes.of(productId));
     }
 }
