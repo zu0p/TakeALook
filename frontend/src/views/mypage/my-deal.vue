@@ -117,7 +117,7 @@ export default {
         store.dispatch('root/requestCreateTradeSection', req)
           .then(res =>{
             room = res.data.room
-            console.log(room)
+            // console.log(room)
 
             router.push({
               name: 'meeting-detail',

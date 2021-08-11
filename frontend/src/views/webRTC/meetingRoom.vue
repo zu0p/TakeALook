@@ -142,6 +142,7 @@ export default {
     })
 
     onBeforeUnmount(()=>{
+      // console.log("close!!")
       ws.close()
     })
 
@@ -151,7 +152,7 @@ export default {
     }
 
     const receiveVideo = function(sender) {
-      console.log("sender: "+sender)
+      // console.log("sender: "+sender)
       var participant = new Participant(sender)
       // state.participants[sender] = participant
       var video = participant.getVideoElement()
@@ -285,7 +286,7 @@ export default {
       const jsoned = JSON.parse(msg)
       //console.log(jsoned.currentPrice)
       updatePrice.curPrice = jsoned.currentPrice
-      console.log(updatePrice.curPrice)
+      // console.log(updatePrice.curPrice)
     }
 
     const onSuccess = function(msg){

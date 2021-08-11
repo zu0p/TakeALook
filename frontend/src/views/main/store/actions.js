@@ -186,3 +186,9 @@ export function requestJoinTrade({state}, payload){
   const url = BASE_URL+'/trade/section/enter'
   return instanceWithAuth.post(url, payload)
 }
+
+// webRTC seller가 카운트 시작
+export function requestSetStarted({state}, roomNumber){
+  const url = BASE_URL+`/trade/section/started/${roomNumber}`
+  return instanceWithAuth.get(url)
+}

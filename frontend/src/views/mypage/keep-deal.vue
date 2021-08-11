@@ -34,6 +34,7 @@ import Recommend from '../deal-detail/components/recommend'
 import { onBeforeMount, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+// import { buyerJoinFunc } from '../webRTC/js/sessionFunc'
 
 export default {
   name: 'Keep-deal',
@@ -85,7 +86,7 @@ export default {
                     info.recommend.push(temp[deal])
                   }
                 }
-                console.log(info.recommend)
+                // console.log(info.recommend)
               }
             })
           })
@@ -111,32 +112,38 @@ export default {
       })
     }
 
+    // const buyerJoin = function(pid, price){
+    //   buyerJoinFunc(state.name, pid, price)
+    // }
     const buyerJoin = function(pid, price){
       const req = {
         userId: state.name,
         productId: pid
       }
-      console.log(req)
+      // console.log(req)
 
       // 서버에 요청보내서 res의 room != none이면 입장
       store.dispatch('root/requestJoinTrade', req)
         .then(res=>{
-          let isActive = res.data.room
-          console.log(isActive)
-          if(isActive!='none'){
+          let room = res.data.room
+          // console.log(isActive)
+          if(room=='none'){
+            alert("거래 세션이 생성되지 않아 입장할 수 없습니다.")
+          }
+          else if(room=='alreadyStarted'){
+            alert("거래 가격제안이 시작되어 입장할 수 없습니다.")
+          }
+          else{
             // 거래 세션에 입장
             router.push({
               name: 'meeting-detail',
               params: {
-                meetingId: isActive,
+                meetingId: room,
                 userId: state.name,
                 isSeller: 0,
                 basePrice: price
               },
             })
-          }
-          else{
-            alert("거래 세션이 아직 생성되지 않아 입장할 수 없습니다.")
           }
         })
     }

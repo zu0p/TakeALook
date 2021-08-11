@@ -25,11 +25,13 @@
 import { reactive } from '@vue/reactivity'
 import ws from '../js/webSocket'
 import {watchEffect} from '@vue/runtime-core'
+import { useStore } from 'vuex'
 
 export default {
   name: 'propose-form',
   props: ['state', 'updatePrice', 'successTrade'],
   setup(props, {emit}){
+    const store = useStore()
     const state = reactive({
       curPrice: 0,
       proposePrice: 0,
@@ -96,12 +98,15 @@ export default {
     }
 
     const requestCountStart = function(){
-      const req = {
+      const reqWS = {
         id: 'startRequestCount',
         room: props.state.room
       }
       console.log(req)
       ws.send(JSON.stringify(req))
+
+      const reqBE = props.state.room
+      // store.dispatch('/root/requestSetStarted', reqBE)
     }
 
     const handleChange = function(value) {
