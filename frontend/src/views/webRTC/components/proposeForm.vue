@@ -10,12 +10,12 @@
       <el-form-item label="낙찰 카운트다운">
         <span>{{state.count}}</span>
       </el-form-item>
-      <el-form-item>
+      <el-form-item  v-if="!state.isSeller">
         <el-input-number v-model="state.proposePrice" @change="handleChange" :step="state.gap"></el-input-number>
       </el-form-item>
       <el-form-item>
-        <el-button v-if="state.isSeller" @click="countDown">카운트 시작</el-button>
-        <el-button v-if="!state.isSeller" @click="propose">가격 제안</el-button>
+        <el-button v-if="state.isSeller" @click="requestCountStart">카운트 시작</el-button>
+        <el-button v-if="!state.isSeller" @click="propose" disabled="!state.isStart">가격 제안</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -34,18 +34,32 @@ export default {
       curPrice: 0,
       proposePrice: 0,
       gap: 10,
-      count: 3,
-      isSeller: props.state.role=='seller'?true:false
+      count: 30,
+      isSeller: props.state.role=='seller'?true:false,
+      isStart: props.state.isStart
     });
 
     const updated = watchEffect(()=>{
-      if(!props.successTrade.flag){
-        console.log(props.updatePrice)
-        state.curPrice = props.updatePrice.curPrice
-        state.proposePrice = state.curPrice
+      // 거래 시작 == count start
+      if(props.state.isStart){
+        //console.log(props)
+        state.isStart = props.state.isStart
+        countDown()
+      }
 
+
+      // 가격제안
+      if(!props.successTrade.flag){
+        //console.log(props.updatePrice)
+        let prevPrive = state.curPrice
+        state.curPrice = props.updatePrice.curPrice
+
+        if(prevPrive != state.curPrice){
+          state.count = 30
+          state.proposePrice = state.curPrice
+        }
         // count reset
-        state.count = 3
+        // state.count = 30
       }
       else{
         // 낙찰성공
@@ -74,9 +88,19 @@ export default {
       if(state.count>0){
         setTimeout(()=>{
           state.count-=1
-          countDown()
+          console.log(state.count)
+          // countDown()
         }, 1000)
       }
+    }
+
+    const requestCountStart = function(){
+      const req = {
+        id: 'startRequestCount',
+        room: props.state.room
+      }
+      console.log(req)
+      ws.send(JSON.stringify(req))
     }
 
     const handleChange = function(value) {
@@ -95,7 +119,7 @@ export default {
       ws.send(JSON.stringify(req))
     }
 
-    return {state, handleChange, countDown, propose}
+    return {state, handleChange, countDown, requestCountStart, propose}
   }
 }
 </script>
