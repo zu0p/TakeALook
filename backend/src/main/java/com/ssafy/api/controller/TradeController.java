@@ -127,11 +127,21 @@ public class TradeController {
             if (!tradeSection.getIsActive()) {
                 tradeSectionCreateRes.setRoom("none");
             }
+            if (tradeSection.getIsStarted()){
+                tradeSectionCreateRes.setRoom("alreadyStarted");
+            }
             return ResponseEntity.status(200).body(tradeSectionCreateRes);
         }catch (Exception e){
             TradeSectionCreateRes tradeSectionCreateRes = TradeSectionCreateRes.of(null, null);
             tradeSectionCreateRes.setRoom("none");
             return ResponseEntity.status(200).body(tradeSectionCreateRes);
         }
+    }
+
+    @GetMapping("/section/started/{room}")
+    @ApiOperation(value = "거래 방 시작등록", notes = "거래 방 시작을 알린다.")
+    public ResponseEntity<?> isTradeSectionStarted(@PathVariable String room){
+        tradeService.findTradeSectionByRoomUrl(room);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "trade is now started"));
     }
 }

@@ -22,6 +22,7 @@ public interface TradeService {
     TradeHistory createTradeHistory(TradeRegistPatchReq buyUpdatePostReq);
     TradeSection createTradeSection(TradeSectionCreateReq tradeSectionCreateReq, String room);
     TradeSection findTradeSection(TradeSectionEnterReq tradeSectionEnterReq);
+    void findTradeSectionByRoomUrl(String url);
 
     void deleteTradeInfo(Long buyProductId);
     Boolean checkTradeHistory(Long productId);

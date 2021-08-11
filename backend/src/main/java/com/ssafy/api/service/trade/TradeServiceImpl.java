@@ -94,6 +94,13 @@ public class TradeServiceImpl implements TradeService {
         return tradeSection;
     }
 
+    @Override
+    public void findTradeSectionByRoomUrl(String url) {
+        TradeSection tradeSection = tradeSectionRepository.findTradeSectionByUrl(url);
+        tradeSection.setIsStarted(Boolean.TRUE);
+        tradeSectionRepository.save(tradeSection);
+    }
+
 
     @Override
     public void deleteTradeInfo(Long productId) {

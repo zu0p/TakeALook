@@ -32,4 +32,11 @@ public class TradeSectionRepositorySupport {
         return Optional.ofNullable(tradeSection);
     }
 
+    public Optional<TradeSection> findTradeSectionByProductId(String url){
+        TradeSection tradeSection = jpaQueryFactory.select(qTradeSection).from(qTradeSection)
+                .where(qTradeSection.url.eq(url)).fetchOne();
+        if(tradeSection == null) return Optional.empty();
+        return Optional.ofNullable(tradeSection);
+    }
+
 }
