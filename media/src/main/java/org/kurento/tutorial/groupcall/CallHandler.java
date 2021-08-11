@@ -134,10 +134,12 @@ public class CallHandler extends TextWebSocketHandler {
   private void joinRoom(JsonObject params, WebSocketSession session) throws IOException {
     final String roomName = params.get("room").getAsString();
     final String name = params.get("name").getAsString();
-    log.info("PARTICIPANT {}: trying to join room {}", name, roomName);
+    final int basePrice = params.get("basePrice").getAsInt();
+    final String role = params.get("role").getAsString();
+    log.info("PARTICIPANT {}: trying to join room {}, price is {}, role is {}", name, roomName, basePrice, role);
 
     Room room = roomManager.getRoom(roomName);
-    final UserSession user = room.join(name, session);
+    final UserSession user = room.join(name, session, role, basePrice);
     registry.register(user);
   }
 

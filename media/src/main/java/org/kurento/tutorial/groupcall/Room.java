@@ -55,6 +55,7 @@ public class Room implements Closeable {
   private String buyer;
   private String seller;
 
+
   public String getName() {
     return name;
   }
@@ -70,8 +71,13 @@ public class Room implements Closeable {
     this.close();
   }
 
-  public UserSession join(String userName, WebSocketSession session) throws IOException {
+  public UserSession join(String userName, WebSocketSession session,String role, int basePrice) throws IOException {
     log.info("ROOM {}: adding participant {}", this.name, userName);
+    if(role.equals("seller")){
+      log.info("seller {} entered the room", userName);
+      this.seller = userName;
+      this.currentPrice = basePrice;
+    }
     final UserSession participant = new UserSession(userName, this.name, session, this.pipeline);
     joinRoom(participant);
     participants.put(participant.getName(), participant);
