@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item>
         <el-button v-if="state.isSeller" @click="requestCountStart">카운트 시작</el-button>
-        <el-button v-if="!state.isSeller" @click="propose" disabled="!state.isStart">가격 제안</el-button>
+        <el-button v-if="!state.isStart" @click="propose" disabled="!state.isStart">가격 제안</el-button>
       </el-form-item>
     </el-form>
   </el-card>

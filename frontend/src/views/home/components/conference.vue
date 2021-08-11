@@ -176,7 +176,7 @@ export default {
 
     const joinTrade = function(e){
       e.stopPropagation()
-      emit('buyerJoin', props.deal.productId)
+      emit('buyerJoin', props.deal.productId, props.deal.basePrice)
     }
 
   return { info, updateDeal, startDeal, deletelikeDeal, likeDeal, joinTrade }

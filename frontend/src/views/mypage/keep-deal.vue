@@ -111,7 +111,7 @@ export default {
       })
     }
 
-    const buyerJoin = function(pid){
+    const buyerJoin = function(pid, price){
       const req = {
         userId: state.name,
         productId: pid
@@ -131,7 +131,7 @@ export default {
                 meetingId: isActive,
                 userId: state.name,
                 isSeller: 0,
-                basePrice: 0
+                basePrice: price
               },
             })
           }
