@@ -1,16 +1,11 @@
 <template>
   <div class="chat-window" style="z-index:2">
-    <!-- <button @click="$emit('close')">뒤로</button>
-    <button @click=connect>connect</button>
-    <button @click=disconnect>disconnect</button>
-    <MessageList>
+
+    <!-- <MessageList>
       <template>
         <span>메세지리스트</span>
       </template>
-    </MessageList>
-    <form @submit.prevent="send" action="#">
-      <input v-model="info.message"><button type="submmit">전송</button>
-    </form> -->
+    </MessageList> -->
     <div class="chat-window-header">
       <el-button type="primary" icon="el-icon-back" @click="$emit('back')"></el-button>
       <div class="chat-window-header-title">
@@ -21,10 +16,31 @@
       </div>
     </div>
     <div class="chat-window-body">
-      <WebSocket/>
+      <div v-for="(chat, idx) in info.chatList" :key="idx">
+        <p>{{chat.message}}</p>
+      </div>
     </div>
     <!-- 메세지 리스트 -->
-    <UserInput/>
+    <div class="chat-user-input">
+      <div class="file-container">
+        <span class="icon-file-message">
+          <!-- <img :src="icons.file.img" :alt="icons.file.name" height="15"/> -->
+        </span>
+        <span class="delete-file-message" @click="cancelFile()">
+          <!-- <img height="10" title="Remove the file"/> -->
+        </span>
+      </div>
+      <form class="chat-user-input">
+        <div class="chat-user-input-text">
+          <el-input placeholder="Please input" v-model="info.msg" @keydown.enter.prevent="send"></el-input>
+        </div>
+        <div class="chat-user-input-buttons">
+          <div class="chat-user-input-button">
+            <el-button type="primary" icon="el-icon-s-promotion" circle="" @click="send"></el-button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -35,7 +51,6 @@ import ChatList from './chat-list.vue'
 import { reactive } from '@vue/reactivity'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
-import WebSocket from './web-socket.vue'
 
 
 export default {
@@ -43,54 +58,54 @@ export default {
     MessageList,
     UserInput,
     ChatList,
-    WebSocket,
   },
   setup(){
-    const stomp = Stomp
-    const SocketJS = SockJS
     const info = reactive({
-      message:'',
-      logs: []
+      msg:'',
+      roomId:1,
+      chatList: [],
+      connected: false,
+      nickname: "dd"
     })
-    // const socket = new SocketJS ("ws://localhost:8080/stomp/chat")
-    const connect = function () {
+
       const serverURL = "http://localhost:8080/stomp/chat"
-      let socket = new SocketJS(serverURL)
-      const stompClient = stomp.over(socket)
+      var socket = new SockJS(serverURL)
+      const stompClient = Stomp.over(socket)
       console.log(`연결 시도, ${serverURL}`)
       stompClient.connect(
         {},
         frame => {
+          info.connected = true
           console.log("연결 성공", frame)
+
+          stompClient.subscribe("/sub/chat/room/"+info.roomId, res=>{
+            console.log("sub 성공", res.body)
+            info.chatList.push(JSON.parse(res.body))
+          })
+          var message = {
+            roomId: info.roomId,
+            writer: info.nickname
+          }
+          stompClient.send("/pub/chat/enter", JSON.stringify(message), {})
         },
         err => {
           console.log("연결 실패", err)
+          info.connected = false
         }
       )
 
-      // socket.onopen = function () {
-      //   info.logs.push({ event: "connect", data:"ws://localhost:8080/stomp/chat"})
-      //   socket.onmessage = function (data) {
-      //     info.logs.push({ event: "수신", data})
-      //     console.log(data)
-      //   }
-      // }
-      // console.log(socket)
-      // console.log(info.logs)
-    }
-
-    const disconnect = function () {
-      socket.close()
-      console.log(socket)
-    }
-
-    const send = function () {
-      socket.send(info.message)
-      info.logs.push({ event: "전송", data: info.message})
-      info.message = ''
-      console.log(socket)
-    }
-    return {info, connect, disconnect, send}
+      const send = function () {
+        if (stompClient && stompClient.connected) {
+          var message = {
+            roomId: info.roomId,
+            message: info.msg,
+            writer: info.nickname
+          }
+          stompClient.send('/pub/chat/message', JSON.stringify(message), {})
+        }
+        info.msg = ""
+      }
+    return {info, send}
   }
 }
 </script>
