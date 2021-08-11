@@ -1,6 +1,6 @@
 <template>
-  <div style="margin-left: 30px; margin-right: 50px;">
-    <el-container style="text-align:center;">
+  <div style="margin-left:20px; margin-right:20px">
+    <el-container style="text-align:center; justify-content:center">
       <img :src="info.imageUrl" alt="" style="max-width:700px; max-height:700px;">
       <el-form ref="form" label-width="120px" style="text-align:left; margin-left:10%;" label-position="left">
         <h1 style="font-size:28px; margin-bottom:5px;">{{ info.productName }}</h1>
@@ -51,12 +51,14 @@
         </div>
       </el-form>
     </el-container>
-    <h1 v-if="info.recommend" style="text-align:left; margin-top:80px; margin-bottom:30px;">이런 상품은 어떠세요?</h1>
-    <el-row style="text-align:center;">
-      <ul v-for="deal in info.recommend" :key="deal.productId" @click="dealDetail(deal.productId)" >
-        <recommend :deal="deal"/>
-      </ul>
-    </el-row>
+    <div style="text-align:center;">
+      <h1 v-if="info.recommend" style="text-align:left; margin-top:80px; margin-bottom:30px; margin-left:5%;">이런 상품은 어떠세요?</h1>
+      <el-row style="text-align:center; display:inline-flex" justify="space-evenly">
+        <ul v-for="deal in info.recommend" :key="deal.productId" @click="dealDetail(deal.productId)" >
+          <recommend :deal="deal"/>
+        </ul>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -82,11 +84,13 @@ export default {
   },
 
   setup () {
+
+
     const store = useStore()
     const router = useRouter()
     const route = useRoute()
     const state = reactive({
-      productId: ''
+      productId: '',
     })
 
     const info = reactive({
@@ -245,7 +249,7 @@ export default {
       router.push(`/products/${id}`)
     }
 
-    return { info, backHome, backKeep, backMy, deleteDeal, likeDeal, deletelikeDeal, updateDeal, dealDetail }
+    return { info, state, backHome, backKeep, backMy, deleteDeal, likeDeal, deletelikeDeal, updateDeal, dealDetail }
   }
 }
 </script>

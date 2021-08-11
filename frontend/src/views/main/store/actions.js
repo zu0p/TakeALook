@@ -174,3 +174,8 @@ export function requestSearch({state}, payload){
   let body = payload
   return instanceWithAuth.post(url, body)
 }
+
+export function requestChatList({state}){
+  const url = BASE_URL+'/trade/chatroom'
+  return instanceWithAuth.get(url)
+}

@@ -78,16 +78,63 @@ public class CallHandler extends TextWebSocketHandler {
         break;
       case "onIceCandidate":
         JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
-
         if (user != null) {
           IceCandidate cand = new IceCandidate(candidate.get("candidate").getAsString(),
               candidate.get("sdpMid").getAsString(), candidate.get("sdpMLineIndex").getAsInt());
           user.addCandidate(cand, jsonMessage.get("name").getAsString());
         }
         break;
+      case "sendChatMessage":
+        broadCastMessage(jsonMessage, session);
+        break;
+      case "proposePrice":
+        realTimeProposal(jsonMessage, session);
+        break;
+      case "tradeClosed":
+        tradeNowClose(jsonMessage, session);
+        break;
+      case "startRequestCount":
+        startRequestCount(jsonMessage, session);
+        break;
       default:
         break;
     }
+  }
+
+
+  // 카운트 시작 알림
+  private void startRequestCount(JsonObject params, WebSocketSession session) throws IOException {
+    final String roomName = params.get("room").getAsString();
+    log.info("Message startRequestCount {}",roomName);
+    Room room = roomManager.getRoom(roomName);
+    room.startRequestCount();
+  }
+
+  private void broadCastMessage(JsonObject params, WebSocketSession session) throws IOException{
+    final String roomName = params.get("room").getAsString();
+    final String name = params.get("name").getAsString();
+    final String newMessage = params.get("message").getAsString();
+    log.info("Message broadcasting {} {} {}",roomName, name, newMessage);
+
+    Room room = roomManager.getRoom(roomName);
+    room.broadCastMessages(name, newMessage);
+  }
+  // 실시간 가격 제안
+  private void realTimeProposal(JsonObject params, WebSocketSession session) throws IOException{
+    final String roomName = params.get("room").getAsString();
+    final String name = params.get("name").getAsString();
+    final int price = params.get("price").getAsInt();
+    log.info("Message proposePrice {} {} {}",roomName, name, price);
+
+    Room room = roomManager.getRoom(roomName);
+    room.realTimeProposals(name, price);
+  }
+  // 최종 낙찰의 경우
+  private void tradeNowClose(JsonObject params, WebSocketSession session) throws IOException{
+    final String roomName = params.get("room").getAsString();
+    log.info("Message tradeClosed {}", roomName);
+    Room room = roomManager.getRoom(roomName);
+    room.tradeNowClosed();
   }
 
   @Override // user session 제거
@@ -99,10 +146,12 @@ public class CallHandler extends TextWebSocketHandler {
   private void joinRoom(JsonObject params, WebSocketSession session) throws IOException {
     final String roomName = params.get("room").getAsString();
     final String name = params.get("name").getAsString();
-    log.info("PARTICIPANT {}: trying to join room {}", name, roomName);
+    final int basePrice = params.get("basePrice").getAsInt();
+    final String role = params.get("role").getAsString();
+    log.info("PARTICIPANT {}: trying to join room {}, price is {}, role is {}", name, roomName, basePrice, role);
 
     Room room = roomManager.getRoom(roomName);
-    final UserSession user = room.join(name, session);
+    final UserSession user = room.join(name, session, role, basePrice);
     registry.register(user);
   }
 

@@ -15,7 +15,9 @@
     </ul>
   </div>
   <div v-else>
-    <b>내가 등록한 거래가 없습니다</b>
+    <h2 style="margin-top:200px; text-align:center;"><i class="el-icon-warning-outline" style="margin-left:5px;"></i>
+        등록한 거래가 없습니다</h2>
+    <span style="font-size:20;">지금 바로 거래를 등록해 보세요</span>
   </div>
 </template>
 
@@ -44,7 +46,7 @@ export default {
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'my-deal')
-      store.dispatch('root/requestSellList', {page:0, size:9})
+      store.dispatch('root/requestSellList', {page:0, size:info.pageSize})
         .then (res => {
           if (res.data.statusCode != 404) {
             info.sellList = res.data.content
@@ -56,7 +58,7 @@ export default {
 
     const handleCurrentChange = function (e) {
       info.page = e-1
-      store.dispatch('root/requestSellList', {page:info.page, size:9})
+      store.dispatch('root/requestSellList', {page:info.page, size:info.pageSize})
         .then(res => {
           if (res.data.statusCode != 404) {
             info.sellList = res.data.content

@@ -5,16 +5,17 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Entity;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @ToString
 public class TradeHistory extends BaseEntity {
-    LocalDate tradeDate;
+    Date tradeDate;
     Long productId;
     Integer price;
     String seller;
     String buyer;
+    String roomId;
 }

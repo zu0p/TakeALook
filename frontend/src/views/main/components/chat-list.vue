@@ -9,43 +9,48 @@
         <el-button type="primary" icon="el-icon-close" @click="$emit('close')"></el-button>
       </div>
     </div>
-    <div class="chat-list-body">
+    <div class="chat-list-body scrollable">
     <!-- <tr v-for="가장 최근 메세지 in 메세지 방 리스트" :key="메세지 방.id"> -->
-      <!-- 유저 이름 클릭 시 chat-window창으로 이동 -->
-      <hr>
-      <el-button @click="chatWindow">zu0p</el-button>
-      <hr>
-      <el-button @click="chatWindow">nahyeon</el-button>
-      <hr>
-      <el-button @click="chatWindow">masterLee</el-button>
-      <hr>
-      <el-button @click="chatWindow">jihyun</el-button>
-      <hr>
-      <el-button @click="chatWindow">junsung</el-button>
+      <div v-for="chat in info.chatList[0]" :key="chat.roomId" @click="chatWindow(chat.roomId)">
+        <chat-lists :chat="chat"/>
+      </div>
     </div>
   </div>
-  <chat-window v-if="info.chatWindow" @back="chatWindow()" @close="$emit('close')"/>
+  <chat-window v-if="info.chatWindow" @back="chatWindow()" @close="$emit('close')" :roomId="info.roomId"/>
 </template>
 
 <script>
 import { reactive } from '@vue/reactivity'
+import { useStore } from 'vuex'
 import ChatWindow from './chat-window.vue'
+import ChatLists from './chat-lists.vue'
 
 export default {
   components: {
     ChatWindow,
+    ChatLists
   },
 
   props: ['back', 'close'],
 
   setup () {
-    console.log(541)
+    const store = useStore()
+
     const info = reactive({
       chatWindow: false,
+      chatList: [],
+      roomId: ''
     })
 
+    store.dispatch('root/requestChatList')
+      .then(res=> {
+        console.log(res.data)
+        info.chatList.push(res.data)
+        console.log(info.chatList[0])
+      })
 
-    const chatWindow = function () {
+    const chatWindow = function (e) {
+      info.roomId = e
       if (info.chatWindow) {
         info.chatWindow = false
       } else {
@@ -109,6 +114,26 @@ export default {
   border-radius: 5px;
   margin-left: auto;
 }
+
+.chat-list-body {
+  margin-left: 20px;
+}
+
+.scrollable {
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+  .scrollable::-webkit-scrollbar {
+    width: 15px;
+  }
+  .scrollable::-webkit-scrollbar-thumb {
+    background-color: lightgray;
+    border-radius: 10px;
+  }
+  .scrollable::-webkit-scrollbar-track {
+    background-color: lightgray;
+  }
 /* chat-window에서 chat-list로 넘어갈 때 fadeIn */
 @keyframes fadeIn {
   0% {

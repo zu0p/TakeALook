@@ -1,6 +1,6 @@
 <template>
-  <el-row style="width: 220px; height: 100px; text-align:left;" @click="dealDetail">
-    <img :src="deal.imageUrl" alt="" style="max-width:100px; max-height:100px;">
+  <el-row style="text-align:left; width:250px" @click="dealDetail">
+    <img :src="deal.imageUrl" alt="" style="width:100px; height:100px;">
     <div style="margin-left:20px;">
       <p style="font-weight: bold;">{{ deal.productName }}</p>
       <p>{{ deal.basePrice }}원</p>

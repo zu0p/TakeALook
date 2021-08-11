@@ -3,16 +3,12 @@ package com.ssafy.api.controller;
 import com.ssafy.api.request.chat.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "*", allowCredentials = "true")
-@Controller
+@RestController
 @RequiredArgsConstructor
-public class ChatController {
-
+public class StompWebSockController {
     private final SimpMessagingTemplate template; //특정 Broker로 메세지를 전달
 
     @MessageMapping(value = "/chat/enter")
