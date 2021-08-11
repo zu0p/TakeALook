@@ -3,13 +3,13 @@
       class="chat-launcher"
       :class="{opened: isOpen}"
       :style="{backgroundColor: colors.launcher.bg}"
-      @click.prevent="isOpen"
+      @click.prevent="isOpen()"
     >
       <img v-if="info.isOpen" class="chat-closed-icon" :src="icons.close.img" :alt="icons.close.name" />
       <img v-else class="chat-open-icon" :src="icons.open.img" :alt="icons.open.name" style="size:10px"/>
     </div>
     <!-- info상태가 isOpen일 때 chat-list를 나타낸다. -->
-    <chat-list v-if="info.isOpen"/>
+    <chat-list v-if="info.isOpen" @close="isOpen()" />
 </template>
 
 <script>
