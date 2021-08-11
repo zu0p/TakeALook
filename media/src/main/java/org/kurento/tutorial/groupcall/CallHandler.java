@@ -93,9 +93,21 @@ public class CallHandler extends TextWebSocketHandler {
       case "tradeClosed":
         tradeNowClose(jsonMessage, session);
         break;
+      case "startRequestCount":
+        startRequestCount(jsonMessage, session);
+        break;
       default:
         break;
     }
+  }
+
+
+  // 카운트 시작 알림
+  private void startRequestCount(JsonObject params, WebSocketSession session) throws IOException {
+    final String roomName = params.get("room").getAsString();
+    log.info("Message startRequestCount {}",roomName);
+    Room room = roomManager.getRoom(roomName);
+    room.startRequestCount();
   }
 
   private void broadCastMessage(JsonObject params, WebSocketSession session) throws IOException{

@@ -105,6 +105,18 @@ public class Room implements Closeable {
     }
   }
 
+  public void startRequestCount() throws IOException{
+    final JsonObject newStartRequestCount = new JsonObject();
+    newStartRequestCount.addProperty("id", "startCount");
+    for (final UserSession participant : participants.values()) {
+      try {
+        participant.sendMessage(newStartRequestCount);
+      } catch (final IOException e) {
+        log.debug(e.getMessage());
+      }
+    }
+  }
+
   // 실시간 가격 제안
   public void realTimeProposals(String name, int price) throws IOException{
     if(price < this.currentPrice) return;
