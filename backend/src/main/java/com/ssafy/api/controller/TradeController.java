@@ -2,7 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.paging.PageReq;
 import com.ssafy.api.request.trade.TradeSectionCreateReq;
-import com.ssafy.api.request.trade.TradeSectionReturnReq;
+import com.ssafy.api.request.trade.TradeSectionEnterReq;
 import com.ssafy.api.response.product.ProductListGetRes;
 import com.ssafy.api.response.trade.TradeListGetRes;
 import com.ssafy.api.response.trade.TradeRes;
@@ -22,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.Optional;
 
 @Slf4j
 @Api(value = "거래 API", tags = {"Trade."})
@@ -64,17 +66,35 @@ public class TradeController {
 
     @PostMapping("/section/create")
     @ApiOperation(value = "거래 방 생성", notes = "거래 방을 생성한다.")
-    public ResponseEntity<?> registBuyProduct(@RequestBody @ApiParam(value="거래 상품 정보", required = true) TradeSectionCreateReq tradeSectionCreateReq) {
-        TradeSectionCreateRes tradeSectionCreateRes = TradeSectionCreateRes.of(tradeSectionCreateReq.getSeller()+tradeSectionCreateReq.getProductId());
-        TradeSection tradeSection = tradeService.createTradeSection(tradeSectionCreateReq, tradeSectionCreateRes.getRoom());
+    public ResponseEntity<?> tradeSectionCreate(@RequestBody @ApiParam(value="거래 상품 정보", required = true) TradeSectionCreateReq tradeSectionCreateReq) {
+        TradeSectionCreateRes tradeSectionCreateRes = TradeSectionCreateRes.of(tradeSectionCreateReq.getSeller(), tradeSectionCreateReq.getProductId());
+        try{
+            TradeSection tradeSectionCheck = tradeService.findTradeSection(TradeSectionEnterReq.of(tradeSectionCreateReq.getSeller(),tradeSectionCreateReq.getProductId()));
+            if(tradeSectionCheck==null) {
+                tradeService.createTradeSection(tradeSectionCreateReq, tradeSectionCreateRes.getRoom());
+                return ResponseEntity.status(200).body(tradeSectionCreateRes);
+            }
+        }catch (Exception e){ // 이미 섹션이 존재함
+            // do nothing
+        }
         return ResponseEntity.status(200).body(tradeSectionCreateRes);
     }
 
     @PostMapping("/section/enter")
     @ApiOperation(value = "거래 방 리턴", notes = "거래 방을 반환한다.")
-    public ResponseEntity<?> registBuyProduct(@RequestBody @ApiParam(value="거래 상품 정보", required = true) TradeSectionReturnReq tradeRegistInfo) {
-        TradeHistory tradeHistory = tradeService.createTradeHistory(tradeRegistInfo);
-        return ResponseEntity.status(200).body(TradeRes.of(tradeRegistInfo.getProductId()));
+    public ResponseEntity<?> tradeSectionEnter(@RequestBody @ApiParam(value="거래 상품 정보", required = true) TradeSectionEnterReq tradeSectionEnterReq) {
+        try{
+            TradeSection tradeSection = tradeService.findTradeSection(tradeSectionEnterReq);
+            TradeSectionCreateRes tradeSectionCreateRes = TradeSectionCreateRes.of(tradeSection.getSeller(), tradeSection.getProductId());
+            if (!tradeSection.getIsActive()) {
+                tradeSectionCreateRes.setRoom("none");
+            }
+            return ResponseEntity.status(200).body(tradeSectionCreateRes);
+        }catch (Exception e){
+            TradeSectionCreateRes tradeSectionCreateRes = TradeSectionCreateRes.of(null, null);
+            tradeSectionCreateRes.setRoom("none");
+            return ResponseEntity.status(200).body(tradeSectionCreateRes);
+        }
     }
 
     @DeleteMapping("/{productId}")

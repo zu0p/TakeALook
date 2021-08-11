@@ -1,10 +1,12 @@
 package com.ssafy.db.repository.trade;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.api.request.trade.TradeSectionEnterReq;
 import com.ssafy.db.entity.QTradeSection;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.TradeSection;
 import com.ssafy.db.entity.User;
+import jdk.nashorn.internal.runtime.options.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,4 +24,12 @@ public class TradeSectionRepositorySupport {
         if(tradeSection == null) return Optional.empty();
         return Optional.ofNullable(tradeSection);
     }
+
+    public Optional<TradeSection> findTradeSectionByProductId(Long productId){
+        TradeSection tradeSection = jpaQueryFactory.select(qTradeSection).from(qTradeSection)
+                .where(qTradeSection.productId.eq(productId)).fetchOne();
+        if(tradeSection == null) return Optional.empty();
+        return Optional.ofNullable(tradeSection);
+    }
+
 }

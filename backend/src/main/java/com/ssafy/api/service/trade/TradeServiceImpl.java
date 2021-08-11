@@ -2,7 +2,7 @@ package com.ssafy.api.service.trade;
 
 import com.ssafy.api.request.paging.PageReq;
 import com.ssafy.api.request.trade.TradeSectionCreateReq;
-import com.ssafy.api.request.trade.TradeSectionReturnReq;
+import com.ssafy.api.request.trade.TradeSectionEnterReq;
 import com.ssafy.api.response.trade.TradeListGetRes;
 import com.ssafy.db.entity.TradeHistory;
 import com.ssafy.db.entity.TradeSection;
@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.db.repository.trade.TradeRepository;
 import com.ssafy.db.repository.trade.TradeRepositorySupport;
+
+import java.util.Optional;
 
 @Service("buyService")
 public class TradeServiceImpl implements TradeService {
@@ -43,7 +45,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    public TradeHistory createTradeHistory(TradeSectionReturnReq buyUpdatePostReq) {
+    public TradeHistory createTradeHistory(TradeSectionEnterReq buyUpdatePostReq) {
         TradeHistory tradeHistory = new TradeHistory();
         tradeHistory.setProductId(buyUpdatePostReq.getProductId());
         tradeHistory.setSeller(buyUpdatePostReq.getUserId());
@@ -59,6 +61,13 @@ public class TradeServiceImpl implements TradeService {
         tradeSection.setIsActive(true);
         return tradeSectionRepository.save(tradeSection);
     }
+
+    @Override
+    public TradeSection findTradeSection(TradeSectionEnterReq tradeSectionEnterReq) {
+        TradeSection tradeSection = tradeSectionRepository.findTradeSectionByProductId(tradeSectionEnterReq.getProductId());
+        return tradeSection;
+    }
+
 
     @Override
     public void deleteTradeInfo(Long productId) {

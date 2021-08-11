@@ -12,9 +12,9 @@ public class TradeSectionCreateRes {
     @ApiModelProperty(name="room info")
     String room;
 
-    public static TradeSectionCreateRes of(String sellerId){
+    public static TradeSectionCreateRes of(String sellerId, Long productId){
         TradeSectionCreateRes tradeSectionCreateRes = new TradeSectionCreateRes();
-        tradeSectionCreateRes.setRoom("RoomCreatedBy"+sellerId);
+        tradeSectionCreateRes.setRoom("RoomCreatedBy"+sellerId+productId);
         return tradeSectionCreateRes;
     }
 }
