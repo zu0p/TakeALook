@@ -146,6 +146,7 @@ export default {
 }
 
 .chat-window-header-title {
+  /* border: 3px solid purple; */
   /* cursor: pointer; */
   text-align: center;
   width: 100%;
@@ -153,6 +154,7 @@ export default {
 }
 
 .chat-window-header-back-button {
+  /* border: 3px solid blue; */
   width: 55px;
   height: 55px;
   align-self: center;
@@ -162,6 +164,7 @@ export default {
   margin-left: auto;
 }
 .chat-window-header-close-button {
+  /* border: 3px solid red; */
   width: 55px;
   height: 55px;
   align-self: center;
@@ -169,6 +172,7 @@ export default {
   cursor: pointer;
   border-radius: 5px;
   margin-left: auto;
+
 }
 
 .chat-window.closed {
