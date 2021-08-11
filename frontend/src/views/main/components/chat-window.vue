@@ -7,39 +7,34 @@
       </template>
     </MessageList> -->
     <div class="chat-window-header">
-      <el-button type="primary" icon="el-icon-back" @click="$emit('back')"></el-button>
+      <div class="chat-window-header-back-button">
+        <el-button type="primary" icon="el-icon-back" @click="$emit('back')"></el-button>
+      </div>
       <div class="chat-window-header-title">
-        hellow
+        <p>판매자 닉네임</p>
       </div>
       <div class="chat-window-header-close-button">
         <el-button type="primary" icon="el-icon-close" @click="$emit('close')"></el-button>
       </div>
     </div>
     <div class="chat-window-body">
-      <div v-for="(chat, idx) in info.chatList" :key="idx">
-        <span>{{chat.writer}} : {{chat.message}}</span>
+      <div class="chat-window-message" v-for="(chat, idx) in info.chatList" :key="idx">
+          <p class="chat-writer">{{chat.writer}}</p>
+        <div class="chat-messages">
+          <p class="chat-message">{{chat.message}}</p>
+        </div>
       </div>
     </div>
     <!-- 메세지 리스트 -->
     <div class="chat-user-input">
-      <div class="file-container">
-        <span class="icon-file-message">
-          <!-- <img :src="icons.file.img" :alt="icons.file.name" height="15"/> -->
-        </span>
-        <span class="delete-file-message" @click="cancelFile()">
-          <!-- <img height="10" title="Remove the file"/> -->
-        </span>
+      <!-- 입력 창 -->
+      <div class="chat-user-input-text">
+        <el-input placeholder="Please input" v-model="info.msg" @keydown.enter.prevent="send"></el-input>
       </div>
-      <form class="chat-user-input">
-        <div class="chat-user-input-text">
-          <el-input placeholder="Please input" v-model="info.msg" @keydown.enter.prevent="send"></el-input>
-        </div>
-        <div class="chat-user-input-buttons">
-          <div class="chat-user-input-button">
-            <el-button type="primary" icon="el-icon-s-promotion" circle="" @click="send"></el-button>
-          </div>
-        </div>
-      </form>
+      <!-- 전송 버튼 -->
+      <div class="chat-user-input-button">
+        <el-button type="primary" icon="el-icon-s-promotion" circle="" @click="send"></el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -66,7 +61,7 @@ export default {
       roomId:1,
       chatList: [],
       connected: false,
-      nickname: "dd"
+      nickname: "human001"
     })
 
       const serverURL = "http://localhost:8080/stomp/chat"
@@ -136,7 +131,6 @@ export default {
 .chat-window-header {
   background-color: cornflowerblue;
   min-height: 75px;
-  text-align: center;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
   padding: 10px;
@@ -147,15 +141,25 @@ export default {
 }
 
 .chat-window-header-title {
-  cursor: pointer;
+  /* cursor: pointer; */
+  text-align: center;
+  width: 100%;
   border-radius: 5px;
 }
 
-.chat-window-header-close-button {
-  width: 40px;
+.chat-window-header-back-button {
+  width: 55px;
+  height: 55px;
   align-self: center;
-  height: 40px;
-  margin-right: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: auto;
+}
+.chat-window-header-close-button {
+  width: 55px;
+  height: 55px;
+  align-self: center;
   box-sizing: border-box;
   cursor: pointer;
   border-radius: 5px;
@@ -181,13 +185,6 @@ export default {
   }
 }
 
-.chat-message--me {
-  text-align: right;
-}
-.chat-message--them {
-  text-align: left;
-}
-
 @media (max-width: 450px) {
   .chat-window {
     width: 100%;
@@ -204,4 +201,95 @@ export default {
     bottom: 0px;
   }
 }
+.chat-window-body {
+  padding: 5px 20px;
+  border-radius: 6px;
+  font-weight: 300;
+
+  position: relative;
+}
+
+.chat-window-body .chat-window-message {
+  width: 100%;
+}
+
+.chat-messages {
+  display: flex;
+}
+
+.chat-window-body .chat-window-message .chat-writer {
+  text-align: left;
+  max-height: 20px;
+  margin-bottom: 5px;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.4;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.chat-window-body .chat-window-message .chat-message {
+  /* message text color */
+  color: #263238;
+  /* message background color */
+  background-color: #f4f7f9;
+  margin-top: 0px;
+  margin-right: 40px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+
+.chat-message--me {
+  text-align: right;
+}
+
+.chat-message--them {
+  text-align: left;
+}
+
+.chat-user-input {
+  min-height: 55px;
+  margin: 0px;
+  position: relative;
+  bottom: 0;
+  display: flex;
+  background-color: #f4f7f9;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chat-user-input-text {
+  flex-grow: 1;
+  outline: none;
+  border-bottom-left-radius: 10px;
+  box-sizing: border-box;
+  /*padding: top, right, bottom, left */
+  padding: 18px 5px 18px 18px;
+  font-size: 15px;
+  line-height: 1.33;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #565867;
+  -webkit-font-smoothing: antialiased;
+  max-height: 200px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.chat-user-input-button {
+  display: flex;
+  align-items: center;
+    /*padding: top, right, bottom, left */
+  padding: 18px 10px 18px 5px;
+}
+
+
 </style>
