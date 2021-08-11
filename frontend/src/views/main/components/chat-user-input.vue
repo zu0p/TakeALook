@@ -9,18 +9,12 @@
       </span>
     </div>
     <form class="chat-user-input">
-      <div class="chat-user-input--text">
-        <span>채팅창</span>
+      <div class="chat-user-input-text">
+        <el-input placeholder="Please input" v-model="state.form.message"></el-input>
       </div>
-      <div class="chat-user-input--buttons">
-        <div class="chat-user-input--button">
-          <span>이모지</span>
-        </div>
-        <div class="chat-user-input--button">
-          <span>파일</span>
-        </div>
-        <div class="chat-user-input--button">
-          <span>전송</span>
+      <div class="chat-user-input-buttons">
+        <div class="chat-user-input-button">
+          <el-button type="primary" icon="el-icon-s-promotion" circle=""></el-button>
         </div>
       </div>
     </form>
@@ -28,9 +22,22 @@
 </template>
 
 <script>
+import { ref, reactive, } from 'vue'
+
 export default {
-  components: {
-  }
+  name: 'UserInputForm',
+
+  setup () {
+    // 독립적인 반응형 값 생성 ref()
+    const userInputForm = ref(null)
+    const state = reactive({
+      form: {
+        message: '',
+      },
+    })
+    return { userInputForm, state }
+  },
+
 }
 </script>
 
@@ -47,7 +54,7 @@ export default {
   transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.chat-user-input--text {
+.chat-user-input-text {
   flex-grow: 1;
   outline: none;
   border-bottom-left-radius: 10px;
@@ -72,13 +79,13 @@ export default {
   cursor: text;
 }
 
-.chat-user-input--buttons {
+.chat-user-input-buttons {
   display: flex;
   align-items: center;
   padding: 0 4px;
 }
 
-.chat-user-input--button {
+.chat-user-input-button {
   margin: 0 4px;
 }
 

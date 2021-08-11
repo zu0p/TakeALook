@@ -33,7 +33,7 @@
   @import '../../common/css/element-plus.css';
 
   /* DM 아이콘 */
-.sc-launcher {
+.chat-launcher {
   width: 60px;
   height: 60px;
   background-position: center;

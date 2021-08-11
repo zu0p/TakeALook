@@ -1,50 +1,51 @@
 <template>
   <!-- <div class="chat-list" :style="{background: userListColor.userList.bg}"> -->
-  <div class="chat-list" style="background-color:lightblue; z-index:1;">
-    <Header/>
-    <table style="padding-top: 5px;">
-      <tbody>
-        <!-- <tr v-for="가장 최근 메세지 in 메세지 방 리스트" :key="메세지 방.id"> -->
-        <tr>
-          <!-- 사진을 가로로 중간에 위치 -->
-          <td style="text-align: center;">
-            <!-- <img :src="user.imageUrl" class="img-msg" /> -->
-            <h1>대화 리스트</h1>
-            <p>최준성</p>
-            <p>신지현</p>
-          </td>
-          <!-- <td class="user-element" :style="{color: userListColor.userList.text}"> -->
-          <td class="user-element">
-            <!-- {{ user.name }} -->
-            <button @click="chatWindow">유저 이름</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="chat-list" style="z-index:1;">
+    <div class="chat-list-header">
+      <div class="chat-list-header-title">
+        <span>대화 리스트</span>
+      </div>
+      <div class="chat-list-header-close-button">
+        <el-button type="primary" icon="el-icon-close"></el-button>
+      </div>
+    </div>
+    <div class="chat-list-body">
+    <!-- <tr v-for="가장 최근 메세지 in 메세지 방 리스트" :key="메세지 방.id"> -->
+      <!-- 유저 이름 클릭 시 chat-window창으로 이동 -->
+      <hr>
+      <el-button @click="chatWindow">zu0p</el-button>
+      <hr>
+      <el-button @click="chatWindow">nahyeon</el-button>
+      <hr>
+      <el-button @click="chatWindow">masterLee</el-button>
+      <hr>
+      <el-button @click="chatWindow">jihyun</el-button>
+      <hr>
+      <el-button @click="chatWindow">junsung</el-button>
+    </div>
   </div>
-  <chat-window v-if="info.chatWindow" @close="chatWindow()"/>
+  <chat-window v-if="info.chatWindow" @back="chatWindow()"/>
 </template>
 
 <script>
 import { reactive } from '@vue/reactivity'
 import ChatWindow from './chat-window.vue'
-import Header from './chat-header.vue'
 
 export default {
   components: {
     ChatWindow,
-    Header
   },
 
-  props: ["close"],
+  props: ['back', 'close'],
 
   setup (props, {emit}) {
     console.log(541)
     console.log(props)
-    if(props.close == "close"){
+    if(props.back == "back"){
       info.chatWindow = false
     }
     console.log(emit)
+
     const info = reactive({
       chatWindow: false
     })
@@ -72,7 +73,7 @@ export default {
   bottom: 100px;
   box-sizing: border-box;
   box-shadow: 0px 7px 40px 2px rgba(148, 149, 150, 0.1);
-  background: white;
+  background: lightgrey;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -82,12 +83,54 @@ export default {
   animation-duration: 0.3s;
   animation-timing-function: ease-in-out;
 }
- /* 채팅중인 상대 유저 프로필 사진  */
-.img-msg {
-  border-radius: 50%;
-  width: 50px;
-  margin-right: 5px;
+
+.chat-list-header {
+  background-color: cornflowerblue;
+  min-height: 75px;
+  border-top-left-radius: 9px;
+  border-top-right-radius: 9px;
+  padding: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
 }
+
+.chat-list-header-title {
+  align-self: center;
+  padding: 10px;
+  flex: 1;
+  user-select: none;
+  font-size: 20px;
+}
+
+.chat-list-header-close-button {
+  width: 40px;
+  align-self: center;
+  height: 40px;
+  margin-right: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: auto;
+}
+/* chat-window에서 chat-list로 넘어갈 때 fadeIn */
+@keyframes fadeIn {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  100% {
+    display: flex;
+    opacity: 1;
+  }
+}
+
+.chat-list-body {
+  text-align: center;
+}
+
 /* 프로필 사진 오른쪽에 나타나는 메세지 CSS 속성 */
 .chat-element {
   font-size: 20px;
