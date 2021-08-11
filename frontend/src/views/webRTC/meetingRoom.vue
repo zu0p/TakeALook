@@ -309,6 +309,7 @@ export default {
       // seller가 count 시작 == 가격제안 시작
       state.isStart = true
     }
+
     return {ws, state, receiveMsg, updatePrice, successTrade, onStartCount, matchingTrade, failTrade, onSuccess, onUpdatePrice, onReceiveMessageEnded, onReceiveMessage, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
   }
 

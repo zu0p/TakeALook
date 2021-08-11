@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item>
         <el-button v-if="state.isSeller" @click="requestCountStart">카운트 시작</el-button>
-        <el-button v-if="!state.isStart" @click="propose" disabled="!state.isStart">가격 제안</el-button>
+        <el-button v-if="!state.isSeller" @click="propose" :disabled="!state.isStart">가격 제안</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -36,15 +36,17 @@ export default {
       gap: 10,
       count: 30,
       isSeller: props.state.role=='seller'?true:false,
-      isStart: props.state.isStart
+      isStart: props.state.isStart,
+      firstStart: true
     });
 
     const updated = watchEffect(()=>{
       // 거래 시작 == count start
-      if(props.state.isStart){
-        //console.log(props)
+      if(props.state.isStart && state.firstStart){
+        state.firstStart = false
         state.isStart = props.state.isStart
         countDown()
+        //emit('started')
       }
 
 
@@ -58,8 +60,6 @@ export default {
           state.count = 30
           state.proposePrice = state.curPrice
         }
-        // count reset
-        // state.count = 30
       }
       else{
         // 낙찰성공
@@ -84,12 +84,13 @@ export default {
           ws.send(JSON.stringify(req))
         }
         alert("낙찰!!")
+        return
       }
       if(state.count>0){
         setTimeout(()=>{
           state.count-=1
-          console.log(state.count)
-          // countDown()
+          // console.log(state.count)
+          countDown()
         }, 1000)
       }
     }
