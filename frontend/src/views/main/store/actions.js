@@ -174,3 +174,15 @@ export function requestSearch({state}, payload){
   let body = payload
   return instanceWithAuth.post(url, body)
 }
+
+// webRTC 거래 방 생성 요청 - seller
+export function requestCreateTradeSection({state}, payload){
+  const url = BASE_URL+'/trade/section/create'
+  return instanceWithAuth.post(url, payload)
+}
+
+// webRTC 거래 방 join 요청 - buyer
+export function requestJoinTrade({state}, payload){
+  const url = BASE_URL+'/trade/section/enter'
+  return instanceWithAuth.post(url, payload)
+}

@@ -76,8 +76,12 @@ function makeRoutesFromMenu () {
   })
 
   routes.push({
-    path: '/meeting/:meetingId/:userId',
+    path: '/meeting/:meetingId/:userId/:isSeller/:basePrice',
     name: 'meeting-detail',
+    props: route =>({
+      isSeller: Number(route.params.isSeller),
+      basePrice: Number(route.params.basePrice)
+    }),
     component: MeetingDetail
   })
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(게시글 상세보기))

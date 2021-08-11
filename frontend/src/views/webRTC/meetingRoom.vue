@@ -11,7 +11,7 @@
             <el-row :gutter="40">
               <el-col id="seller" :span="16"></el-col>
               <el-col id="propse" :span="8">
-                <propse-form :name="state.name" :room="state.room" :updatePrice="updatePrice" :successTrade="successTrade" @onSellerOrBuyer="matchingTrade" @onUser="failTrade"/>
+                <propse-form :state="state" :updatePrice="updatePrice" :successTrade="successTrade" @onSellerOrBuyer="matchingTrade" @onUser="failTrade"/>
               </el-col>
             </el-row>
             <el-row id="buyer" :gutter="20">
@@ -45,12 +45,14 @@ export default {
     PropseForm,
     ChatForm
   },
+  props:['isSeller', 'basePrice'],
   setup(props, {emit}){
     const store = useStore()
     const router = useRouter()
     const state = reactive({
       room:'',
       name:'',
+      role: '',
       participants:{},
     })
     const receiveMsg = reactive({
@@ -111,20 +113,27 @@ export default {
     // sessionStorage.setItem('ws', ws)
 
     onBeforeMount(()=> {
+      console.log(props.basePrice)
+      state.role = props.isSeller==1?'seller':'buyer'
       let curUrl = document.location.href.split('/').reverse()
-      state.room = curUrl[1]
-      //state.name = curUrl[0]
+      state.room = curUrl[3]
+      state.name = curUrl[2]
 
-      store.dispatch('root/requestUserInfo')
-        .then(res=>{
-          state.name = res.data.userId
-      })
+      // store.dispatch('root/requestUserInfo')
+      //   .then(res=>{
+      //     state.name = res.data.userId
+      // })
 
       const message = {
         id : 'joinRoom',
         name : state.name,
         room : state.room,
+        role : state.role,
+        basePrice: props.basePrice
       }
+
+      updatePrice.curPrice = props.basePrice
+      console.log(message)
       sendMessage(message)
     })
 
@@ -187,10 +196,10 @@ export default {
           }
         }
       }
-      if(state.name==seller)
+      if(state.role=='seller')
         constraints.video.mandatory.maxWidth = 720
       //console.log(state.name + " registered in room " + state.room)
-      var participant = new Participant(state.name)
+      var participant = new Participant(state.name, state.role)
 
       var video = participant.getVideoElement()
 

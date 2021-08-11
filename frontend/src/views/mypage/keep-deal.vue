@@ -3,7 +3,7 @@
   <div v-if="info.wishList">
     <ul class="infinite-list">
       <li v-for="wish in info.wishList" @click="clickDeal(wish.productId)" class="infinite-list-item" :key="wish.productId" >
-        <conference :deal="wish"/>
+        <conference :deal="wish" @buyerJoin="buyerJoin"/>
       </li>
       <el-pagination
         background
@@ -31,7 +31,7 @@
 <script>
 import Conference from '@/views/home/components/conference'
 import Recommend from '../deal-detail/components/recommend'
-import { onMounted, reactive } from 'vue'
+import { onBeforeMount, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
@@ -54,7 +54,15 @@ export default {
     })
 
     const state = reactive({
-      isLoading: true
+      isLoading: true,
+      name: ''
+    })
+
+    onBeforeMount(()=>{
+      store.dispatch('root/requestUserInfo')
+        .then(res=>{
+          state.name = res.data.userId
+      })
     })
 
     // 페이지 진입시 불리는 훅
@@ -103,7 +111,37 @@ export default {
       })
     }
 
-    return { info, state, clickDeal, handleCurrentChange }
+    const buyerJoin = function(pid){
+      const req = {
+        userId: state.name,
+        productId: pid
+      }
+      console.log(req)
+
+      // 서버에 요청보내서 res의 room != none이면 입장
+      store.dispatch('root/requestJoinTrade', req)
+        .then(res=>{
+          let isActive = res.data.room
+          console.log(isActive)
+          if(isActive!='none'){
+            // 거래 세션에 입장
+            router.push({
+              name: 'meeting-detail',
+              params: {
+                meetingId: isActive,
+                userId: state.name,
+                isSeller: 0,
+                basePrice: 0
+              },
+            })
+          }
+          else{
+            alert("거래 세션이 아직 생성되지 않아 입장할 수 없습니다.")
+          }
+        })
+    }
+
+    return { info, state, clickDeal, handleCurrentChange, buyerJoin }
   }
 }
 </script>
