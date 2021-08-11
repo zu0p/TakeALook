@@ -5,6 +5,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.api.response.product.ProductListGetRes;
+import com.ssafy.api.response.trade.TradeCompleteRes;
 import com.ssafy.api.response.trade.TradeListGetRes;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.QProduct;
@@ -55,6 +56,32 @@ public class TradeRepositorySupport {
                 .limit(pageable.getPageSize())
                 .fetchResults();
         return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+    }
+
+    public List<TradeCompleteRes> findByUserIdBuyer(String userId) {
+        List<TradeCompleteRes> result = jpaQueryFactory
+                .select(Projections.constructor(TradeCompleteRes.class, qProduct.id, qProduct.productName, qTradeHistory.tradeDate,
+                        qTradeHistory.seller, qTradeHistory.price, qTradeHistory.roomId))
+                .from(qProduct)
+                .join(qTradeHistory)
+                .on(qProduct.id.eq(qTradeHistory.productId))
+                .where(qTradeHistory.buyer.eq(userId))
+                .fetch();
+
+        return result;
+    }
+
+    public List<TradeCompleteRes> findByUserIdSeller(String userId) {
+        List<TradeCompleteRes> result = jpaQueryFactory
+                .select(Projections.constructor(TradeCompleteRes.class, qProduct.id, qProduct.productName, qTradeHistory.tradeDate,
+                        qTradeHistory.seller, qTradeHistory.price, qTradeHistory.roomId))
+                .from(qProduct)
+                .join(qTradeHistory)
+                .on(qProduct.id.eq(qTradeHistory.productId))
+                .where(qTradeHistory.seller.eq(userId))
+                .fetch();
+
+        return result;
     }
 
     public List<Product> findAllByBuyerSub(String buyer){
