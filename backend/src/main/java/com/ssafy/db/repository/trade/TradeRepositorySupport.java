@@ -74,7 +74,7 @@ public class TradeRepositorySupport {
     public List<TradeCompleteRes> findByUserIdSeller(String userId) {
         List<TradeCompleteRes> result = jpaQueryFactory
                 .select(Projections.constructor(TradeCompleteRes.class, qProduct.id, qProduct.productName, qTradeHistory.tradeDate,
-                        qTradeHistory.seller, qTradeHistory.price, qTradeHistory.roomId))
+                        qTradeHistory.buyer, qTradeHistory.price, qTradeHistory.roomId))
                 .from(qProduct)
                 .join(qTradeHistory)
                 .on(qProduct.id.eq(qTradeHistory.productId))
