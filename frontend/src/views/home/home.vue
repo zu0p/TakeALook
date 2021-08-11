@@ -29,7 +29,7 @@
   <ul class="infinite-list">
     <div v-if="!info.searched" >
       <li v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId">
-        <conference :deal="deal"/>
+        <conference :deal="deal"  @buyerJoin="buyerJoin" @startTrade="startTrade"/>
       </li>
     </div>
     <div v-else>
@@ -39,7 +39,7 @@
           <span style="font-size:20;">입력하신 검색어를 확인하시고 다시 검색해 주세요</span>
       </div>
       <li v-else v-for="deal in info.dealList" @click="clickDeal(deal.productId)" class="infinite-list-item" :key="deal.productId">
-        <conference :deal="deal"/>
+        <conference :deal="deal"  @buyerJoin="buyerJoin" @startTrade="startTrade"/>
       </li>
     </div>
     <el-pagination
@@ -58,7 +58,7 @@
 
 <script>
 import Conference from './components/conference'
-import { onMounted, reactive } from 'vue'
+import { onBeforeMount, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter, useRoute } from 'vue-router'
 
@@ -105,7 +105,8 @@ export default {
     // console.log(route.params.search)
 
     const state = reactive({
-      isLoading: true
+      isLoading: true,
+      name: ''
     })
     const info = reactive({
       dealList: '',
@@ -126,6 +127,13 @@ export default {
     if (route.params.search) {
       info.preSearch = route.params.search
     }
+
+    onBeforeMount(()=>{
+      store.dispatch('root/requestUserInfo')
+        .then(res=>{
+          state.name = res.data.userId
+      })
+    })
 
     // state.isLoading = true
     onMounted (() => {
@@ -343,7 +351,93 @@ export default {
       })
     }
 
-    return { info, state, clickDeal, searchDeal, handleCurrentChange, priceHigh, newDeal, priceLow, reserveTime }
+    const dateTimeToString = function (time) {
+      const array = time.toString().split(' ')
+      const month = ["","Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      let res = `${array[3]}-`
+      for(let i = 1; i<=12; i++){
+        if(array[1]==month[i]){
+          if(i<10)
+            res+=`0${i}-`
+          else
+            res += `${i}-`
+          break;
+        }
+      }
+      res += `${array[2]}T${array[4]}.000+00:00`
+      return res
+    }
+
+    const startTrade = function(param){
+      const req = {
+        seller: param.seller,
+        productId: param.productId,
+      }
+      // console.log(param.reserveTime) // 예약시간
+      let now = new Date()
+      now = dateTimeToString(now)
+      // console.log(now) // 현재시간
+
+      if(param.reserveTime>now){
+        let room = ''
+        store.dispatch('root/requestCreateTradeSection', req)
+          .then(res =>{
+            room = res.data.room
+            // console.log(room)
+
+            router.push({
+              name: 'meeting-detail',
+              params: {
+                meetingId: room,
+                userId: state.name,
+                isSeller: 1,
+                basePrice: param.basePrice
+              },
+            })
+          })
+      }
+      else{
+        alert("예약시간을 넘어 거래를 시작할 수 없습니다.")
+      }
+    }
+
+    const buyerJoin = function(pid, price){
+      const req = {
+        userId: state.name,
+        productId: pid
+      }
+      // console.log(req)
+
+      // 서버에 요청보내서 res의 room != none이면 입장
+      store.dispatch('root/requestJoinTrade', req)
+        .then(res=>{
+          let room = res.data.room
+          console.log(res)
+          console.log(res.data)
+          if(room=='none'){
+            alert("거래 세션이 생성되지 않아 입장할 수 없습니다.")
+          }
+          else if(room=='alreadyStarted'){
+            alert("거래 가격제안이 시작되어 입장할 수 없습니다.")
+          }
+          else if(room=='null'){
+            alert("null...")
+          }
+          else{
+            // 거래 세션에 입장
+            router.push({
+              name: 'meeting-detail',
+              params: {
+                meetingId: room,
+                userId: state.name,
+                isSeller: 0,
+                basePrice: price
+              },
+            })
+          }
+        })
+    }
+    return { info, state, buyerJoin, startTrade, clickDeal, searchDeal, handleCurrentChange, priceHigh, newDeal, priceLow, reserveTime }
   }
 }
 </script>
