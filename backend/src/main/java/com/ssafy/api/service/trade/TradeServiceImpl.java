@@ -1,27 +1,28 @@
 package com.ssafy.api.service.trade;
 
 import com.ssafy.api.request.paging.PageReq;
-import com.ssafy.api.request.trade.TradeRegistPatchReq;
+import com.ssafy.api.request.trade.TradeSectionCreateReq;
+import com.ssafy.api.request.trade.TradeSectionReturnReq;
 import com.ssafy.api.response.trade.TradeListGetRes;
 import com.ssafy.db.entity.TradeHistory;
+import com.ssafy.db.entity.TradeSection;
 import com.ssafy.db.repository.product.ProductRepository;
+import com.ssafy.db.repository.trade.TradeSectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.db.entity.Product;
 import com.ssafy.db.repository.trade.TradeRepository;
 import com.ssafy.db.repository.trade.TradeRepositorySupport;
-
-import javax.transaction.Transactional;
-import java.util.List;
 
 @Service("buyService")
 public class TradeServiceImpl implements TradeService {
     @Autowired
     TradeRepository tradeRepository;
+    @Autowired
+    TradeSectionRepository tradeSectionRepository;
     @Autowired
     TradeRepositorySupport tradeRepositorySupport;
     @Autowired
@@ -42,14 +43,21 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    public TradeHistory createTradeHistory(TradeRegistPatchReq buyUpdatePostReq) {
+    public TradeHistory createTradeHistory(TradeSectionReturnReq buyUpdatePostReq) {
         TradeHistory tradeHistory = new TradeHistory();
-        tradeHistory.setBuyer(buyUpdatePostReq.getBuyer());
-        tradeHistory.setPrice(buyUpdatePostReq.getPrice());
         tradeHistory.setProductId(buyUpdatePostReq.getProductId());
-        tradeHistory.setSeller(buyUpdatePostReq.getSeller());
-        tradeHistory.setTradeDate(buyUpdatePostReq.getTrade_date());
+        tradeHistory.setSeller(buyUpdatePostReq.getUserId());
         return tradeRepository.save(tradeHistory);
+    }
+
+    @Override
+    public TradeSection createTradeSection(TradeSectionCreateReq tradeSectionCreateReq, String room) {
+        TradeSection tradeSection = new TradeSection();
+        tradeSection.setSeller(tradeSectionCreateReq.getSeller());
+        tradeSection.setProductId(tradeSectionCreateReq.getProductId());
+        tradeSection.setUrl(room);
+        tradeSection.setIsActive(true);
+        return tradeSectionRepository.save(tradeSection);
     }
 
     @Override
