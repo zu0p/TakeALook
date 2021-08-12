@@ -126,6 +126,7 @@ public class TradeController {
             TradeSectionCreateRes tradeSectionCreateRes = TradeSectionCreateRes.of(tradeSection.getSeller(), tradeSection.getProductId());
             if (!tradeSection.getIsActive()) {
                 tradeSectionCreateRes.setRoom("none");
+                return ResponseEntity.status(200).body(tradeSectionCreateRes);
             }
             if (tradeSection.getIsStarted()!=null && tradeSection.getIsStarted()){
                 tradeSectionCreateRes.setRoom("alreadyStarted");
