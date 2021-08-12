@@ -16,4 +16,5 @@ public class TradeSectionCreateReq {
 
     @ApiModelProperty(name="상품 ID", example="productId")
     Long productId;
+
 }
