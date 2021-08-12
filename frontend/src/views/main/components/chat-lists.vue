@@ -1,7 +1,7 @@
 <template>
-  <el-row style="margin-top:10px; margin-bottom:10px;">
-    <img :src="info.imageUrl" alt="" style="width:50px; height:50px; border-radius: 7px;">
-    <div style="margin-left:20px; text-align:left;">
+  <el-row style="margin-top:10px; margin-bottom:10px; height: 70px;">
+    <img :src="info.imageUrl" alt="" style="width:50px; height:50px; border-radius: 7px; align-self: center">
+    <div style="margin-left:20px; text-align:left; align-self: center">
       <p style="font-weight: bold; margin-top:0;">{{ chat.productName }}
         <span style="margin-bottom:0; font-size:10px;">{{ chat.receiver }}</span></p>
       <p style="margin-bottom:0;">최근 대화</p>
@@ -32,5 +32,4 @@ export default {
 </script>
 
 <style>
-
 </style>
