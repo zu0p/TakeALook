@@ -17,6 +17,9 @@
         <el-form-item label="기준가">
          <span style="margin-top:0; margin-left:20px; font-weight: 900;">{{ info.basePrice }}원</span>
         </el-form-item>
+        <el-form-item label="호가 단위">
+         <span style="margin-top:0; margin-left:20px; font-weight: 900;">{{ info.bidIncrement }}원</span>
+        </el-form-item>
         <el-form-item label="거래 시간">
          <span style="margin-top:0; margin-left:20px; font-weight: 900;">{{ info.reserveTime.slice(5, 7) }}월 {{ info.reserveTime.slice(8, 10) }}일
               {{ info.reserveTime.slice(11, 13) }}시 {{ info.reserveTime.slice(14, 16) }}분</span>
