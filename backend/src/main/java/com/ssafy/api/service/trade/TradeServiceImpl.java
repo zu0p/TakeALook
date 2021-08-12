@@ -87,20 +87,20 @@ public class TradeServiceImpl implements TradeService {
         tradeSection.setIsActive(true);
         tradeSection.setIsStarted(false);
         tradeSection.setPriceGap(tradeSectionCreateReq.getPriceGap());
+//        tradeSection.setMaxPrice(0);
         return tradeSectionRepository.save(tradeSection);
     }
 
     @Override
     public TradeSection updateTradeSection(TradeSection oldTradeSection, Integer maxPrice) {
-        TradeSection tradeSection = new TradeSection();
-        tradeSection.setSeller(oldTradeSection.getSeller());
-        tradeSection.setProductId(oldTradeSection.getProductId());
-        tradeSection.setUrl(oldTradeSection.getUrl());
-        tradeSection.setIsActive(oldTradeSection.getIsActive());
-        tradeSection.setIsStarted(oldTradeSection.getIsStarted());
-        tradeSection.setPriceGap(oldTradeSection.getPriceGap());
-        tradeSection.setMaxPrice(maxPrice);
-        return tradeSectionRepository.save(tradeSection);
+        oldTradeSection.setSeller(oldTradeSection.getSeller());
+        oldTradeSection.setProductId(oldTradeSection.getProductId());
+        oldTradeSection.setUrl(oldTradeSection.getUrl());
+        oldTradeSection.setIsActive(oldTradeSection.getIsActive());
+        oldTradeSection.setIsStarted(oldTradeSection.getIsStarted());
+        oldTradeSection.setPriceGap(oldTradeSection.getPriceGap());
+        oldTradeSection.setMaxPrice(maxPrice);
+        return tradeSectionRepository.save(oldTradeSection);
     }
 
     @Override
