@@ -61,7 +61,7 @@ export default {
     UserInput,
     ChatList,
   },
-  //! 변경
+
   props:["roomId"],
 
   setup(props){

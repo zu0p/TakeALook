@@ -3,13 +3,14 @@
   <div class="chat-list" style="z-index:1;">
     <div class="chat-list-header">
       <div class="chat-list-header-title">
-        <span>대화 리스트</span>
+        <h1 style="margin-top:0; margin-bottom:0;">채팅</h1>
       </div>
       <div class="chat-list-header-close-button">
-        <el-button type="primary" icon="el-icon-close" @click="$emit('close')"></el-button>
+        <!-- <el-button @click="$emit('close')" style="border:none;"></el-button> -->
+        <i class="el-icon-close" @click="$emit('close')" style="font-weight:bold;"></i>
       </div>
     </div>
-    <div class="chat-list-body scrollable">
+    <div class="chat-list-body scrollable" style="margin-top:5px;">
     <!-- <tr v-for="가장 최근 메세지 in 메세지 방 리스트" :key="메세지 방.id"> -->
       <div v-for="chat in info.chatList[0]" :key="chat.roomId" @click="chatWindow(chat.roomId)">
         <chat-lists :chat="chat"/>
@@ -73,10 +74,10 @@ export default {
   bottom: 100px;
   box-sizing: border-box;
   box-shadow: 0px 7px 40px 2px rgba(148, 149, 150, 0.1);
-  background: lightgrey;
+  background: white;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   border-radius: 10px;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   animation: fadeIn;
@@ -85,18 +86,19 @@ export default {
 }
 
 .chat-list-header {
-  background-color: cornflowerblue;
-  min-height: 75px;
+  background-color: white;
+  min-height: 50px;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
   padding: 10px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  /* box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2); */
   position: relative;
   box-sizing: border-box;
   display: flex;
 }
 
 .chat-list-header-title {
+  text-align: left;
   align-self: center;
   padding: 10px;
   flex: 1;
@@ -108,11 +110,17 @@ export default {
   width: 40px;
   align-self: center;
   height: 40px;
-  margin-right: 10px;
+  /* margin-top: 10px; */
+  /* margin-right: 10px; */
   box-sizing: border-box;
   cursor: pointer;
   border-radius: 5px;
-  margin-left: auto;
+  /* margin-left: auto; */
+  font-size:30px;
+}
+
+.chat-list-header-close-button > i:hover{
+  color: rgb(88, 172, 250);
 }
 
 .chat-list-body {
@@ -124,16 +132,18 @@ export default {
   overflow-y: scroll;
 }
 
-  .scrollable::-webkit-scrollbar {
-    width: 15px;
-  }
-  .scrollable::-webkit-scrollbar-thumb {
-    background-color: lightgray;
-    border-radius: 10px;
-  }
-  .scrollable::-webkit-scrollbar-track {
-    background-color: lightgray;
-  }
+.scrollable::-webkit-scrollbar {
+  width: 20px;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background-color: white;
+  border-radius: 10px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background-color: white;
+}
 /* chat-window에서 chat-list로 넘어갈 때 fadeIn */
 @keyframes fadeIn {
   0% {
@@ -149,11 +159,5 @@ export default {
 
 .chat-list-body {
   text-align: center;
-}
-
-/* 프로필 사진 오른쪽에 나타나는 메세지 CSS 속성 */
-.chat-element {
-  font-size: 20px;
-  vertical-align: middle;
 }
 </style>
