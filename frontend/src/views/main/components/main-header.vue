@@ -6,13 +6,13 @@
     <div class="hide-on-small">
       <div class="logo-wrapper" @click="clickLogo"><div class="ic ic-logo"/></div>
       <div class="tool-wrapper">
-        <div class="search-field">
+        <!-- <div class="search-field">
           <el-input
             placeholder="검색"
             prefix-icon="el-icon-search"
             v-model="state.searchValue">
           </el-input>
-        </div>
+        </div> -->
         <div class="button-wrapper" v-if="!isLogin">
           <el-button @click="clickSignup">
             <i class="el-icon-circle-plus-outline"/>
@@ -35,7 +35,7 @@
     <div class="hide-on-big">
       <div class="menu-icon-wrapper" @click="changeCollapse"><i class="el-icon-menu"></i></div>
       <div class="logo-wrapper" @click="clickLogo"><div class="ic ic-logo"/></div>
-      <div class="menu-icon-wrapper"><i class="el-icon-search"></i></div>
+      <!-- <div class="menu-icon-wrapper"><i class="el-icon-search"></i></div> -->
       <div class="mobile-sidebar-wrapper" v-if="!state.isCollapse">
         <div class="mobile-sidebar">
           <div class="mobile-sidebar-tool-wrapper"  v-if="!isLogin">
