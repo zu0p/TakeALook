@@ -14,7 +14,7 @@
         <el-input-number v-model="state.proposePrice" @change="handleChange" :step="state.gap"></el-input-number>
       </el-form-item>
       <el-form-item>
-        <el-button v-if="state.isSeller" @click="requestCountStart">카운트 시작</el-button>
+        <el-button v-if="state.isSeller" @click="requestCountStart" :disabled="!state.firstStart">카운트 시작</el-button>
         <el-button v-if="!state.isSeller" @click="propose" :disabled="!state.isStart">가격 제안</el-button>
       </el-form-item>
     </el-form>
