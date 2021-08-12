@@ -55,7 +55,8 @@ export default {
       role: '',
       participants:{},
       isStart: false,
-      productId: ''
+      productId: '',
+      priceGap: 0
     })
     const receiveMsg = reactive({
       flag: false,
@@ -131,9 +132,10 @@ export default {
         .then(res=>{
           if(res.data.sellerId == state.name)state.role = 'seller'
           else state.role = 'buyer'
-          console.log(state.role)
+          // console.log(state.role)
 
           state.productId = res.data.productId
+          state.priceGap = res.data.priceGap
           updatePrice.curPrice = res.data.basePrice
 
           const message = {

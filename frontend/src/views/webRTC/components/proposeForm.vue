@@ -35,7 +35,7 @@ export default {
     const state = reactive({
       curPrice: 0,
       proposePrice: 0,
-      gap: 10,
+      gap: props.state.priceGap,
       count: 30,
       isSeller: props.state.role=='seller'?true:false,
       isStart: props.state.isStart,
@@ -47,6 +47,7 @@ export default {
 
     const updated = watchEffect(()=>{
       state.isSeller = props.state.role=='seller'?true:false
+      state.gap = props.state.priceGap
       // state.isStart = props.state.isStart
 
       // 거래 시작 == count start
