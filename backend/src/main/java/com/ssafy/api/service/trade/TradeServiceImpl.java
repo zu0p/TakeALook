@@ -86,6 +86,20 @@ public class TradeServiceImpl implements TradeService {
         tradeSection.setUrl(room);
         tradeSection.setIsActive(true);
         tradeSection.setIsStarted(false);
+        tradeSection.setPriceGap(tradeSectionCreateReq.getPriceGap());
+        return tradeSectionRepository.save(tradeSection);
+    }
+
+    @Override
+    public TradeSection updateTradeSection(TradeSection oldTradeSection, Integer maxPrice) {
+        TradeSection tradeSection = new TradeSection();
+        tradeSection.setSeller(oldTradeSection.getSeller());
+        tradeSection.setProductId(oldTradeSection.getProductId());
+        tradeSection.setUrl(oldTradeSection.getUrl());
+        tradeSection.setIsActive(oldTradeSection.getIsActive());
+        tradeSection.setIsStarted(oldTradeSection.getIsStarted());
+        tradeSection.setPriceGap(oldTradeSection.getPriceGap());
+        tradeSection.setMaxPrice(maxPrice);
         return tradeSectionRepository.save(tradeSection);
     }
 
@@ -96,10 +110,11 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
-    public void findTradeSectionByRoomUrl(String url) {
+    public TradeSection findTradeSectionByRoomUrl(String url) {
         TradeSection tradeSection = tradeSectionRepository.findTradeSectionByUrl(url);
         tradeSection.setIsStarted(Boolean.TRUE);
         tradeSectionRepository.save(tradeSection);
+        return tradeSection;
     }
 
 

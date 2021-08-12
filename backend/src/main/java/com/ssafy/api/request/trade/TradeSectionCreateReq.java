@@ -17,4 +17,6 @@ public class TradeSectionCreateReq {
     @ApiModelProperty(name="상품 ID", example="productId")
     Long productId;
 
+    @ApiModelProperty(name="호가 단위", example="priceGap")
+    int priceGap;
 }
