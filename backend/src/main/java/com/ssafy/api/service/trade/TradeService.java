@@ -24,7 +24,7 @@ public interface TradeService {
     TradeSection updateTradeSection(TradeSection tradeSection, Integer maxPrice);
     TradeSection findTradeSection(TradeSectionEnterReq tradeSectionEnterReq);
     TradeSection findTradeSectionByRoomUrl(String url);
-
+    TradeSection findTradeSectionAndStartByRoomUrl(String url);
     void deleteTradeInfo(Long buyProductId);
     Boolean checkTradeHistory(Long productId);
 }

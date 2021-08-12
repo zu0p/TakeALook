@@ -165,7 +165,7 @@ public class TradeController {
     @ApiOperation(value = "거래 방 시작등록", notes = "거래 방 시작을 알린다.")
     public ResponseEntity<?> isTradeSectionStarted(@PathVariable String room){
         log.info("거래방 시작 등록 호출됨!!! 방번호 : {}", room);
-        tradeService.findTradeSectionByRoomUrl(room);
+        tradeService.findTradeSectionAndStartByRoomUrl(room);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "trade is now started"));
     }
 }
