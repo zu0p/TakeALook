@@ -112,7 +112,7 @@ public class TradeServiceImpl implements TradeService {
     @Override
     public TradeSection findTradeSectionByRoomUrl(String url) {
         TradeSection tradeSection = tradeSectionRepository.findTradeSectionByUrl(url);
-        tradeSection.setIsStarted(Boolean.TRUE);
+        tradeSection.setIsActive(Boolean.TRUE);
         tradeSectionRepository.save(tradeSection);
         return tradeSection;
     }
