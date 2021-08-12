@@ -72,11 +72,11 @@ public class Room implements Closeable {
   }
 
   public UserSession join(String userName, WebSocketSession session,String role, int basePrice) throws IOException {
+    this.currentPrice = basePrice;
     log.info("ROOM {}: adding participant {}", this.name, userName);
     if(role.equals("seller")){
       log.info("seller {} entered the room", userName);
       this.seller = userName;
-      this.currentPrice = basePrice;
     }
     final UserSession participant = new UserSession(userName, this.name, session, this.pipeline);
     joinRoom(participant);
@@ -141,7 +141,7 @@ public class Room implements Closeable {
   public void tradeNowClosed() throws IOException{
     final JsonObject finalProposal = new JsonObject();
     finalProposal.addProperty("id", "success");
-    finalProposal.addProperty("sellerId", "seller");
+    finalProposal.addProperty("sellerId", this.seller);
     finalProposal.addProperty("buyerId", this.buyer);
     log.info("Message return {} {} {}","success", "seller", this.buyer);
     for (final UserSession participant : participants.values()) {
