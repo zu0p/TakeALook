@@ -141,7 +141,7 @@ public class Room implements Closeable {
   public void tradeNowClosed() throws IOException{
     final JsonObject finalProposal = new JsonObject();
     finalProposal.addProperty("id", "success");
-    finalProposal.addProperty("sellerId", "seller");
+    finalProposal.addProperty("sellerId", this.seller);
     finalProposal.addProperty("buyerId", this.buyer);
     log.info("Message return {} {} {}","success", "seller", this.buyer);
     for (final UserSession participant : participants.values()) {
