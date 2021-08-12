@@ -85,6 +85,7 @@ public class TradeServiceImpl implements TradeService {
         tradeSection.setProductId(tradeSectionCreateReq.getProductId());
         tradeSection.setUrl(room);
         tradeSection.setIsActive(true);
+        tradeSection.setIsStarted(false);
         return tradeSectionRepository.save(tradeSection);
     }
 
