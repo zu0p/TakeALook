@@ -54,7 +54,8 @@ export default {
       name:'',
       role: '',
       participants:{},
-      isStart: false
+      isStart: false,
+      productId: ''
     })
     const receiveMsg = reactive({
       flag: false,
@@ -117,12 +118,14 @@ export default {
     // sessionStorage.setItem('ws', ws)
 
     onBeforeMount(()=> {
-      console.log(props.basePrice)
+      //console.log(props.basePrice)
       state.role = props.isSeller==1?'seller':'buyer'
       let curUrl = document.location.href.split('/').reverse()
-      state.room = curUrl[3]
-      state.name = curUrl[2]
-
+      state.productId = curUrl[0]
+      state.room = curUrl[4]
+      state.name = curUrl[3]
+      //console.log(curUrl)
+      //console.log(state.productId)
       // store.dispatch('root/requestUserInfo')
       //   .then(res=>{
       //     state.name = res.data.userId
@@ -290,19 +293,35 @@ export default {
     }
 
     const onSuccess = function(msg){
+      console.log(msg)
       const jsoned = JSON.parse(msg)
       successTrade.flag = true
       successTrade.sellerId = jsoned.sellerId
       successTrade.buyerId = jsoned.buyerId
     }
 
-    const matchingTrade = function(){
+    const matchingTrade = function(price){
       //DM으로 보내주기
-      console.log("매칭 성공")
+      console.log('매칭 성공')
+      const req = {
+        seller: successTrade.sellerId,
+        buyer: successTrade.buyerId,
+        price: price,
+        productId: state.productId
+      }
+      console.log(req)
+      store.dispatch('root/requestMatching', req)
+        .then(res=>{
+          console.log(res)
+          alert('거래 성공! DM에서 거래를 이어나가세요!')
+          router.push({name:'home'})
+        })
     }
 
     const failTrade = function(){
       //낙찰 실패한 유저들
+      console.log('매칭 실패')
+      alert('거래가 종료되었습니다.')
       router.push({name:'home'})
     }
 

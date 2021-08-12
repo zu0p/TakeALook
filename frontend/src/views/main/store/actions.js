@@ -192,3 +192,9 @@ export function requestSetStarted({state}, roomNumber){
   const url = BASE_URL+`/trade/section/started/${roomNumber}`
   return instanceWithAuth.get(url)
 }
+
+// webRTC 거래 매칭 성공
+export function requestMatching({state}, payload){
+  const url = BASE_URL+'/trade/history'
+  return instanceWithAuth.post(url, payload)
+}

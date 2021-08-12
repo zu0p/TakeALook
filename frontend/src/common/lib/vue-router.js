@@ -76,11 +76,12 @@ function makeRoutesFromMenu () {
   })
 
   routes.push({
-    path: '/meeting/:meetingId/:userId/:isSeller/:basePrice',
+    path: '/meeting/:meetingId/:userId/:isSeller/:basePrice/:productId',
     name: 'meeting-detail',
     props: route =>({
       isSeller: Number(route.params.isSeller),
-      basePrice: Number(route.params.basePrice)
+      basePrice: Number(route.params.basePrice),
+      productId: Number(route.params.productId)
     }),
     component: MeetingDetail
   })

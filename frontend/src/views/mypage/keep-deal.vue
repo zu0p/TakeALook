@@ -145,7 +145,8 @@ export default {
                 meetingId: room,
                 userId: state.name,
                 isSeller: 0,
-                basePrice: price
+                basePrice: price,
+                productId: pid
               },
             })
           }

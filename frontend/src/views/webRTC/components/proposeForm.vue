@@ -66,10 +66,16 @@ export default {
       else{
         // 낙찰성공
         if(props.state.name == props.successTrade.sellerId || props.state.name == props.successTrade.buyerId){
+          console.log('seller: '+props.successTrade.sellerId)
+          console.log('buyer: '+props.successTrade.buyerId)
           emit('onSellerOrBuyer')
+          ws.close()
         }
         else{
+          console.log('seller: '+props.successTrade.sellerId)
+          console.log('buyer: '+props.successTrade.buyerId)
           emit('onUser')
+          ws.close()
         }
       }
     })
@@ -85,9 +91,8 @@ export default {
           console.log(req)
           ws.send(JSON.stringify(req))
         }
-        alert("낙찰!!")
-        ws.close()
-        return
+        // alert("낙찰!!")
+        console.log("낙찰")
       }
       if(state.count>0){
         setTimeout(()=>{
