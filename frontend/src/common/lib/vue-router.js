@@ -76,13 +76,15 @@ function makeRoutesFromMenu () {
   })
 
   routes.push({
-    path: '/meeting/:meetingId/:userId/:isSeller/:basePrice/:productId',
+    // path: '/meeting/:meetingId/:userId/:isSeller/:basePrice/:productId',
+    // name: 'meeting-detail',
+    // props: route =>({
+    //   isSeller: Number(route.params.isSeller),
+    //   basePrice: Number(route.params.basePrice),
+    //   productId: Number(route.params.productId)
+    // }),
+    path: '/meeting/:meetingId/:userId',
     name: 'meeting-detail',
-    props: route =>({
-      isSeller: Number(route.params.isSeller),
-      basePrice: Number(route.params.basePrice),
-      productId: Number(route.params.productId)
-    }),
     component: MeetingDetail
   })
   // menu 자체에는 나오지 않는 페이지 라우터에 추가(게시글 상세보기))

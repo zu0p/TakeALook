@@ -24,7 +24,7 @@
 <script>
 import { reactive } from '@vue/reactivity'
 import ws from '../js/webSocket'
-import {watchEffect} from '@vue/runtime-core'
+import {onMounted, watchEffect} from '@vue/runtime-core'
 import { useStore } from 'vuex'
 
 export default {
@@ -41,8 +41,14 @@ export default {
       isStart: props.state.isStart,
       firstStart: true
     });
+    onMounted(()=>{
+      console.log(props.state)
+    })
 
     const updated = watchEffect(()=>{
+      state.isSeller = props.state.role=='seller'?true:false
+      // state.isStart = props.state.isStart
+
       // 거래 시작 == count start
       if(props.state.isStart && state.firstStart){
         state.firstStart = false
@@ -108,7 +114,7 @@ export default {
         id: 'startRequestCount',
         room: props.state.room
       }
-      console.log(reqWS)
+      //console.log(reqWS)
       ws.send(JSON.stringify(reqWS))
 
       const reqBE = props.state.room

@@ -126,16 +126,16 @@ export default {
       store.dispatch('root/requestJoinTrade', req)
         .then(res=>{
           let room = res.data.room
-          console.log(res)
-          console.log(res.data)
-          if(room=='none'){
-            alert("거래 세션이 생성되지 않아 입장할 수 없습니다.")
+          // console.log(res)
+          // console.log(res.data)
+          if(room=='createdButNotStarted'){
+            alert("거래가 시작되지 않아 입장할 수 없습니다.")
           }
-          else if(room=='alreadyStarted'){
+          else if(room=='createdAndStarted'){
             alert("거래 가격제안이 시작되어 입장할 수 없습니다.")
           }
-          else if(room=='null'){
-            alert("null...")
+          else if(room=='notCreated'){
+            alert("거래 세션이 생성되지 않아 입장할 수 없습니다.")
           }
           else{
             // 거래 세션에 입장
@@ -144,9 +144,9 @@ export default {
               params: {
                 meetingId: room,
                 userId: state.name,
-                isSeller: 0,
-                basePrice: price,
-                productId: pid
+                // isSeller: 0,
+                // basePrice: price,
+                // productId: pid
               },
             })
           }

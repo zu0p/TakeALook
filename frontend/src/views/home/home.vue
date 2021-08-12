@@ -369,17 +369,19 @@ export default {
     }
 
     const startTrade = function(param){
-      const req = {
-        seller: param.seller,
-        productId: param.productId,
-      }
-      // console.log(param.reserveTime) // 예약시간
       let now = new Date()
       now = dateTimeToString(now)
-      // console.log(now) // 현재시간
 
       if(param.reserveTime>now){
+        //호가 입력받기
+        let priceGap = Number(prompt('가격 증감 단위를 입력하세요.(숫자)'))
+
         let room = ''
+        const req = {
+          seller: param.seller,
+          productId: param.productId,
+          priceGap: priceGap
+        }
         store.dispatch('root/requestCreateTradeSection', req)
           .then(res =>{
             room = res.data.room
@@ -389,9 +391,7 @@ export default {
               name: 'meeting-detail',
               params: {
                 meetingId: room,
-                userId: state.name,
-                isSeller: 1,
-                basePrice: param.basePrice
+                userId: state.name
               },
             })
           })
@@ -412,16 +412,16 @@ export default {
       store.dispatch('root/requestJoinTrade', req)
         .then(res=>{
           let room = res.data.room
-          console.log(res)
-          console.log(res.data)
-          if(room=='none'){
-            alert("거래 세션이 생성되지 않아 입장할 수 없습니다.")
+          //console.log(res)
+          // console.log(res.data)
+          if(room=='createdButNotStarted'){
+            alert("거래가 시작되지 않아 입장할 수 없습니다.")
           }
-          else if(room=='alreadyStarted'){
+          else if(room=='createdAndStarted'){
             alert("거래 가격제안이 시작되어 입장할 수 없습니다.")
           }
-          else if(room=='null'){
-            alert("null...")
+          else if(room=='notCreated'){
+            alert("거래 세션이 생성되지 않아 입장할 수 없습니다.")
           }
           else{
             // 거래 세션에 입장
@@ -430,8 +430,6 @@ export default {
               params: {
                 meetingId: room,
                 userId: state.name,
-                isSeller: 0,
-                basePrice: price
               },
             })
           }

@@ -45,7 +45,7 @@ export default {
     PropseForm,
     ChatForm
   },
-  props:['isSeller', 'basePrice'],
+  // props:['isSeller', 'basePrice'],
   setup(props, {emit}){
     const store = useStore()
     const router = useRouter()
@@ -119,29 +119,42 @@ export default {
 
     onBeforeMount(()=> {
       //console.log(props.basePrice)
-      state.role = props.isSeller==1?'seller':'buyer'
+      // state.role = props.isSeller==1?'seller':'buyer'
       let curUrl = document.location.href.split('/').reverse()
-      state.productId = curUrl[0]
-      state.room = curUrl[4]
-      state.name = curUrl[3]
-      //console.log(curUrl)
-      //console.log(state.productId)
-      // store.dispatch('root/requestUserInfo')
-      //   .then(res=>{
-      //     state.name = res.data.userId
-      // })
-
-      const message = {
-        id : 'joinRoom',
-        name : state.name,
-        room : state.room,
-        role : state.role,
-        basePrice: props.basePrice
+      state.room = curUrl[1]
+      state.name = curUrl[0]
+      let req = {
+        room: state.room
       }
+      //console.log(req)
+      store.dispatch('root/requestTradeSectionInfo', req)
+        .then(res=>{
+          console.log(res.data)
+          console.log(state.name+" "+res.data.sellerId)
+          if(res.data.sellerId == state.name)state.role = 'seller'
+          else state.role = 'buyer'
+          console.log(state.role)
 
-      updatePrice.curPrice = props.basePrice
-      console.log(message)
-      sendMessage(message)
+          state.productId = res.data.productId
+          updatePrice.curPrice = res.data.basePrice
+
+          const message = {
+            id : 'joinRoom',
+            name : state.name,
+            room : state.room,
+            role : state.role,
+            basePrice: updatePrice.curPrice
+            // basePrice: props.basePrice
+          }
+
+          // updatePrice.curPrice = props.basePrice
+          console.log(message)
+          sendMessage(message)
+      })
+    })
+
+    onMounted(()=>{
+
     })
 
     onBeforeUnmount(()=>{
@@ -309,13 +322,22 @@ export default {
         price: price,
         productId: state.productId
       }
-      console.log(req)
+      // console.log(req)
+      store.dispatch('root/requestProductSold', state.productId)
+        .then(res=>{
+          console.log(res)
+        })
+      store.dispatch('root/requestUpdateMaxPrice',{curPrice: updatePrice.curPrice, room: state.room})
+        .then(res =>{
+          console.log(res)
+        })
       store.dispatch('root/requestMatching', req)
         .then(res=>{
           console.log(res)
           alert('거래 성공! DM에서 거래를 이어나가세요!')
           router.push({name:'home'})
         })
+
     }
 
     const failTrade = function(){
