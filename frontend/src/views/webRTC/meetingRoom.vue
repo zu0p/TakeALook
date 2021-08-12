@@ -129,8 +129,6 @@ export default {
       //console.log(req)
       store.dispatch('root/requestTradeSectionInfo', req)
         .then(res=>{
-          console.log(res.data)
-          console.log(state.name+" "+res.data.sellerId)
           if(res.data.sellerId == state.name)state.role = 'seller'
           else state.role = 'buyer'
           console.log(state.role)
@@ -148,7 +146,7 @@ export default {
           }
 
           // updatePrice.curPrice = props.basePrice
-          console.log(message)
+          // console.log(message)
           sendMessage(message)
       })
     })

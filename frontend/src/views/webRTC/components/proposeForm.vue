@@ -41,9 +41,9 @@ export default {
       isStart: props.state.isStart,
       firstStart: true
     });
-    onMounted(()=>{
-      console.log(props.state)
-    })
+    // onMounted(()=>{
+    //   console.log(props.state)
+    // })
 
     const updated = watchEffect(()=>{
       state.isSeller = props.state.role=='seller'?true:false
@@ -133,7 +133,7 @@ export default {
         name: props.state.name,
         price: state.proposePrice
       }
-      console.log(req)
+      // console.log(req)
       ws.send(JSON.stringify(req))
     }
 
