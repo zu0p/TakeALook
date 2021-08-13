@@ -108,7 +108,7 @@ export default {
        },
     })
 
-      const serverURL = "http://localhost:8080/stomp/chat"
+      const serverURL = "https://i5d101.p.ssafy.io:8080/stomp/chat"
       var socket = new SockJS(serverURL)
       const stompClient = Stomp.over(socket)
       console.log(`연결 시도, ${serverURL}`)
