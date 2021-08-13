@@ -371,7 +371,7 @@ export default {
 	/* border: 2px groove; */
 	margin-left: 5;
 	margin-right: 5;
-	width: 150;
+	/* width: 150; */
 	text-align: center;
 	overflow: hide;
 	/* float: left; */

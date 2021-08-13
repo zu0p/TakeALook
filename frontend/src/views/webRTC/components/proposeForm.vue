@@ -78,7 +78,7 @@ export default {
         if(props.state.name == props.successTrade.sellerId || props.state.name == props.successTrade.buyerId){
           console.log('seller: '+props.successTrade.sellerId)
           console.log('buyer: '+props.successTrade.buyerId)
-          emit('onSellerOrBuyer')
+          emit('onSellerOrBuyer', state.curPrice)
           ws.close()
         }
         else{
