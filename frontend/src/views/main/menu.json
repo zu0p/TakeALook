@@ -41,13 +41,6 @@
     "path": "/userInfo",
     "icon": "el-icon-user",
     "children": []
-  },
-  "webRTC":{
-    "name": "webRTC test",
-    "hidden": true,
-    "path": "/webRTC",
-    "icon": "el-icon-user",
-    "children": []
   }
 }
 

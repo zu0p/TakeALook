@@ -3,7 +3,7 @@
   <div v-if="info.wishList">
     <ul class="infinite-list">
       <li v-for="wish in info.wishList" @click="clickDeal(wish.productId)" class="infinite-list-item" :key="wish.productId" >
-        <conference :deal="wish"/>
+        <conference :deal="wish" @buyerJoin="buyerJoin"/>
       </li>
       <el-pagination
         background
@@ -31,9 +31,10 @@
 <script>
 import Conference from '@/views/home/components/conference'
 import Recommend from '../deal-detail/components/recommend'
-import { onMounted, reactive } from 'vue'
+import { onBeforeMount, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+// import { buyerJoinFunc } from '../webRTC/js/sessionFunc'
 
 export default {
   name: 'Keep-deal',
@@ -54,7 +55,15 @@ export default {
     })
 
     const state = reactive({
-      isLoading: true
+      isLoading: true,
+      name: ''
+    })
+
+    onBeforeMount(()=>{
+      store.dispatch('root/requestUserInfo')
+        .then(res=>{
+          state.name = res.data.userId
+      })
     })
 
     // 페이지 진입시 불리는 훅
@@ -77,7 +86,7 @@ export default {
                     info.recommend.push(temp[deal])
                   }
                 }
-                console.log(info.recommend)
+                // console.log(info.recommend)
               }
             })
           })
@@ -103,7 +112,48 @@ export default {
       })
     }
 
-    return { info, state, clickDeal, handleCurrentChange }
+    // const buyerJoin = function(pid, price){
+    //   buyerJoinFunc(state.name, pid, price)
+    // }
+    const buyerJoin = function(pid, price){
+      const req = {
+        userId: state.name,
+        productId: pid
+      }
+      // console.log(req)
+
+      // 서버에 요청보내서 res의 room != none이면 입장
+      store.dispatch('root/requestJoinTrade', req)
+        .then(res=>{
+          let room = res.data.room
+          // console.log(res)
+          // console.log(res.data)
+          if(room=='createdButNotStarted'){
+            alert("거래가 시작되지 않아 입장할 수 없습니다.")
+          }
+          else if(room=='createdAndStarted'){
+            alert("거래 가격제안이 시작되어 입장할 수 없습니다.")
+          }
+          else if(room=='notCreated'){
+            alert("거래 세션이 생성되지 않아 입장할 수 없습니다.")
+          }
+          else{
+            // 거래 세션에 입장
+            router.push({
+              name: 'meeting-detail',
+              params: {
+                meetingId: room,
+                userId: state.name,
+                // isSeller: 0,
+                // basePrice: price,
+                // productId: pid
+              },
+            })
+          }
+        })
+    }
+
+    return { info, state, clickDeal, handleCurrentChange, buyerJoin }
   }
 }
 </script>

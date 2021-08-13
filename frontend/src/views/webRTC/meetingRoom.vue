@@ -11,7 +11,7 @@
             <el-row :gutter="40">
               <el-col id="seller" :span="16"></el-col>
               <el-col id="propse" :span="8">
-                <propse-form :name="state.name" :room="state.room" :updatePrice="updatePrice" :successTrade="successTrade" @onSellerOrBuyer="matchingTrade" @onUser="failTrade"/>
+                <propse-form :state="state" :updatePrice="updatePrice" :successTrade="successTrade" @onSellerOrBuyer="matchingTrade" @onUser="failTrade"/>
               </el-col>
             </el-row>
             <el-row id="buyer" :gutter="20">
@@ -45,13 +45,18 @@ export default {
     PropseForm,
     ChatForm
   },
+  // props:['isSeller', 'basePrice'],
   setup(props, {emit}){
     const store = useStore()
     const router = useRouter()
     const state = reactive({
       room:'',
       name:'',
+      role: '',
       participants:{},
+      isStart: false,
+      productId: '',
+      priceGap: 0
     })
     const receiveMsg = reactive({
       flag: false,
@@ -104,6 +109,9 @@ export default {
       case 'success':
         onSuccess(message.data)
         break
+      case 'startCount':
+        onStartCount(message.data)
+        break
       default:
         console.error('Unrecognized message', parsedMessage)
       }
@@ -111,24 +119,46 @@ export default {
     // sessionStorage.setItem('ws', ws)
 
     onBeforeMount(()=> {
+      //console.log(props.basePrice)
+      // state.role = props.isSeller==1?'seller':'buyer'
       let curUrl = document.location.href.split('/').reverse()
       state.room = curUrl[1]
-      //state.name = curUrl[0]
-
-      store.dispatch('root/requestUserInfo')
-        .then(res=>{
-          state.name = res.data.userId
-      })
-
-      const message = {
-        id : 'joinRoom',
-        name : state.name,
-        room : state.room,
+      state.name = curUrl[0]
+      let req = {
+        room: state.room
       }
-      sendMessage(message)
+      //console.log(req)
+      store.dispatch('root/requestTradeSectionInfo', req)
+        .then(res=>{
+          if(res.data.sellerId == state.name)state.role = 'seller'
+          else state.role = 'buyer'
+          // console.log(state.role)
+
+          state.productId = res.data.productId
+          state.priceGap = res.data.priceGap
+          updatePrice.curPrice = res.data.basePrice
+
+          const message = {
+            id : 'joinRoom',
+            name : state.name,
+            room : state.room,
+            role : state.role,
+            basePrice: updatePrice.curPrice
+            // basePrice: props.basePrice
+          }
+
+          // updatePrice.curPrice = props.basePrice
+          // console.log(message)
+          sendMessage(message)
+      })
+    })
+
+    onMounted(()=>{
+
     })
 
     onBeforeUnmount(()=>{
+      // console.log("close!!")
       ws.close()
     })
 
@@ -138,7 +168,7 @@ export default {
     }
 
     const receiveVideo = function(sender) {
-      console.log("sender: "+sender)
+      // console.log("sender: "+sender)
       var participant = new Participant(sender)
       // state.participants[sender] = participant
       var video = participant.getVideoElement()
@@ -187,10 +217,10 @@ export default {
           }
         }
       }
-      if(state.name==seller)
+      if(state.role=='seller')
         constraints.video.mandatory.maxWidth = 720
       //console.log(state.name + " registered in room " + state.room)
-      var participant = new Participant(state.name)
+      var participant = new Participant(state.name, state.role)
 
       var video = participant.getVideoElement()
 
@@ -272,27 +302,57 @@ export default {
       const jsoned = JSON.parse(msg)
       //console.log(jsoned.currentPrice)
       updatePrice.curPrice = jsoned.currentPrice
-      console.log(updatePrice.curPrice)
+      // console.log(updatePrice.curPrice)
     }
 
     const onSuccess = function(msg){
+      console.log(msg)
       const jsoned = JSON.parse(msg)
       successTrade.flag = true
       successTrade.sellerId = jsoned.sellerId
       successTrade.buyerId = jsoned.buyerId
     }
 
-    const matchingTrade = function(){
+    const matchingTrade = function(price){
       //DM으로 보내주기
-      console.log("매칭 성공")
+      console.log('매칭 성공')
+      const req = {
+        seller: successTrade.sellerId,
+        buyer: successTrade.buyerId,
+        price: price,
+        productId: state.productId
+      }
+      // console.log(req)
+      store.dispatch('root/requestProductSold', state.productId)
+        .then(res=>{
+          console.log(res)
+        })
+      store.dispatch('root/requestUpdateMaxPrice',{curPrice: updatePrice.curPrice, room: state.room})
+        .then(res =>{
+          console.log(res)
+        })
+      store.dispatch('root/requestMatching', req)
+        .then(res=>{
+          console.log(res)
+          alert('거래 성공! DM에서 거래를 이어나가세요!')
+          router.push({name:'home'})
+        })
+
     }
 
     const failTrade = function(){
       //낙찰 실패한 유저들
+      console.log('매칭 실패')
+      alert('거래가 종료되었습니다.')
       router.push({name:'home'})
     }
 
-    return {ws, state, receiveMsg, updatePrice, successTrade, matchingTrade, failTrade, onSuccess, onUpdatePrice, onReceiveMessageEnded, onReceiveMessage, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
+    const onStartCount = function(){
+      // seller가 count 시작 == 가격제안 시작
+      state.isStart = true
+    }
+
+    return {ws, state, receiveMsg, updatePrice, successTrade, onStartCount, matchingTrade, failTrade, onSuccess, onUpdatePrice, onReceiveMessageEnded, onReceiveMessage, waitForConnection, onNewParticipant, receiveVideo, receiveVideoResponse, callResponse, onExistingParticipants, leaveRoom, onParticipantLeft, sendMessage}
   }
 
 }
