@@ -18,6 +18,7 @@ public class TradeSection extends BaseEntity {
     LocalDate endTime; // 실제 거래 방 종료 시간
     String title;
     Boolean isActive;
+    Boolean isStarted; // 이미 시작했는지 여부
     String url;
     Integer priceGap;
     Integer maxPrice;

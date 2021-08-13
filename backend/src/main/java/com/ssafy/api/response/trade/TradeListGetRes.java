@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ public class TradeListGetRes {
     @ApiModelProperty(name="상품 이름")
     String productName;
     @ApiModelProperty(name="상품 거래일")
-    LocalDate tradeDate;
+    Date tradeDate;
     @ApiModelProperty(name="판매자 id")
     String seller;
     @ApiModelProperty(name="구매자 id")
@@ -30,7 +31,7 @@ public class TradeListGetRes {
     @ApiModelProperty(name="상품 판매 여부")
     Boolean isSold;
 
-    public TradeListGetRes(Long productId, String productName, LocalDate tradeDate, String seller,
+    public TradeListGetRes(Long productId, String productName, Date tradeDate, String seller,
                            String buyer, Integer price, String categories, String imageUrl, Boolean isSold) {
         this.productId = productId;
         this.productName = productName;

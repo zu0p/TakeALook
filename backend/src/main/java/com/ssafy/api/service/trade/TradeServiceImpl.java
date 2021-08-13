@@ -63,7 +63,6 @@ public class TradeServiceImpl implements TradeService {
         return chatList;
     }
 
-
     @Override
     public TradeHistory createTradeHistory(TradeRegistPatchReq buyUpdatePostReq) {
         String roomId = UUID.randomUUID().toString();
@@ -85,7 +84,22 @@ public class TradeServiceImpl implements TradeService {
         tradeSection.setProductId(tradeSectionCreateReq.getProductId());
         tradeSection.setUrl(room);
         tradeSection.setIsActive(true);
+        tradeSection.setIsStarted(false);
+        tradeSection.setPriceGap(tradeSectionCreateReq.getPriceGap());
+//        tradeSection.setMaxPrice(0);
         return tradeSectionRepository.save(tradeSection);
+    }
+
+    @Override
+    public TradeSection updateTradeSection(TradeSection oldTradeSection, Integer maxPrice) {
+        oldTradeSection.setSeller(oldTradeSection.getSeller());
+        oldTradeSection.setProductId(oldTradeSection.getProductId());
+        oldTradeSection.setUrl(oldTradeSection.getUrl());
+        oldTradeSection.setIsActive(oldTradeSection.getIsActive());
+        oldTradeSection.setIsStarted(oldTradeSection.getIsStarted());
+        oldTradeSection.setPriceGap(oldTradeSection.getPriceGap());
+        oldTradeSection.setMaxPrice(maxPrice);
+        return tradeSectionRepository.save(oldTradeSection);
     }
 
     @Override
@@ -94,6 +108,21 @@ public class TradeServiceImpl implements TradeService {
         return tradeSection;
     }
 
+    @Override
+    public TradeSection findTradeSectionByRoomUrl(String url) {
+        TradeSection tradeSection = tradeSectionRepository.findTradeSectionByUrl(url);
+        tradeSection.setIsActive(Boolean.TRUE);
+        tradeSectionRepository.save(tradeSection);
+        return tradeSection;
+    }
+
+    @Override
+    public TradeSection findTradeSectionAndStartByRoomUrl(String url) {
+        TradeSection tradeSection = tradeSectionRepository.findTradeSectionByUrl(url);
+        tradeSection.setIsStarted(Boolean.TRUE);
+        tradeSectionRepository.save(tradeSection);
+        return tradeSection;
+    }
 
     @Override
     public void deleteTradeInfo(Long productId) {

@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface TradeSectionRepository extends JpaRepository<TradeSection, String> {
     Optional<TradeSection> findTradeSectionBySeller(String seller);
     TradeSection findTradeSectionByProductId(Long productId);
+    TradeSection findTradeSectionByUrl(String url);
 }
