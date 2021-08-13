@@ -224,3 +224,9 @@ export function requestUpdateMaxPrice({state}, payload){
   const url = BASE_URL+'/trade/section/updateMaxPrice'
   return instanceWithAuth.post(url, payload)
 }
+
+// 채팅 조회
+export function requestChatData({state}, payload){
+  const url = BASE_URL+`/chat/${payload}`
+  return instanceWithAuth.get(url)
+}
