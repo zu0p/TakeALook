@@ -15,8 +15,8 @@ function createInstanceWithAuth(url) {
   return setInterceptors(instance)
 }
 
-const BASE_URL = 'https://i5d101.p.ssafy.io:8080/api/v1'
-// const BASE_URL = 'http://localhost:8080/api/v1'
+// const BASE_URL = 'https://i5d101.p.ssafy.io:8080/api/v1'
+const BASE_URL = 'https://localhost:8080/api/v1'
 // const BASE_URL = 'https://soft-lizard-45.loca.lt/api/v1/'
 const instanceWithAuth = createInstance()
 const posts = createInstanceWithAuth('posts')
@@ -179,6 +179,13 @@ export function requestChatList({state}){
   const url = BASE_URL+'/trade/chatroom'
   return instanceWithAuth.get(url)
 }
+
+export function requestSaveChatList({state}, payload){
+  const url = BASE_URL+'/chat'
+  let body = payload
+  return instanceWithAuth.post(url, body)
+}
+
 
 // webRTC 거래 방 생성 요청 - seller
 export function requestCreateTradeSection({state}, payload){

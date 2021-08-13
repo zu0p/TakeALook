@@ -13,7 +13,7 @@
       <div class="chat-window-header-title">
         <p>판매자 닉네임</p>
       </div>
-      <div class="chat-window-header-close-button" @click="$emit('close')">
+      <div class="chat-window-header-close-button" @click="$emit('close'), save()">
         <img :src="info.btn.CloseIcon" :alt="info.btn.name"/>
       </div>
     </div>
@@ -157,8 +157,19 @@ export default {
         info.msg = ""
       }
 
+      const save = function () {
 
-    return {info, send}
+        store.dispatch('root/requestSaveChatList', JSON.stringify(info.data) )
+          .then(res=> {
+            console.log(res)
+            console.log('채팅이 성공적으로 저장되었습니다')
+          })
+        .catch(res=> {
+          console.log('채팅내용저장에 실패했습니다.')
+        })
+      }
+
+    return {info, send, save}
   }
 }
 </script>

@@ -17,7 +17,7 @@
       </div>
     </div>
   </div>
-  <chat-window v-if="info.chatWindow" @back="chatWindow()" @close="$emit('close')" :roomId="info.roomId" :userId="info.userId"/>
+  <chat-window v-if="info.chatWindow" @close="$emit('close')" :roomId="info.roomId" :userId="info.userId"/>
 </template>
 
 <script>
