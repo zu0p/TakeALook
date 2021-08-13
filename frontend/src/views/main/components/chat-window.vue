@@ -89,18 +89,20 @@ export default {
     BackIcon,
   },
 
-  props:["roomId"],
+  props:["roomId","userId"],
 
   setup(props){
+    console.log(props.userId)
     const store = useStore()
     const info = reactive({
-      chatList: [],
-      messageList: [],
+      data: {
+        chatList: [],
+      },
       msg:'',
-      roomId:props.roomId,
+      roomId: props.roomId,
       sendTime:'',
       connected: false,
-      nickname: "human001",
+      nickname: props.userId,
       btn: {
         CloseIcon,
         BackIcon,
@@ -119,11 +121,13 @@ export default {
           console.log("연결 성공", frame)
           console.log(store)
 
+
           stompClient.subscribe("/sub/chat/room/"+info.roomId, res=>{
             console.log("sub 성공", res.body)
-            info.messageList.push(res.body)
-            info.chatList.push(JSON.parse(res.body))
+            info.data.chatList.push(JSON.parse(res.body))
           })
+          console.log(0)
+          console.log(info)
           var message = {
             roomId: info.roomId,
             writer: info.nickname,
@@ -146,9 +150,14 @@ export default {
             sendTime: Date.now()
           }
           stompClient.send('/pub/chat/message', JSON.stringify(message), {})
+          console.log(1)
+          console.log(info.data)
+          console.log(2)
         }
         info.msg = ""
       }
+
+
     return {info, send}
   }
 }

@@ -17,7 +17,7 @@
       </div>
     </div>
   </div>
-  <chat-window v-if="info.chatWindow" @back="chatWindow()" @close="$emit('close')" :roomId="info.roomId"/>
+  <chat-window v-if="info.chatWindow" @back="chatWindow()" @close="$emit('close')" :roomId="info.roomId" :userId="info.userId"/>
 </template>
 
 <script>
@@ -40,12 +40,19 @@ export default {
     const info = reactive({
       chatWindow: false,
       chatList: [],
-      roomId: ''
+      roomId: '',
+      userId: '',
     })
+
+    store.dispatch('root/requestUserInfo')
+      .then(res=> {
+        // console.log(res.data)
+        info.userId = res.data.userId
+      })
 
     store.dispatch('root/requestChatList')
       .then(res=> {
-        console.log(res.data)
+        // console.log(res.data)
         info.chatList.push(res.data)
         console.log(info.chatList[0])
       })

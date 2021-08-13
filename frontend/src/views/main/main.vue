@@ -32,6 +32,8 @@
   @import '../../common/css/common.css';
   @import '../../common/css/element-plus.css';
 
+/* 배경화면 */
+
   /* DM 아이콘 */
 .chat-launcher {
   width: 60px;
