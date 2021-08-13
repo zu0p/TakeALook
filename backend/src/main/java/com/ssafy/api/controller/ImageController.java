@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import retrofit2.http.Multipart;
 
 import javax.servlet.ServletContext;
 import java.io.File;
@@ -34,9 +33,11 @@ public class ImageController {
     public ResponseEntity<?> uploadImages(@RequestParam("imageFile") MultipartFile img) throws IOException {
         log.info("image has arrived!!!! which is {}", img.getOriginalFilename());
         String webAppRoot = servletContext.getRealPath("/");
+        log.info("webAppRoot: {} ",webAppRoot);
         String relativeFolder = File.separator + "resources" + File.separator + "images" + File.separator;
-
+        log.info("relativeFolder: {} ",relativeFolder);
         String filename = webAppRoot + relativeFolder + img.getOriginalFilename();
+        log.info("filename: {} ",filename);
         FileCopyUtils.copy(filename.getBytes(), new File(filename));
 
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Images arrived"));
