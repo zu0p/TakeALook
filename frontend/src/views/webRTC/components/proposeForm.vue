@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card shadow="never">
     <template #header>
       <span> 가격 제안하기 </span>
     </template>
@@ -8,7 +8,8 @@
         <span>{{state.curPrice}}</span>
       </el-form-item>
       <el-form-item label="낙찰 카운트다운">
-        <span>{{state.count}}</span>
+        <span v-if="!state.imminent">{{state.count}}</span>
+        <span v-if="state.imminent" style="color: red; font-weight:bold;">{{state.count}}</span>
       </el-form-item>
       <el-form-item  v-if="!state.isSeller">
         <el-input-number v-model="state.proposePrice" @change="handleChange" :step="state.gap"></el-input-number>
@@ -39,7 +40,8 @@ export default {
       count: 30,
       isSeller: props.state.role=='seller'?true:false,
       isStart: props.state.isStart,
-      firstStart: true
+      firstStart: true,
+      imminent: false
     });
     // onMounted(()=>{
     //   console.log(props.state)
@@ -67,6 +69,7 @@ export default {
 
         if(prevPrive != state.curPrice){
           state.count = 30
+          state.imminent = false
           state.proposePrice = state.curPrice
         }
       }
@@ -100,6 +103,9 @@ export default {
         }
         // alert("낙찰!!")
         console.log("낙찰")
+      }
+      if(state.count<=10){
+        state.imminent = true
       }
       if(state.count>0){
         setTimeout(()=>{
