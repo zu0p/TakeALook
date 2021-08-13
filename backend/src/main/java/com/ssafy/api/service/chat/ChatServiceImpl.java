@@ -30,7 +30,7 @@ public class ChatServiceImpl implements ChatService {
         try {
             JSONParser jsonParse = new JSONParser();
             JSONObject jObject = (JSONObject) jsonParse.parse(chatList);
-            JSONArray dataList = (JSONArray) jObject.get("data");
+            JSONArray dataList = (JSONArray) jObject.get("chatList");
 
             for (int i = 0; i < dataList.size(); i++) {
                 Chat chat = new Chat();
