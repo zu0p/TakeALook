@@ -6,15 +6,16 @@
         <h1 style="margin-top:0; margin-bottom:0;">채팅</h1>
       </div>
       <div class="chat-list-header-close-button">
-        <!-- <el-button @click="$emit('close')" style="border:none;"></el-button> -->
         <i class="el-icon-close" @click="$emit('close')" style="font-weight:bold;"></i>
       </div>
     </div>
-    <div class="chat-list-body scrollable" style="margin-top:5px;">
-    <!-- <tr v-for="가장 최근 메세지 in 메세지 방 리스트" :key="메세지 방.id"> -->
+    <div v-if="info.chatList" class="chat-list-body scrollable" style="margin-top:5px;">
       <div v-for="chat in info.chatList[0]" :key="chat.roomId" @click="chatWindow(chat.roomId)">
         <chat-lists :chat="chat"/>
       </div>
+    </div>
+    <div v-else class="chat-list-body" style="margin-top:50px;">
+      <h1>생성된 대화방이 없습니다</h1>
     </div>
   </div>
   <chat-window v-if="info.chatWindow" @back="chatWindow()" @close="$emit('close')" :roomId="info.roomId"/>
@@ -45,9 +46,11 @@ export default {
 
     store.dispatch('root/requestChatList')
       .then(res=> {
-        console.log(res.data)
-        info.chatList.push(res.data)
-        console.log(info.chatList[0])
+        if (res.data.statusCode != 404 ){
+          info.chatList.push(res.data)
+        } else {
+          info.chatList = false
+        }
       })
 
     const chatWindow = function (e) {
