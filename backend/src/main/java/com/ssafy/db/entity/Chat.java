@@ -13,12 +13,9 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class TradeHistory extends BaseEntity {
-    @Temporal(TemporalType.TIMESTAMP)
-    Date tradeDate;
-    Long productId;
-    Integer price;
-    String seller;
-    String buyer;
+public class Chat extends BaseEntity {
+    String writer;
+    String message;
+    String sendTime;
     String roomId;
 }
