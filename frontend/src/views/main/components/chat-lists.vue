@@ -1,20 +1,35 @@
 <template>
-  <div style="text-align:left;" >
-    <h1>{{ chat.productName }} <span style="font-size:13px"> {{ chat.price }}</span></h1>
-    <span>{{ chat.receiver }} </span>
-    <hr>
-    <!-- <span style="font-size:13px"> {{ chat.tradeDate.slice(5,7) }}월 {{ chat.tradeDate.slice(8,10) }}일
-      {{ chat.tradeDate.slice(11,13) }}시 {{ chat.tradeDate.slice(14,16) }}분
-    </span> -->
-  </div>
+  <el-row style="margin-top:10px; margin-bottom:10px; height: 70px;">
+    <img :src="info.imageUrl" alt="" style="width:50px; height:50px; border-radius: 7px; align-self: center">
+    <div style="margin-left:20px; text-align:left; align-self: center">
+      <p style="font-weight: bold; margin-top:0;">{{ chat.productName }}
+        <span style="margin-bottom:0; font-size:10px;">{{ chat.receiver }}</span></p>
+      <p style="margin-bottom:0;">최근 대화</p>
+    </div>
+  </el-row>
+  <hr color="#F2F2F2" size="1px">
 </template>
 
 <script>
+import { reactive } from '@vue/reactivity'
+import { useStore } from 'vuex'
+
 export default {
   props: ["chat"],
+
+  setup(props){
+    const store = useStore()
+    const info = reactive({
+      imageUrl: ''
+    })
+    store.dispatch('root/requestDealDetail', props.chat.productId)
+    .then(res=> {
+      info.imageUrl = res.data.imageUrl
+    })
+    return {info}
+  }
 }
 </script>
 
 <style>
-
 </style>

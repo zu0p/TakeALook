@@ -88,7 +88,7 @@ export default {
     CloseIcon,
     BackIcon,
   },
-  //! 변경
+
   props:["roomId"],
 
   setup(props){
