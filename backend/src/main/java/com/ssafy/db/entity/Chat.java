@@ -16,7 +16,6 @@ import java.util.Date;
 public class Chat extends BaseEntity {
     String writer;
     String message;
-    @Temporal(TemporalType.TIMESTAMP)
-    Date sendTime;
+    String sendTime;
     String roomId;
 }
