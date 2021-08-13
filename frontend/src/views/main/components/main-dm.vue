@@ -80,6 +80,7 @@ export default {
 
 <style>
 .chat-open-icon{
+  transform: rotate(-90deg);
   margin-top: 25%;
   width: 50%;
   height: 50%;

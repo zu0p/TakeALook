@@ -7,39 +7,62 @@
       </template>
     </MessageList> -->
     <div class="chat-window-header">
-      <el-button type="primary" icon="el-icon-back" @click="$emit('back')"></el-button>
-      <div class="chat-window-header-title">
-        hellow
+      <div class="chat-window-header-back-button" @click="$emit('back')">
+        <img :src="info.btn.BackIcon" :alt="info.btn.name"/>
       </div>
-      <div class="chat-window-header-close-button">
-        <el-button type="primary" icon="el-icon-close" @click="$emit('close')"></el-button>
+      <div class="chat-window-header-title">
+        <p>판매자 닉네임</p>
+      </div>
+      <div class="chat-window-header-close-button" @click="$emit('close')">
+        <img :src="info.btn.CloseIcon" :alt="info.btn.name"/>
       </div>
     </div>
     <div class="chat-window-body">
-      <div v-for="(chat, idx) in info.chatList" :key="idx">
-        <span>{{chat.writer}} : {{chat.message}}</span>
+      <div class="chat-window-message" v-for="(chat, idx) in info.chatList" :key="idx">
+          <p class="chat-writer">{{chat.writer}}</p>
+        <div class="chat-messages">
+          <p class="chat-message">{{chat.message}}</p>
+        </div>
+      </div>
+      <div>
+      <!-- <MessageList
+        v-for="(chat, idx) in info.chatList"
+        :key="idx"
+        :chat="chat"
+        :user="(chat.writer)"
+      > -->
+      <!-- 슬록 속성(slot props) 을 이용해서 자식 컴포넌트에 정의 되어있는 데이터를 부모 컴포넌트에서 접근할 수 있다. -->
+      <!-- <template v-slot:user-avatar="scopedProps">
+        <slot name="user-avatar" :user="scopedProps.user" :message="scopedProps.message"> </slot>
+      </template>
+      <template v-slot:text-message-body="scopedProps">
+        <slot
+          name="text-message-body"
+          :message="scopedProps.message"
+          :messageText="scopedProps.messageText"
+          :messageColors="scopedProps.messageColors"
+          :me="scopedProps.me"
+        >
+        </slot>
+      </template>
+      <template v-slot:system-message-body="scopedProps">
+        <slot name="system-message-body" :message="scopedProps.message"> </slot>
+      </template>
+      <template v-slot:text-message-toolbox="scopedProps">
+        <slot name="text-message-toolbox" :message="scopedProps.message" :me="scopedProps.me">
+        </slot>
+      </template>
+      </MessageList> -->
       </div>
     </div>
     <!-- 메세지 리스트 -->
     <div class="chat-user-input">
-      <div class="file-container">
-        <span class="icon-file-message">
-          <!-- <img :src="icons.file.img" :alt="icons.file.name" height="15"/> -->
-        </span>
-        <span class="delete-file-message" @click="cancelFile()">
-          <!-- <img height="10" title="Remove the file"/> -->
-        </span>
+      <div class="chat-user-input-text">
+        <el-input placeholder="Please input" v-model="info.msg" @keydown.enter.prevent="send"></el-input>
       </div>
-      <form class="chat-user-input">
-        <div class="chat-user-input-text">
-          <el-input placeholder="Please input" v-model="info.msg" @keydown.enter.prevent="send"></el-input>
-        </div>
-        <div class="chat-user-input-buttons">
-          <div class="chat-user-input-button">
-            <el-button type="primary" icon="el-icon-s-promotion" circle="" @click="send"></el-button>
-          </div>
-        </div>
-      </form>
+      <div class="chat-user-input-button">
+        <el-button type="primary" icon="el-icon-s-promotion" circle="" @click="send"></el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -53,6 +76,8 @@ import { reactive } from '@vue/reactivity'
 import { useStore } from 'vuex'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
+import CloseIcon from '@/assets/images/close-icon-big.png'
+import BackIcon from '@/assets/images/back-icon-big.png'
 
 
 export default {
@@ -60,6 +85,8 @@ export default {
     MessageList,
     UserInput,
     ChatList,
+    CloseIcon,
+    BackIcon,
   },
 
   props:["roomId"],
@@ -67,14 +94,21 @@ export default {
   setup(props){
     const store = useStore()
     const info = reactive({
+      chatList: [],
+      messageList: [],
       msg:'',
       roomId:props.roomId,
-      chatList: [],
+      sendTime:'',
       connected: false,
-      nickname: "dd"
+      nickname: "human001",
+      btn: {
+        CloseIcon,
+        BackIcon,
+        name: 'default',
+       },
     })
 
-      const serverURL = "http://localhost:8080/stomp/chat"
+      const serverURL = "https://i5d101.p.ssafy.io:8080/stomp/chat"
       var socket = new SockJS(serverURL)
       const stompClient = Stomp.over(socket)
       console.log(`연결 시도, ${serverURL}`)
@@ -83,14 +117,17 @@ export default {
         frame => {
           info.connected = true
           console.log("연결 성공", frame)
+          console.log(store)
 
           stompClient.subscribe("/sub/chat/room/"+info.roomId, res=>{
             console.log("sub 성공", res.body)
+            info.messageList.push(res.body)
             info.chatList.push(JSON.parse(res.body))
           })
           var message = {
             roomId: info.roomId,
-            writer: info.nickname
+            writer: info.nickname,
+            sendTime: Date.now(),
           }
           stompClient.send("/pub/chat/enter", JSON.stringify(message), {})
         },
@@ -104,8 +141,9 @@ export default {
         if (stompClient && stompClient.connected) {
           var message = {
             roomId: info.roomId,
+            writer: info.nickname,
             message: info.msg,
-            writer: info.nickname
+            sendTime: Date.now()
           }
           stompClient.send('/pub/chat/message', JSON.stringify(message), {})
         }
@@ -130,7 +168,6 @@ export default {
   background: white;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-radius: 10px;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   animation: fadeIn;
@@ -139,9 +176,8 @@ export default {
 }
 
 .chat-window-header {
-  background-color: cornflowerblue;
+  background-color: #4e8cff;
   min-height: 75px;
-  text-align: center;
   border-top-left-radius: 9px;
   border-top-right-radius: 9px;
   padding: 10px;
@@ -152,19 +188,63 @@ export default {
 }
 
 .chat-window-header-title {
-  cursor: pointer;
+  /* border: 3px solid purple; */
+  /* cursor: pointer; */
+  color: white;
+  font-weight: 900;
+  text-align: center;
+  width: 100%;
   border-radius: 5px;
 }
 
-.chat-window-header-close-button {
-  width: 40px;
+.chat-window-header-back-button {
+  /* border: 3px solid blue; */
+  min-width: 40px;
   align-self: center;
-  height: 40px;
+  min-height: 40px;
   margin-right: 10px;
   box-sizing: border-box;
   cursor: pointer;
   border-radius: 5px;
   margin-left: auto;
+}
+
+.chat-window-header-close-button {
+  /* border: 3px solid red; */
+  min-width: 40px;
+  align-self: center;
+  min-height: 40px;
+  margin-right: 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-left: auto;
+}
+
+.chat-window-header-close-button:hover {
+  /* border: 3px solid red; */
+  box-shadow: 0px 2px 5px rgba(0.2, 0.2, 0.5, 0.1);
+}
+
+.chat-window-header-back-button:hover {
+  /* border: 3px solid red; */
+  box-shadow: 0px 2px 5px rgba(0.2, 0.2, 0.5, 0.1);
+}
+
+.chat-window-header-close-button img {
+  /* border: 3px solid red; */
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.chat-window-header-back-button img {
+  /* border: 3px solid red; */
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .chat-window.closed {
@@ -186,13 +266,6 @@ export default {
   }
 }
 
-.chat-message--me {
-  text-align: right;
-}
-.chat-message--them {
-  text-align: left;
-}
-
 @media (max-width: 450px) {
   .chat-window {
     width: 100%;
@@ -209,4 +282,100 @@ export default {
     bottom: 0px;
   }
 }
+.chat-window-body {
+  width: 100%;
+  padding: 5px 20px;
+  border-radius: 6px;
+  font-weight: 300;
+  vertical-align: top;
+  position: relative;
+}
+
+.chat-window-body .chat-window-message {
+  width: 100%;
+}
+
+.chat-messages {
+  display: flex;
+  white-space: pre-wrap;
+}
+
+.chat-window-body .chat-window-message .chat-writer {
+  text-align: left;
+  max-height: 20px;
+  margin-bottom: 5px;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.4;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.chat-window-body .chat-window-message .chat-message {
+  /* message text color */
+  color: #263238;
+  /* message background color */
+  background-color: #f4f7f9;
+  margin-top: 0px;
+  margin-right: 40px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+  -webkit-font-smoothing: subpixel-antialiased;
+
+
+}
+
+
+.chat-message--me {
+  text-align: right;
+}
+
+.chat-message--them {
+  text-align: left;
+}
+
+.chat-user-input {
+  width: 100%;
+  min-height: 55px;
+  margin: 0px;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  background-color: #f4f7f9;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+
+.chat-user-input-text {
+  flex-grow: 1;
+  outline: none;
+  border-bottom-left-radius: 10px;
+  box-sizing: border-box;
+  /*padding: top, right, bottom, left */
+  padding: 18px 5px 18px 18px;
+  font-size: 15px;
+  line-height: 1.33;
+  word-wrap: break-word;
+  color: #565867;
+  -webkit-font-smoothing: antialiased;
+  max-height: 100px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.chat-user-input-button {
+  display: flex;
+  align-items: center;
+    /*padding: top, right, bottom, left */
+  padding: 18px 10px 18px 5px;
+}
+
+
 </style>

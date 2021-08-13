@@ -87,8 +87,8 @@ export default {
       form: {
         productName: '',
         categories: '',
-        reserveTime: '',
         basePrice: '',
+        reserveTime: '',
         description: '',
         state: '',
       },
@@ -192,7 +192,7 @@ export default {
             imageUrl: state.src.imageUrl,
             productName: state.form.productName,
             categories: state.form.categories,
-            basePrice: state.form.basePrice,
+            basePrice: parseInt(state.form.basePrice),
             reserveTime: state.form.reserveTime,
             description: state.form.description,
            })
