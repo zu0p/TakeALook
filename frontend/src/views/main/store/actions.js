@@ -175,6 +175,11 @@ export function requestSearch({state}, payload){
   return instanceWithAuth.post(url, body)
 }
 
+export function requestChatList({state}){
+  const url = BASE_URL+'/trade/chatroom'
+  return instanceWithAuth.get(url)
+}
+
 // webRTC 거래 방 생성 요청 - seller
 export function requestCreateTradeSection({state}, payload){
   // console.log("1. tradeSection 생성 - seller")

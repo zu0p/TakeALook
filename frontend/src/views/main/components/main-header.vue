@@ -297,6 +297,6 @@ export default {
     top: 5px;
   }
   .mobile-sidebar-wrapper {
-    z-index: 1;
+    z-index: 10;
   }
 </style>

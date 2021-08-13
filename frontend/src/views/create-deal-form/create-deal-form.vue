@@ -82,8 +82,8 @@ export default {
       form: {
         productName: '',
         categories: '',
-        reserveTime: '',
         basePrice: '',
+        reserveTime: '',
         description: '',
         registTime: new Date(),
         restrictTime: '',
@@ -172,28 +172,34 @@ export default {
       //console.log(state.date)
       //console.log(typeof state.date)
       state.loading = true
-
-      const body ={
-          basePrice: parseInt(state.form.basePrice),
-          categories: state.form.categories,
-          description: state.form.description,
-          imageUrl: state.src.imageUrl,
-          productName: state.form.productName,
-          registTime: state.date1,
-          reserveTime: state.date,
-          // restrictTime: state.form.restrictTime,
-          // state: state.form.state,
-      }
-      // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
-      store.dispatch('root/createPost', body)
-      .then(res=>{
-        console.log(res)
-        router.push({name: 'home'})
-      })
-      .catch(err=>{
-        state.loading = false
-        alert('필수 항목을 입력하세요.')
-        console.log(err)
+      createDealForm.value.validate((valid) => {
+        if (valid) {
+          const body ={
+            imageUrl: state.src.imageUrl,
+              productName: state.form.productName,
+              categories: state.form.categories,
+              basePrice: parseInt(state.form.basePrice),
+              registTime: state.date1,
+              reserveTime: state.date,
+              description: state.form.description,
+              // restrictTime: state.form.restrictTime,
+              // state: state.form.state,
+          }
+          // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
+          store.dispatch('root/createPost', body)
+          .then(res=>{
+            console.log(res)
+            router.push({name: 'home'})
+          })
+          .catch(err=>{
+            state.loading = false
+            alert('게시글 작성에 실패하였습니다.')
+            console.log(err)
+          })
+        } else if(!valid){
+          state.loading = false
+          alert('필수 항목을 입력하세요.')
+        }
       })
       // createDealForm.value.validate((valid) => {
       //   if (valid) {
