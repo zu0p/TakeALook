@@ -34,7 +34,7 @@ public class ImageController {
         log.info("image has arrived!!!! which is {}", img.getOriginalFilename());
         String webAppRoot = servletContext.getRealPath("/");
         log.info("webAppRoot: {} ",webAppRoot);
-        String relativeFolder = File.separator + "resources" + File.separator + "images" + File.separator;
+        String relativeFolder = "resources" + File.separator + "images" + File.separator;
         log.info("relativeFolder: {} ",relativeFolder);
         String filename = webAppRoot + relativeFolder + img.getOriginalFilename();
         log.info("filename: {} ",filename);
