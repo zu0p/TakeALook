@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="chat-window-body">
-      <div class="chat-window-message" v-for="(chat, idx) in info.chatList" :key="idx">
+      <div class="chat-window-message" v-for="(chat, idx) in info.data.chatList" :key="idx">
           <p class="chat-writer">{{chat.writer}}</p>
         <div class="chat-messages">
           <p class="chat-message">{{chat.message}}</p>
@@ -100,7 +100,6 @@ export default {
       },
       msg:'',
       roomId: props.roomId,
-      sendTime:'',
       connected: false,
       nickname: props.userId,
       btn: {
@@ -128,10 +127,11 @@ export default {
           })
           console.log(0)
           console.log(info)
+          var Datenow = Date.now()
           var message = {
             roomId: info.roomId,
             writer: info.nickname,
-            sendTime: Date.now(),
+            sendTime: Datenow.toString(),
           }
           stompClient.send("/pub/chat/enter", JSON.stringify(message), {})
         },
@@ -143,15 +143,18 @@ export default {
 
       const send = function () {
         if (stompClient && stompClient.connected) {
+          var Datenow = Date.now()
+          console.log('현재시간은' + Datenow)
           var message = {
             roomId: info.roomId,
             writer: info.nickname,
             message: info.msg,
-            sendTime: Date.now()
+            sendTime: Datenow.toString(),
           }
+          console.log(message.sendTime)
           stompClient.send('/pub/chat/message', JSON.stringify(message), {})
           console.log(1)
-          console.log(info.data)
+          console.log(JSON.stringify(message))
           console.log(2)
         }
         info.msg = ""
@@ -159,11 +162,11 @@ export default {
 
       const save = function () {
 
-        store.dispatch('root/requestSaveChatList', JSON.stringify(info.data) )
-          .then(res=> {
-            console.log(res)
-            console.log('채팅이 성공적으로 저장되었습니다')
-          })
+      store.dispatch('root/requestSaveChatList', (info.data) )
+        .then(res=> {
+          console.log(res)
+          console.log('채팅이 성공적으로 저장되었습니다')
+        })
         .catch(res=> {
           console.log('채팅내용저장에 실패했습니다.')
         })
