@@ -1,9 +1,9 @@
 <template>
-  <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 관심 목록</h1>
+  <h1 style="font-size:30px; text-align:left; margin-left:100px" v-loading.fullscreen.lock="state.isLoading">나의 관심 목록</h1>
   <div v-if="info.wishList">
     <ul class="infinite-list">
       <li v-for="wish in info.wishList" @click="clickDeal(wish.productId)" class="infinite-list-item" :key="wish.productId" >
-        <conference :deal="wish"/>
+        <conference :deal="wish" @buyerJoin="buyerJoin"/>
       </li>
       <el-pagination
         background
@@ -15,21 +15,33 @@
     </ul>
   </div>
   <div v-else>
-    <b>찜한 거래가 없습니다</b>
+    <div v-if="!info.searchResult" >
+      <h2 style="margin-top:200px; text-align:center;"><i class="el-icon-warning-outline" style="margin-left:5px;"></i>
+        찜한 거래가 없습니다</h2>
+      <span style="font-size:20;">이런 상품은 어떠세요?</span>
+      <el-row justify="center" style="margin-top:10px">
+        <ul v-for="deal in info.recommend" :key="deal.productId" @click="dealDetail(deal.productId)">
+          <recommend :deal="deal"/>
+        </ul>
+      </el-row>
+    </div>
   </div>
 </template>
 
 <script>
 import Conference from '@/views/home/components/conference'
-import { onMounted, reactive } from 'vue'
+import Recommend from '../deal-detail/components/recommend'
+import { onBeforeMount, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+// import { buyerJoinFunc } from '../webRTC/js/sessionFunc'
 
 export default {
   name: 'Keep-deal',
 
   components: {
     Conference,
+    Recommend,
   },
 
   setup () {
@@ -38,23 +50,52 @@ export default {
     const info = reactive({
       wishList:'',
       pageSize: 10,
-      total: 0
+      total: 0,
+      recommend: ''
+    })
+
+    const state = reactive({
+      isLoading: true,
+      name: ''
+    })
+
+    onBeforeMount(()=>{
+      store.dispatch('root/requestUserInfo')
+        .then(res=>{
+          state.name = res.data.userId
+      })
     })
 
     // 페이지 진입시 불리는 훅
     onMounted (() => {
       store.commit('root/setMenuActiveMenuName', 'keep-deal')
-      store.dispatch('root/requestWishList', {page:0, size:9})
+      store.dispatch('root/requestWishList', {page:0, size:info.pageSize})
           .then (res => {
             info.wishList = res.data.content
             info.total = res.data.totalElements
             info.pageSize = res.data.size
           })
+          .catch(err => {
+            store.dispatch('root/requestAllDeal')
+            .then (res => {
+              if (res.data.statusCode != 404) {
+                var temp = res.data.sort(()=>Math.random()-0.5)
+                info.recommend = []
+                for (var deal in temp) {
+                  if (info.recommend.length < 4){
+                    info.recommend.push(temp[deal])
+                  }
+                }
+                // console.log(info.recommend)
+              }
+            })
+          })
+        state.isLoading = false
     })
 
     const handleCurrentChange = function (e) {
       info.page = e-1
-      store.dispatch('root/requestWishList', {page:info.page, size:9})
+      store.dispatch('root/requestWishList', {page:info.page, size:info.pageSize})
         .then(res => {
           if (res.data.statusCode != 404) {
             info.wishList = res.data.content
@@ -71,7 +112,48 @@ export default {
       })
     }
 
-    return { info, clickDeal, handleCurrentChange }
+    // const buyerJoin = function(pid, price){
+    //   buyerJoinFunc(state.name, pid, price)
+    // }
+    const buyerJoin = function(pid, price){
+      const req = {
+        userId: state.name,
+        productId: pid
+      }
+      // console.log(req)
+
+      // 서버에 요청보내서 res의 room != none이면 입장
+      store.dispatch('root/requestJoinTrade', req)
+        .then(res=>{
+          let room = res.data.room
+          // console.log(res)
+          // console.log(res.data)
+          if(room=='createdButNotStarted'){
+            alert("거래가 시작되지 않아 입장할 수 없습니다.")
+          }
+          else if(room=='createdAndStarted'){
+            alert("거래 가격제안이 시작되어 입장할 수 없습니다.")
+          }
+          else if(room=='notCreated'){
+            alert("거래 세션이 생성되지 않아 입장할 수 없습니다.")
+          }
+          else{
+            // 거래 세션에 입장
+            router.push({
+              name: 'meeting-detail',
+              params: {
+                meetingId: room,
+                userId: state.name,
+                // isSeller: 0,
+                // basePrice: price,
+                // productId: pid
+              },
+            })
+          }
+        })
+    }
+
+    return { info, state, clickDeal, handleCurrentChange, buyerJoin }
   }
 }
 </script>

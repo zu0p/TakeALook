@@ -9,8 +9,9 @@ import ws from './webSocket.js'
  *                        The tag of the new element will be 'video<name>'
  * @return
  */
-export default function Participant(name) {
+export default function Participant(name, role) {
 	this.name = name;
+  this.role = role;
 	var container = document.createElement('div');
 	container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
 	container.id = name;
@@ -23,7 +24,7 @@ export default function Participant(name) {
 	container.appendChild(video);
 	container.appendChild(span);
 	container.onclick = switchContainerClass;
-  if(this.name=='seller'){
+  if(this.role=='seller'){
     document.getElementById('seller').appendChild(container);
   }
   else{
