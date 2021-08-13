@@ -53,8 +53,9 @@
           </div>
             <!-- 내가 생성한 거래가 아닌 경우 -->
           <div v-else>
-              <!-- 찜한 경우 -->
+            <!-- 찜한 경우 -->
             <div style="text-align:right; margin-top:30px" v-if="info.wish">
+              <el-button type="primary" @click="joinTrade" size="small">입장</el-button>
               <span style="color:#ffd04b; margin-right:10px;">{{ info.wishCount }}</span>
               <a class="custom-icon" @click="deletelikeDeal" style="color:#ffd04b;"><i class="el-icon-message-solid"></i></a>
             </div>
@@ -98,7 +99,7 @@ export default {
 
   props: ["deal"],
 
-  setup (props) {
+  setup (props,{emit}) {
     // console.log(props)
     const store = useStore()
     const router = useRouter()
@@ -145,6 +146,7 @@ export default {
     const startDeal = function (e) {
       e.stopPropagation()
       console.log("거래 시작")
+      emit('startTrade', props.deal)
     }
 
     const deletelikeDeal = function (e) {
@@ -172,7 +174,12 @@ export default {
       })
     }
 
-  return { info, updateDeal, startDeal, deletelikeDeal, likeDeal }
+    const joinTrade = function(e){
+      e.stopPropagation()
+      emit('buyerJoin', props.deal.productId, props.deal.basePrice)
+    }
+
+  return { info, updateDeal, startDeal, deletelikeDeal, likeDeal, joinTrade }
   }
 }
 </script>
