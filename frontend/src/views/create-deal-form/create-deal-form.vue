@@ -33,11 +33,6 @@
       <el-form-item prop="basePrice" label="가격" :label-width="state.formLabelWidth">
         <el-input v-model="state.form.basePrice" placeholder="가격을 입력하세요 (단위: 원)" maxlength="12" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off"></el-input>
       </el-form-item>
-      <!-- 호가단위 -->
-      <!-- 숫자만 입력 가능 -->
-      <el-form-item prop="basePrice" label="호가 단위" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.bidIncrement" placeholder="가격을 입력하세요 (단위: 원)" maxlength="12" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" autocomplete="off"></el-input>
-      </el-form-item>
       <!-- 제품 판매 예약시간 -->
       <el-form-item prop="reserveTime" label="제품 판매 예약시간" :label-width="state.formLabelWidth">
         <el-col :span="30">
@@ -88,7 +83,6 @@ export default {
         productName: '',
         categories: '',
         basePrice: '',
-        bidIncrement: '',
         reserveTime: '',
         description: '',
         registTime: new Date(),
@@ -107,9 +101,6 @@ export default {
           {required: true, message: '필수 선택 항목입니다.', trigger: 'blur'},
         ],
         basePrice:[
-          {required: true, message: '필수 입력 항목입니다.', trigger: 'blur'},
-        ],
-        bidIncrement:[
           {required: true, message: '필수 입력 항목입니다.', trigger: 'blur'},
         ],
         reserveTime:[
@@ -188,7 +179,6 @@ export default {
               productName: state.form.productName,
               categories: state.form.categories,
               basePrice: parseInt(state.form.basePrice),
-              bidIncrement: parseInt(state.form.bidIncrement),
               registTime: state.date1,
               reserveTime: state.date,
               description: state.form.description,
