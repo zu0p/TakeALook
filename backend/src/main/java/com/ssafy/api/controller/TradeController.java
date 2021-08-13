@@ -1,14 +1,9 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.paging.PageReq;
-import com.ssafy.api.request.trade.TradeRegistPatchReq;
-import com.ssafy.api.request.trade.TradeSectionCreateReq;
-import com.ssafy.api.request.trade.TradeSectionEnterReq;
+import com.ssafy.api.request.trade.*;
 import com.ssafy.api.response.product.ProductListGetRes;
-import com.ssafy.api.response.trade.TradeCompleteRes;
-import com.ssafy.api.response.trade.TradeListGetRes;
-import com.ssafy.api.response.trade.TradeRes;
-import com.ssafy.api.response.trade.TradeSectionCreateRes;
+import com.ssafy.api.response.trade.*;
 import com.ssafy.api.service.product.ProductService;
 import com.ssafy.api.service.trade.TradeService;
 import com.ssafy.api.service.user.UserService;
@@ -125,13 +120,52 @@ public class TradeController {
             TradeSection tradeSection = tradeService.findTradeSection(tradeSectionEnterReq);
             TradeSectionCreateRes tradeSectionCreateRes = TradeSectionCreateRes.of(tradeSection.getSeller(), tradeSection.getProductId());
             if (!tradeSection.getIsActive()) {
-                tradeSectionCreateRes.setRoom("none");
+                tradeSectionCreateRes.setRoom("createdButNotStarted");
+                log.info("setRoom createdButNotStarted, {}", tradeSectionCreateRes.getRoom());
+                return ResponseEntity.status(200).body(tradeSectionCreateRes);
+            }
+            if (tradeSection.getIsStarted()){
+                tradeSectionCreateRes.setRoom("createdAndStarted");
+                log.info("setRoom createdAndStarted, {}", tradeSectionCreateRes.getRoom());
             }
             return ResponseEntity.status(200).body(tradeSectionCreateRes);
         }catch (Exception e){
             TradeSectionCreateRes tradeSectionCreateRes = TradeSectionCreateRes.of(null, null);
-            tradeSectionCreateRes.setRoom("none");
+            tradeSectionCreateRes.setRoom("notCreated");
+            log.info("setRoom notCreated, {}", tradeSectionCreateRes.getRoom());
             return ResponseEntity.status(200).body(tradeSectionCreateRes);
         }
+    }
+
+    @PostMapping("/section/info")
+    @ApiOperation(value = "거래 방 정보반환", notes = "거래 방 정보를 반환한다.")
+    public ResponseEntity<?> tradeSectionInfo(@RequestBody @ApiParam(value="room번호", required = true) TradeSectionInfoReq tradeSectionInfoReq) {
+        String roomUrl = tradeSectionInfoReq.getRoom();
+        TradeSection tradeSection = tradeService.findTradeSectionByRoomUrl(roomUrl);
+        TradeSectionInfoRes tradeSectionInfoRes = TradeSectionInfoRes.of(
+                tradeSection.getProductId(),
+                tradeSection.getSeller(),
+                productService.getProductByProductId(tradeSection.getProductId()).getBasePrice(),
+                tradeSection.getPriceGap()
+        );
+        return ResponseEntity.status(200).body(tradeSectionInfoRes);
+    }
+
+    @PostMapping("/section/updateMaxPrice")
+    @ApiOperation(value = "거래 방 max price를 갱신", notes = "거래 방 max price를 갱신한다.")
+    public ResponseEntity<?> updateSectionMaxPrice (@RequestBody @ApiParam(value="curPrice, room번호", required = true) TradeSectionUpdatePriceReq tradeSectionUpdatePriceReq) {
+        TradeSection tradeSection = tradeService.findTradeSectionByRoomUrl(tradeSectionUpdatePriceReq.getRoom());
+        log.info("updateMaxPrice 입력: {}",tradeSectionUpdatePriceReq.toString());
+        log.info("찾은 tradeSection: {}",tradeSection.toString());
+        tradeService.updateTradeSection(tradeSection, tradeSectionUpdatePriceReq.getCurPrice());
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "maxPrice is now updated"));
+    }
+
+    @GetMapping("/section/started/{room}")
+    @ApiOperation(value = "거래 방 시작등록", notes = "거래 방 시작을 알린다.")
+    public ResponseEntity<?> isTradeSectionStarted(@PathVariable String room){
+        log.info("거래방 시작 등록 호출됨!!! 방번호 : {}", room);
+        tradeService.findTradeSectionAndStartByRoomUrl(room);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "trade is now started"));
     }
 }
