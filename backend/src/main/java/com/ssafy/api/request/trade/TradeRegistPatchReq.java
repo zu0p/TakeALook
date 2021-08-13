@@ -7,10 +7,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
-@ToString
 @ApiModel("TradeRegistPatchRequest")
 public class TradeRegistPatchReq {
     @ApiModelProperty(name="구매자 ID", example="ssafy_web")
@@ -22,5 +22,5 @@ public class TradeRegistPatchReq {
     @ApiModelProperty(name="판매자 ID", example="ssafy_web")
     String seller;
     @ApiModelProperty(name="거래한 시간", example="?")
-    LocalDate trade_date;
+    Date tradeDate;
 }

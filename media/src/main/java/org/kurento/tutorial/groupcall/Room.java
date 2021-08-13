@@ -51,6 +51,11 @@ public class Room implements Closeable {
   private final MediaPipeline pipeline;
   private final String name;
 
+  private int currentPrice;
+  private String buyer;
+  private String seller;
+
+
   public String getName() {
     return name;
   }
@@ -66,8 +71,13 @@ public class Room implements Closeable {
     this.close();
   }
 
-  public UserSession join(String userName, WebSocketSession session) throws IOException {
+  public UserSession join(String userName, WebSocketSession session,String role, int basePrice) throws IOException {
+    this.currentPrice = basePrice;
     log.info("ROOM {}: adding participant {}", this.name, userName);
+    if(role.equals("seller")){
+      log.info("seller {} entered the room", userName);
+      this.seller = userName;
+    }
     final UserSession participant = new UserSession(userName, this.name, session, this.pipeline);
     joinRoom(participant);
     participants.put(participant.getName(), participant);
@@ -79,6 +89,68 @@ public class Room implements Closeable {
     log.debug("PARTICIPANT {}: Leaving room {}", user.getName(), this.name);
     this.removeParticipant(user.getName());
     user.close();
+  }
+
+  public void broadCastMessages(String name, String newMessage) throws IOException{
+    final JsonObject newBroadCastMessage = new JsonObject();
+    newBroadCastMessage.addProperty("id", "broadCastNewMessage");
+    newBroadCastMessage.addProperty("message", newMessage);
+    newBroadCastMessage.addProperty("name", name);
+    for (final UserSession participant : participants.values()) {
+      try {
+        participant.sendMessage(newBroadCastMessage);
+      } catch (final IOException e) {
+        log.debug(e.getMessage());
+      }
+    }
+  }
+
+  public void startRequestCount() throws IOException{
+    final JsonObject newStartRequestCount = new JsonObject();
+    newStartRequestCount.addProperty("id", "startCount");
+    for (final UserSession participant : participants.values()) {
+      try {
+        participant.sendMessage(newStartRequestCount);
+      } catch (final IOException e) {
+        log.debug(e.getMessage());
+      }
+    }
+  }
+
+  // 실시간 가격 제안
+  public void realTimeProposals(String name, int price) throws IOException{
+    if(price < this.currentPrice) return;
+    this.buyer = name;
+    this.currentPrice = price;
+
+    final JsonObject newProposal = new JsonObject();
+    newProposal.addProperty("id","updatePrice");
+    newProposal.addProperty("currentPrice",this.currentPrice);
+
+    log.info("Message return {} {}","updatePrice", this.currentPrice);
+    for (final UserSession participant : participants.values()) {
+      try {
+        participant.sendMessage(newProposal);
+      } catch (final IOException e) {
+        log.debug(e.getMessage());
+      }
+    }
+  }
+
+  // 최종 낙찰의 경우
+  public void tradeNowClosed() throws IOException{
+    final JsonObject finalProposal = new JsonObject();
+    finalProposal.addProperty("id", "success");
+    finalProposal.addProperty("sellerId", this.seller);
+    finalProposal.addProperty("buyerId", this.buyer);
+    log.info("Message return {} {} {}","success", "seller", this.buyer);
+    for (final UserSession participant : participants.values()) {
+      try {
+        participant.sendMessage(finalProposal);
+      } catch (final IOException e) {
+        log.debug(e.getMessage());
+      }
+    }
   }
 
   private Collection<String> joinRoom(UserSession newParticipant) throws IOException {

@@ -12,11 +12,13 @@ import java.time.LocalDate;
 @Setter
 @ToString
 public class TradeSection extends BaseEntity {
-    String productId;
+    Long productId;
+    String seller;
     LocalDate startTime; // 실제 거래 방 시작 시간
     LocalDate endTime; // 실제 거래 방 종료 시간
     String title;
     Boolean isActive;
+    Boolean isStarted; // 이미 시작했는지 여부
     String url;
     Integer priceGap;
     Integer maxPrice;
