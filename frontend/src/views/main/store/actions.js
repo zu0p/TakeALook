@@ -56,7 +56,7 @@ export function requestModifyUserInfo({state}, payload){
 // 게시글 작성 요청 보내기
 export function createPost({commit}, postData) {
   const url = BASE_URL+'/product'
-  console.log(url)
+  // console.log(url)
   let body = postData
   // const url = BASE_URL+`/create-deal-form/${userId}/${}`
   return instanceWithAuth.post(url, body)
@@ -173,4 +173,62 @@ export function requestSearch({state}, payload){
   const url = BASE_URL+'/product/search'
   let body = payload
   return instanceWithAuth.post(url, body)
+}
+
+export function requestChatList({state}){
+  const url = BASE_URL+'/trade/chatroom'
+  return instanceWithAuth.get(url)
+}
+
+// webRTC 거래 방 생성 요청 - seller
+export function requestCreateTradeSection({state}, payload){
+  // console.log("1. tradeSection 생성 - seller")
+  const url = BASE_URL+'/trade/section/create'
+  return instanceWithAuth.post(url, payload)
+}
+
+// webRTC 거래 방 join 요청 - buyer
+export function requestJoinTrade({state}, payload){
+  const url = BASE_URL+'/trade/section/enter'
+  return instanceWithAuth.post(url, payload)
+}
+
+// webRTC seller가 카운트 시작
+export function requestSetStarted({state}, roomNumber){
+  console.log("3. 카운트 시작 클릭 시 start 바꾸기 요청")
+  const url = BASE_URL+`/trade/section/started/${roomNumber}`
+  return instanceWithAuth.get(url)
+}
+
+// webRTC 거래 매칭 성공 시 product의 isSold = true로 업데이트
+export function requestProductSold({state}, pid){
+  const url = BASE_URL+`/product/sold/${pid}`
+  return instanceWithAuth.patch(url)
+}
+
+// webRTC 거래 매칭 성공
+export function requestMatching({state}, payload){
+  const url = BASE_URL+'/trade/history'
+  return instanceWithAuth.post(url, payload)
+}
+
+// tradeSection의 정보 요청
+export function requestTradeSectionInfo({state}, payload){
+  // console.log("2. tradeSection info호출 - seller")
+  const url = BASE_URL+'/trade/section/info'
+  return instanceWithAuth.post(url, payload)
+}
+
+// tradeSection의 maxPrice update
+export function requestUpdateMaxPrice({state}, payload){
+  const url = BASE_URL+'/trade/section/updateMaxPrice'
+  return instanceWithAuth.post(url, payload)
+}
+
+// img 업로드 요청
+export function requestUploadImage({state}, formData){
+  const url = BASE_URL+'/image/upload'
+  return instanceWithAuth.post(url, formData,{
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
 }

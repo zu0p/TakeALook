@@ -1,69 +1,91 @@
 <template>
 
-  <el-row>
-    <el-scrollbar class="chat-scrollbar" height="600px" ref="scrollbar">
-      <el-card shadow="never" style="width: 90%" v-for="i in state.chats" :key="i">
-        <div class="messages">
-          <el-tag type="info" style="margin-right:10px"><span>{{i.userId}}</span></el-tag>
-          <span>{{i.message}}</span>
-        </div>
-      </el-card>
-    </el-scrollbar>
-  </el-row>
-  <el-row>
-    <el-input v-model="state.inputMessage" style="width: 70%; margin: 0 3% 0 6px"></el-input>
-    <el-button @click="clickSend">전송</el-button>
-  </el-row>
+  <!-- <el-row> -->
+    <!-- <el-scrollbar class="chat-scrollbar" height="600px" ref="scrollbar"> -->
+  <div id="container">
+    <div id="chat-container">
+      <ul id="chat">
+        <li class="chats" v-for="i in state.chats" :key="i">
+          <el-card shadow="never" style="width: 90%">
+            <div class="messages">
+              <el-tag v-if="!i.me" type="info"><span>{{i.name}}</span></el-tag>
+              <el-tag v-if="i.me" type="success"><span>{{i.name}}</span></el-tag>
+              <span>{{i.message}}</span>
+            </div>
+          </el-card>
+        </li>
+      </ul>
+    </div>
+      <!-- </el-scrollbar> -->
+    <!-- </el-row> -->
+    <div id="send-container">
+      <el-input v-model="state.inputMessage" style="width: 70%; margin: 0 3% 0 6px"  @keyup.enter="clickSend"></el-input>
+      <el-button @click="clickSend">전송</el-button>
+    </div>
+  </div>
 
 </template>
 
 <script>
 import { reactive, ref } from '@vue/reactivity'
-import { onUpdated } from '@vue/runtime-core'
+import { onBeforeUpdate, onMounted, onUpdated, watch, watchEffect } from '@vue/runtime-core'
+import { useStore } from 'vuex'
+import ws from '../js/webSocket'
+
 export default {
   name: 'chat-form',
+
+  props: ['name', 'room', 'receiveMessage'],
+
   setup(props, {emit}){
-    const scrollbar = ref(null)
+    const store = useStore()
     let state = reactive({
-      chats:[
-        {
-          userId: 'zu0p',
-          message: '생활기스 없나요??'
-        },
-        {
-          userId: 'zu0p',
-          message: '뒷면도 보여주세요!'
-        },
-        {
-          userId: 'test2',
-          message: '거래 시작 언제하나요?'
-        },
-        {
-          userId: 'test1',
-          message: '잘안보여요..'
-        },
-        {
-          userId: 'test3',
-          message: '좀 더 가까이서 보여주실 수 있나요?'
-        },
-      ],
+      curUserId: props.name,
+      roomId: props.room,
+      chats: [],
       inputMessage : ''
     })
 
+    const propsMsg = watchEffect(()=>{
+      //console.log(props.receiveMessage)
+      if(props.receiveMessage.flag){
+        const jsoned = JSON.parse(props.receiveMessage.message)
+        const received = {
+          name: jsoned.name,
+          message: jsoned.message,
+          me: state.curUserId==jsoned.name?true:false
+        }
+        state.chats.push(received)
+        console.log(state.chats)
+
+        emit('endReceiveMsg')
+      }
+    })
+
     const clickSend = function(){
+      if(state.inputMessage=='') return
       const newMessage ={
-        userId: 'zu0p',
+        id: 'sendChatMessage',
+        name: state.curUserId,
+        room: state.roomId,
         message: state.inputMessage
       }
 
-      state.chats.push(newMessage)
+      ws.send(JSON.stringify(newMessage))
       state.inputMessage =''
 
     }
 
+    onMounted(()=>{
+      store.dispatch('root/requestUserInfo')
+        .then(res=>{
+          state.curUserId= res.data.userId
+        })
+    })
+
     onUpdated(()=>{
-      console.log(scrollbar)
-      scrollbar.setScrollTop(600)
+      let scroll = document.getElementById("chat-container")
+      scroll.scrollTop = scroll.scrollHeight
     })
 
     return {state, clickSend}
@@ -74,8 +96,29 @@ export default {
 <style>
 .messages{
   text-align: left;
+  margin-right:5px;
 }
 .chat-scrollbar{
   width: 100%!important;
+}
+#chat{
+  /* display: flex; */
+  /* overflow: scroll; */
+  /* flex-direction: column-reverse; */
+  /* overflow-y: auto; */
+  /* height: 500px; */
+  list-style-type: none;
+}
+#container{
+  border: thin solid gainsboro;
+  border-radius: 4px;
+}
+#chat-container{
+  overflow-y: scroll;
+  height: 70vh;
+}
+#send-container{
+  /* height: 30vh; */
+  margin: 0 0 15px 0;
 }
 </style>
