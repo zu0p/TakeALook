@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
+import static org.kurento.jsonrpc.client.JsonRpcClient.log;
+
 @Service
 public class ImageServiceImpl implements ImageService{
     @Override
@@ -17,8 +19,10 @@ public class ImageServiceImpl implements ImageService{
         String absolutePath = new File("").getAbsolutePath();
         String path = "\\src\\main\\resources\\images\\";
 
-        File file = new File(absolutePath+path+imageFileName);
+        log.info("file saved {} ", absolutePath+path+imageFileName);
 
+        File file = new File(absolutePath+path+imageFileName);
+        log.info("file name {} ",file.toString());
         file.getParentFile().mkdirs();
         image.transferTo(file);
     }
