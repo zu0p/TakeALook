@@ -2,7 +2,7 @@
   <el-container class="update-deal-form">
     <!-- 이미지 업로드 폼 -->
     <form class="image-upload-form" method="post" enctype="multipart/form-data">
-      <img class="wrapper" :src="imgUrl" alt="">
+      <img class="wrapper" :src="state.imgUrl" alt="">
       <div class="button">
           <label for="chooseFile">
               👉 이곳을 눌러 사진을 업로드 하세요 👈
@@ -82,8 +82,9 @@ export default {
     const router = useRouter()
     // 독립적인 반응형 값 생성 ref()
     const updateDealForm = ref(null)
-    let imgUrl = require(`@/assets/pimages/${props.productId}.jpg`)
+    // let imgUrl = require(`@/assets/pimages/${props.productId}.jpg`)
     const state = reactive({
+      imgUrl = require(`@/assets/pimages/${props.productId}.jpg`),
       form: {
         productName: '',
         categories: '',
@@ -159,7 +160,7 @@ export default {
       // img.src = res.path[0].files[0] + new Date().getTime()
 
       const tmp = URL.createObjectURL(res.path[0].files[0])
-      imgUrl = tmp
+      state.imgUrl = tmp
     }
 
         // reserveTime 의 타입은 String이다.
@@ -246,7 +247,7 @@ export default {
       window.location='/'
     }
 
-    return { imgUrl, updateDealForm, state, clickUpdate, clickCancel, loadFile,  }
+    return { updateDealForm, state, clickUpdate, clickCancel, loadFile,  }
   },
   // imageUrl, el-date-picker 관련 method
   methods: {
