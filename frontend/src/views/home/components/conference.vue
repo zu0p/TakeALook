@@ -8,7 +8,7 @@
             <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a>
             <!-- 찜한 거래인 경우 -->
             <a class="custom-icon2" v-else style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
-            <img :src="require(`@/assets/pimages/${deal.productId}.jpg`)" alt="" style="width: 100%; display: block;">
+            <img :src="imgUrl" alt="" style="width: 100%; display: block;">
         </div>
       <div style="text-align:left; padding: 14px;">
         <span class="title enddeal">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
@@ -34,7 +34,7 @@
       <!-- 거래가 시작되지 않은 경우 -->
     <el-card :body-style="{ padding: '0px' }" shadow="hover" v-else>
       <div class="image-wrapper">
-        <img :src="require(`@/assets/pimages/${deal.productId}.jpg`)" alt="" style="width: 100%; display: block;">
+        <img :src="imgUrl" alt="" style="width: 100%; display: block;">
       </div>
       <div style="text-align:left; padding: 14px;" @click="dealDetail">
         <span class="title">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
@@ -75,7 +75,7 @@
   <div v-else style="text-align:center">
     <el-card :body-style="{ padding: '0px' }" shadow="hover">
       <div class="image-wrapper">
-        <img :src="require(`@/assets/pimages/${deal.productId}.jpg`)" alt="" style="width: 100%; display: block;">
+        <img :src="imgUrl" alt="" style="width: 100%; display: block;">
       </div>
       <div style="text-align: left; padding: 14px;">
         <span class="title">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
@@ -104,7 +104,7 @@ export default {
     const store = useStore()
     const router = useRouter()
 
-
+    const imgUrl = require(`@/assets/pimages/${deal.productId}.jpg`)
     const info = reactive({
       wishCount: 0,
       isLogin: false,
@@ -179,7 +179,7 @@ export default {
       emit('buyerJoin', props.deal.productId, props.deal.basePrice)
     }
 
-  return { info, updateDeal, startDeal, deletelikeDeal, likeDeal, joinTrade }
+  return { imgUrl, info, updateDeal, startDeal, deletelikeDeal, likeDeal, joinTrade }
   }
 }
 </script>
