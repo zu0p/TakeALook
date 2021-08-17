@@ -82,7 +82,7 @@ export default {
     const router = useRouter()
     // 독립적인 반응형 값 생성 ref()
     const updateDealForm = ref(null)
-    const imgUrl = require(`@/assets/pimages/${productId}.jpg`)
+    const imgUrl = require(`@/assets/pimages/${props.productId}.jpg`)
     const state = reactive({
       form: {
         productName: '',
