@@ -1,23 +1,14 @@
 package com.ssafy.api.controller;
 
-import com.ssafy.api.request.product.ProductRegisterPostReq;
 import com.ssafy.api.response.chat.ChatListGetRes;
-import com.ssafy.api.response.product.ProductListGetRes;
-import com.ssafy.api.response.product.ProductRegistPostRes;
 import com.ssafy.api.service.chat.ChatService;
-import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
-import com.ssafy.db.entity.Product;
-import com.ssafy.db.repository.chat.ChatRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
 

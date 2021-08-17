@@ -27,11 +27,10 @@ public class ImageController {
     @Autowired
     ImageService imageService;
 
-    @PostMapping(value = "/upload", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/upload/{productId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation(value = "이미지 업로드", notes = "이미지를 받으면 서버에 저장한다.")
-    public ResponseEntity<?> uploadImages(@RequestParam("imageFile") MultipartFile image) throws IOException {
+    public ResponseEntity<?> uploadImages(@RequestParam("imageFile") MultipartFile image, @PathVariable Long productId) throws IOException {
         log.info("image has arrived!!!! which is {}", image.getOriginalFilename());
-        Long productId = 111L;
         imageService.saveImage(image,productId);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200,"Images arrived"));
     }
