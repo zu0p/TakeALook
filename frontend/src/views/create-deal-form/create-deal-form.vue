@@ -164,7 +164,7 @@ export default {
     }
 
     const saveFile = function (pid) {
-      console.log("saveFile func")
+      // console.log("saveFile func")
       let img = document.getElementById('chooseFile')
 
       let fd = new FormData()
@@ -177,6 +177,7 @@ export default {
       store.dispatch('root/requestUploadImage', req)
       .then(res => {
         //console.log(res)
+        alert('상품 등록이 완료되었습니다!')
         router.push({name: 'home'})
       })
       .catch(err=>{
