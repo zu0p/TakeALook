@@ -63,7 +63,6 @@ public class TradeServiceImpl implements TradeService {
         return chatList;
     }
 
-
     @Override
     public TradeHistory createTradeHistory(TradeRegistPatchReq buyUpdatePostReq) {
         String roomId = UUID.randomUUID().toString();
@@ -124,7 +123,6 @@ public class TradeServiceImpl implements TradeService {
         tradeSectionRepository.save(tradeSection);
         return tradeSection;
     }
-
 
     @Override
     public void deleteTradeInfo(Long productId) {

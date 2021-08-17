@@ -8,7 +8,8 @@
         <li class="chats" v-for="i in state.chats" :key="i">
           <el-card shadow="never" style="width: 90%">
             <div class="messages">
-              <el-tag type="info"><span>{{i.name}}</span></el-tag>
+              <el-tag v-if="!i.me" type="info"><span>{{i.name}}</span></el-tag>
+              <el-tag v-if="i.me" type="success"><span>{{i.name}}</span></el-tag>
               <span>{{i.message}}</span>
             </div>
           </el-card>
@@ -51,7 +52,8 @@ export default {
         const jsoned = JSON.parse(props.receiveMessage.message)
         const received = {
           name: jsoned.name,
-          message: jsoned.message
+          message: jsoned.message,
+          me: state.curUserId==jsoned.name?true:false
         }
         state.chats.push(received)
         console.log(state.chats)
@@ -107,11 +109,16 @@ export default {
   /* height: 500px; */
   list-style-type: none;
 }
+#container{
+  border: thin solid gainsboro;
+  border-radius: 4px;
+}
 #chat-container{
   overflow-y: scroll;
   height: 70vh;
 }
 #send-container{
-  height: 30vh;
+  /* height: 30vh; */
+  margin: 0 0 15px 0;
 }
 </style>

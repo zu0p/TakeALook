@@ -2,6 +2,7 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.user.UserRegisterPostReq;
 import com.ssafy.api.response.user.UserRegistPostRes;
+import com.ssafy.api.service.image.ImageService;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.User;
 import io.swagger.annotations.Api;
@@ -24,6 +25,8 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/image")
 public class ImageController {
+    @Autowired
+    ImageService imageService;
 
     @Autowired
     ServletContext servletContext;
