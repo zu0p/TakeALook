@@ -84,7 +84,7 @@ export default {
     const updateDealForm = ref(null)
     // let imgUrl = require(`@/assets/pimages/${props.productId}.jpg`)
     const state = reactive({
-      imgUrl = require(`@/assets/pimages/${props.productId}.jpg`),
+      imgUrl : require(`@/assets/pimages/${props.productId}.jpg`),
       form: {
         productName: '',
         categories: '',
