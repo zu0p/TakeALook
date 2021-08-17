@@ -176,14 +176,14 @@ export default {
         if (valid) {
           const body ={
             imageUrl: state.src.imageUrl,
-              productName: state.form.productName,
-              categories: state.form.categories,
-              basePrice: parseInt(state.form.basePrice),
-              registTime: state.date1,
-              reserveTime: state.date,
-              description: state.form.description,
-              // restrictTime: state.form.restrictTime,
-              // state: state.form.state,
+            productName: state.form.productName,
+            categories: state.form.categories,
+            basePrice: parseInt(state.form.basePrice),
+            registTime: state.date1,
+            reserveTime: state.date,
+            description: state.form.description,
+            // restrictTime: state.form.restrictTime,
+            // state: state.form.state,
           }
           // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
           store.dispatch('root/createPost', body)

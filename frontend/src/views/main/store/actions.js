@@ -180,6 +180,13 @@ export function requestChatList({state}){
   return instanceWithAuth.get(url)
 }
 
+// 채팅 조회
+export function requestChatData({state}, payload){
+  const url = BASE_URL+`/chat/${payload}`
+  return instanceWithAuth.get(url)
+}
+
+// 채팅내용 저장 요청
 export function requestSaveChatList({state}, payload){
   const url = BASE_URL+'/chat'
   let body = payload
