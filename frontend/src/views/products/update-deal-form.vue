@@ -151,12 +151,15 @@ export default {
 
         // 이미지 파일 처리
     const loadFile = function (res) {
-      const tmp = URL.createObjectURL(res.path[0].files[0])
+      //const tmp = URL.createObjectURL(res.path[0].files[0])
       // console.log(imgUrl)
       // state.src.imageUrl = imgUrl
 
-      let img = document.getElementById('chooseFile')
-      img.src = tmp+new Date().getTime()
+      // let img = document.getElementById('chooseFile')
+      // img.src = res.path[0].files[0] + new Date().getTime()
+
+      const tmp = URL.createObjectURL(res.path[0].files[0])
+      imgUrl = tmp
     }
 
         // reserveTime 의 타입은 String이다.
@@ -222,9 +225,9 @@ export default {
            })
           .then(res=>{
             //console.log(res.data)
+            saveFile(props.productId)
           }).then(()=>{
             state.loading = false
-            saveFile(props.productId)
           })
           .catch(err=>{
             state.loading = false
