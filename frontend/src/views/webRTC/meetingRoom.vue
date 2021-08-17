@@ -366,6 +366,27 @@ export default {
   border-radius: 4px;
   min-height: 500px;
 }
+.participant {
+	border-radius: 4px;
+	/* border: 2px groove; */
+	margin-left: 5;
+	margin-right: 5;
+	/* width: 150; */
+	text-align: center;
+	overflow: hide;
+	/* float: left; */
+	padding: 5px;
+	border-radius: 10px;
+	-webkit-box-shadow: 0 0 200px rgba(255, 255, 255, 0.5), 0 1px 2px
+		rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0 200px rgba(255, 255, 255, 0.5), 0 1px 2px
+		rgba(0, 0, 0, 0.3);
+	/*Transition*/
+	-webkit-transition: all 0.3s linear;
+	-moz-transition: all 0.3s linear;
+	-o-transition: all 0.3s linear;
+	transition: all 0.3s linear;
+}
 .participant video {
   border-radius: 4px;
 }
@@ -374,5 +395,14 @@ export default {
 }
 .el-aside{
   overflow: hidden;
+}
+#col-buyer{
+  margin: 5px 5px 10px 5px;
+}
+#seller{
+  margin: 0 0 15px 0;
+}
+#buyer{
+  overflow-x: scroll;
 }
 </style>
