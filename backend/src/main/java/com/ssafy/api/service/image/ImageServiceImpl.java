@@ -22,6 +22,10 @@ public class ImageServiceImpl implements ImageService{
         log.info("file saved {} ", absolutePath+path+imageFileName);
 
         File file = new File(absolutePath+path+imageFileName);
+        if( file.exists() ){
+            file.delete();
+            file = new File(absolutePath+path+imageFileName);
+        }
         log.info("file name {} ",file.toString());
         file.getParentFile().mkdirs();
         image.transferTo(file);
