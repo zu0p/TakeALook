@@ -1,7 +1,7 @@
 <template>
   <div style="margin-left:20px; margin-right:20px">
     <el-container style="text-align:center; justify-content:center">
-      <img :src="info.imageUrl" alt="" style="max-width:700px; max-height:700px;">
+      <img :src="require(`@/assets/pimages/${state.productId}.jpg`)" alt="" style="max-width:700px; max-height:700px;">
       <el-form ref="form" label-width="120px" style="text-align:left; margin-left:10%;" label-position="left">
         <h1 style="font-size:28px; margin-bottom:5px;">{{ info.productName }}</h1>
         <div style="text-align:right;" v-if="info.mine">
@@ -99,7 +99,7 @@ export default {
       categories: '',
       description: '',
       reserveTime: '',
-      imageUrl: '<%= BASE_URL %>',
+      imageUrl: '',
       seller: '',
       recommend: '',
       registTime: '',
@@ -114,8 +114,10 @@ export default {
 
     onBeforeMount (() => {
       state.productId = route.params.productId
-      info.imageUrl += `src/assets/pimages/${state.productId}.jpg`
-      console.log(info.imageUrl)
+      // // info.imageUrl += `src/assets/pimages/${state.productId}.jpg`
+      // info.imageUrl = `1`
+      // console.log(info.imageUrl)
+      // console.log(window.location.pathname)
       store.dispatch('root/requestDealDetail', state.productId)
         .then(res=>{
           if(res.data.statusCode == 404){
