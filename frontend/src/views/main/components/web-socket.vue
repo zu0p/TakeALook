@@ -53,7 +53,7 @@ export default {
           });
           var message = {
           roomId: this.roomId,
-          writer: this.nickname
+          writer: this.nickname,
         };
 
           this.stompClient.send("/pub/chat/enter", JSON.stringify(message), {});
@@ -71,7 +71,7 @@ export default {
         var message = {
          roomId: this.roomId,
           message: this.msg,
-           writer: this.nickname
+           writer: this.nickname,
         };
         this.stompClient.send("/pub/chat/message", JSON.stringify(message), {});
       }

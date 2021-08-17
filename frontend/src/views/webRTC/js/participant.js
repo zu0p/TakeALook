@@ -15,26 +15,30 @@ export default function Participant(name, role) {
 	var container = document.createElement('div');
 	container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
 	container.id = name;
-	var span = document.createElement('span');
+	// var span = document.createElement('span');
+	var div = document.createElement('div');
 	var video = document.createElement('video');
 	var rtcPeer;
 
 	Object.defineProperty(this, 'rtcPeer', { writable: true});
 
 	container.appendChild(video);
-	container.appendChild(span);
+	// container.appendChild(span);
+	container.appendChild(div);
 	container.onclick = switchContainerClass;
   if(this.role=='seller'){
     document.getElementById('seller').appendChild(container);
   }
   else{
     var col = document.createElement('el-col')
+    col.id = 'col-buyer'
     col.appendChild(container)
     document.getElementById('buyer').appendChild(col);
     // document.getElementById('participants').appendChild(container);
   }
 
-	span.appendChild(document.createTextNode(name));
+	// span.appendChild(document.createTextNode(name));
+	div.appendChild(document.createTextNode(name));
 
 	video.id = 'video-' + name;
 	video.autoplay = true;

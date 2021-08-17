@@ -8,11 +8,14 @@ import lombok.Setter;
 
 import java.util.Date;
 
+/**
+ * 상품 API ([GET] /api/v1/product) 요청에 대한 응답값 정의.
+ */
 @Getter
 @Setter
-@ApiModel("ProductUpdatePatchResponse")
-public class ProductUpdatePatchRes {
-    @ApiModelProperty(name="판매자")
+@ApiModel("ProductRegistResponse")
+public class ProductGetInfoRes {
+    @ApiModelProperty(name="상품 판매자")
     String seller;
     @ApiModelProperty(name="상품명")
     String productName;
@@ -50,4 +53,5 @@ public class ProductUpdatePatchRes {
         res.setRestrictTime(product.getRestrictTime());
         return res;
     }
+
 }
