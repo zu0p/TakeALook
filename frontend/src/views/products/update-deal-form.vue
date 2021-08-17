@@ -2,7 +2,7 @@
   <el-container class="update-deal-form">
     <!-- 이미지 업로드 폼 -->
     <form class="image-upload-form" method="post" enctype="multipart/form-data">
-      <img class="wrapper" :src="state.src.imageUrl" alt="">
+      <img class="wrapper" :src="require(`@/assets/pimages/${productId}.jpg`)" alt="">
       <div class="button">
           <label for="chooseFile">
               👉 이곳을 눌러 사진을 업로드 하세요 👈
@@ -177,6 +177,26 @@ export default {
       state.date = res
     }
 
+    const saveFile = function (pid) {
+      console.log("saveFile func")
+      let img = document.getElementById('chooseFile')
+
+      let fd = new FormData()
+      fd.append('imageFile', img.files[0])
+
+      const req = {
+        imageFile: fd,
+        productId: pid
+      }
+      store.dispatch('root/requestUploadImage', req)
+      .then(res => {
+        //console.log(res)
+        router.push({name: 'home'})
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+    }
 
     const clickUpdate = function () {
       // console.log(state.form.categories)
@@ -196,17 +216,17 @@ export default {
             reserveTime: state.form.reserveTime,
             description: state.form.description,
            })
-            .then(res=>{
-              //console.log(res.data)
-              router.push({name:'home'})
-            }).then(()=>{
-              state.loading = false
-            })
-            .catch(err=>{
-              state.loading = false
-              alert("게시글 수정에 실패하였습니다.")
-              console.log(err)
-            })
+          .then(res=>{
+            //console.log(res.data)
+          }).then(()=>{
+            state.loading = false
+            saveFile(props.productId)
+          })
+          .catch(err=>{
+            state.loading = false
+            alert("게시글 수정에 실패하였습니다.")
+            console.log(err)
+          })
         } else if(!valid){
           state.loading = false
           alert('필수 항목을 입력하세요.')

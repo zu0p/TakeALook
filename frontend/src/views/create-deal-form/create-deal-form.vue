@@ -210,9 +210,9 @@ export default {
           // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
           store.dispatch('root/createPost', body)
           .then(res=>{
-            console.log(res.data)
+            // console.log(res.data)
             let pid = res.data.productId
-            console.log(pid)
+            // console.log(pid)
             saveFile(pid)
             //router.push({name: 'home'})
           })
