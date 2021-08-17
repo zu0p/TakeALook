@@ -26,8 +26,6 @@ public class ProductUpdatePatchReq {
     String state;
     @ApiModelProperty(name="상품 사진 imageUrl", example = "your_product_image")
     String imageUrl;
-    @ApiModelProperty(name="상품 등록 시간 registTime", example = "regist time")
-    Date registTime;
     @ApiModelProperty(name="거래 방 예약 시간 reserveTime", example = "reserve time")
     Date reserveTime;
     @ApiModelProperty(name="거래 방 예약 시간 reserveTime", example = "reserve time")
