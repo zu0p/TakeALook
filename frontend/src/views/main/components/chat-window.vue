@@ -11,17 +11,30 @@
         <img :src="info.btn.BackIcon" :alt="info.btn.name"/>
       </div>
       <div class="chat-window-header-title">
-        <p>판매자 닉네임</p>
+        <p>{{info.productName}}</p>
       </div>
       <div class="chat-window-header-close-button" @click="$emit('close')">
         <img :src="info.btn.CloseIcon" :alt="info.btn.name"/>
       </div>
     </div>
-    <div class="chat-window-body">
-      <div class="chat-window-message" v-for="(chat, idx) in info.chatList" :key="idx">
-          <p class="chat-writer">{{chat.writer}}</p>
-        <div class="chat-messages">
-          <p class="chat-message">{{chat.message}}</p>
+    <div class="chat-window-body" id="chat-window-scroll">
+      <div class="chat-window-message" v-for="(chat, idx) in info.saveChatList" :key="idx">
+        <div v-if="info.saveChatList" id="chatContent">
+          <div v-if="userId===chat.writer">
+            <p class="chat-writer1"></p>
+            <div class="chat-messages1">
+              <p class="chat-message1">{{chat.message}}</p>
+            </div>
+          </div>
+          <div v-else>
+            <p class="chat-writer">{{chat.writer}}</p>
+            <div class="chat-messages">
+              <p class="chat-message">{{chat.message}}</p>
+            </div>
+          </div>
+        </div>
+        <div v-else>
+          <p>아직 메세지가 없습니다...</p>
         </div>
       </div>
       <div>
@@ -78,6 +91,7 @@ import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import CloseIcon from '@/assets/images/close-icon-big.png'
 import BackIcon from '@/assets/images/back-icon-big.png'
+import { onBeforeMount, onUnmounted, onUpdated } from '@vue/runtime-core'
 
 
 export default {
@@ -89,18 +103,25 @@ export default {
     BackIcon,
   },
 
-  props:["roomId"],
+  props:["roomId","userId","productName"],
+
+
 
   setup(props){
+
+    console.log(props.userId)
+    console.log(props.productName)
     const store = useStore()
     const info = reactive({
-      chatList: [],
-      messageList: [],
+      data: {
+        chatList: [],
+      },
+      saveChatList: [],
       msg:'',
-      roomId:props.roomId,
-      sendTime:'',
+      productName: props.productName,
+      roomId: props.roomId,
       connected: false,
-      nickname: "human001",
+      nickname: props.userId,
       btn: {
         CloseIcon,
         BackIcon,
@@ -108,49 +129,112 @@ export default {
        },
     })
 
-      const serverURL = "https://i5d101.p.ssafy.io:8080/stomp/chat"
-      var socket = new SockJS(serverURL)
-      const stompClient = Stomp.over(socket)
-      console.log(`연결 시도, ${serverURL}`)
-      stompClient.connect(
-        {},
-        frame => {
-          info.connected = true
-          console.log("연결 성공", frame)
-          console.log(store)
 
-          stompClient.subscribe("/sub/chat/room/"+info.roomId, res=>{
-            console.log("sub 성공", res.body)
-            info.messageList.push(res.body)
-            info.chatList.push(JSON.parse(res.body))
-          })
-          var message = {
-            roomId: info.roomId,
-            writer: info.nickname,
-            sendTime: Date.now(),
+    onBeforeMount(()=>{
+      console.log(info.roomId)
+      store.dispatch('root/requestChatData', info.roomId)
+        .then(res=>{
+          // info.saveChatList = res.data
+          // console.log(res.data)
+          // console.log(info.saveChatList)
+          if(res.data.statusCode != 404) {
+            // console.log('채팅 내용을 성공적으로 불러왔습니다.')
+            info.saveChatList = res.data
           }
-          stompClient.send("/pub/chat/enter", JSON.stringify(message), {})
-        },
-        err => {
-          console.log("연결 실패", err)
-          info.connected = false
-        }
-      )
+          else{
+            info.saveChatList = false
+          }
+        })
+        .catch(res=>{
+          console.log('채팅 내용을 불러오는데 실패했습니다.')
+        })
+    })
 
-      const send = function () {
-        if (stompClient && stompClient.connected) {
-          var message = {
-            roomId: info.roomId,
-            writer: info.nickname,
-            message: info.msg,
-            sendTime: Date.now()
-          }
-          stompClient.send('/pub/chat/message', JSON.stringify(message), {})
-        }
-        info.msg = ""
+    const serverURL = "https://i5d101.p.ssafy.io:8080/stomp/chat"
+    var socket = new SockJS(serverURL)
+    const stompClient = Stomp.over(socket)
+    // console.log(`연결 시도, ${serverURL}`)
+    stompClient.connect(
+      {},
+      frame => {
+        info.connected = true
+        // console.log("연결 성공", frame)
+        // console.log('방 제목 :'+info.roomId, '닉네임 :'+info.nickname)
+
+        stompClient.subscribe("/sub/chat/room/"+info.roomId, res=>{
+          // console.log("sub 성공", res.body)
+          // if(!info.saveChatList) {
+            // info.saveChatList = [{"writer":info.nickname,"message":info.nickname+"님이 채팅방에 참여하였습니다."}]
+          // }
+          // else{
+            // }
+          info.saveChatList.push(JSON.parse(res.body))
+          info.data.chatList.push(JSON.parse(res.body))
+        })
+        // console.log(0)
+        // console.log(info)
+        // var Datenow = Date.now()
+        // var message = {
+        //   roomId: info.roomId,
+        //   writer: info.nickname,
+        //   sendTime: Datenow.toString(),
+        // }
+        window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
+
+      },
+      err => {
+        console.log("연결 실패", err)
+        info.connected = false
       }
-    return {info, send}
-  }
+    )
+
+
+
+    // 전송 시 chatList에 추가
+    const send = function () {
+      if (stompClient && stompClient.connected) {
+        var Datenow = Date.now()
+        console.log('현재시간은' + Datenow)
+        var message = {
+          roomId: info.roomId,
+          writer: info.nickname,
+          message: info.msg,
+          sendTime: Date.now()
+        }
+        stompClient.send('/pub/chat/message', JSON.stringify(message), {})
+        // console.log(1)
+        // console.log(JSON.stringify(message))
+      }
+      info.msg = ""
+    }
+
+    // 대화내용 서버에 저장하기
+    const save = function () {
+    store.dispatch('root/requestSaveChatList', (info.data) )
+      .then(res=> {
+        // console.log('채팅이 성공적으로 저장되었습니다')
+        // console.log(res)
+      })
+      .catch(res=> {
+        console.log('채팅내용저장에 실패했습니다.')
+      })
+    }
+
+    // 어떤 식으로든 채팅 화면을 벗어나면 채팅내용이 저장
+    onUnmounted(()=>{
+      save()
+      stompClient.disconnect()
+    })
+
+    onUpdated(()=>{
+      let scroll = document.getElementById("chat-window-scroll")
+      scroll.scrollTop = scroll.scrollHeight
+    })
+    // console.log(scroll)
+
+    return {info, send, save, }
+  },
+
 }
 </script>
 
@@ -283,22 +367,23 @@ export default {
   }
 }
 .chat-window-body {
-  width: 100%;
+  /* 너비330px, 패딩 좌우 20xp씩 총 370px */
+  width: 330px;
+  max-height: 429px;
   padding: 5px 20px;
   border-radius: 6px;
   font-weight: 300;
   vertical-align: top;
   position: relative;
+  /* 채팅 내용이 화면에 채울 수 있는 내용보다 더 많아지면 자동으로 스크롤 바 생성 */
+  overflow: auto;
+  height: 70vh;
 }
 
 .chat-window-body .chat-window-message {
   width: 100%;
 }
 
-.chat-messages {
-  display: flex;
-  white-space: pre-wrap;
-}
 
 .chat-window-body .chat-window-message .chat-writer {
   text-align: left;
@@ -308,6 +393,11 @@ export default {
   font-size: 12px;
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
+}
+
+.chat-messages {
+  display: flex;
+  white-space: pre-wrap;
 }
 
 .chat-window-body .chat-window-message .chat-message {
@@ -326,22 +416,53 @@ export default {
   line-height: 1.4;
   position: relative;
   -webkit-font-smoothing: subpixel-antialiased;
-
-
 }
 
 
-.chat-message--me {
+.chat-window-body .chat-window-message .chat-writer1 {
   text-align: right;
+  max-height: 20px;
+  margin-bottom: 5px;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.4;
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 
-.chat-message--them {
-  text-align: left;
+.chat-messages1 {
+  /* border: 3px solid red; */
+  /* 채팅 친 내용만큼만 감싸서 보여주기 */
+  display: flex;
+  white-space: pre-wrap;
+  /* 오른쪽에 채팅 나타내기 */
+  justify-content: flex-end;
 }
+
+.chat-window-body .chat-window-message .chat-message1 {
+  /* border: 3px solid orange; */
+  /* message text color */
+  color: #f4f7f9;
+  /* message background color */
+  background-color: #4e8cff;
+  margin-top: 0px;
+  margin-right: 5px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
 
 .chat-user-input {
   width: 100%;
   min-height: 55px;
+  max-height: 76px;
   margin: 0px;
   position: absolute;
   bottom: 0;
@@ -368,6 +489,7 @@ export default {
   max-height: 100px;
   overflow-x: hidden;
   overflow-y: auto;
+
 }
 
 .chat-user-input-button {

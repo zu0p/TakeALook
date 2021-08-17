@@ -1,8 +1,7 @@
 <template>
   <h1 style="font-size:30px; text-align:left; margin-left:100px">나의 구매 목록</h1>
-  <div v-if="buyList">
+  <div v-if="info.buyList">
     <ul class="infinite-list">
-    <!-- url 알게 되면 연결 callDeals -->
       <li v-for="buy in info.buyList" @click="clickDeal(buy.productId)" class="infinite-list-item" :key="buy.productId" >
         <conference :deal="buy"/>
       </li>
@@ -10,8 +9,8 @@
         background
         layout="prev, pager, next"
         @current-change="handleCurrentChange"
-        :page-size="pageSize"
-        :total="total">
+        :page-size="info.pageSize"
+        :total="info.total">
       </el-pagination>
     </ul>
   </div>
@@ -48,9 +47,11 @@ export default {
       store.commit('root/setMenuActiveMenuName', 'order-deal')
       store.dispatch('root/requestBuyList', {page:0, size:info.pageSize})
         .then (res => {
-          info.buyList = res.data.content
-          info.total = res.data.totalElements
-          info.pageSize = res.data.size
+          if (res.data.statusCode != 404) {
+            info.buyList = res.data.content
+            info.total = res.data.totalElements
+            info.pageSize = res.data.size
+          }
         })
     })
 
@@ -73,7 +74,7 @@ export default {
       })
     }
 
-    return { clickDeal, handleCurrentChange }
+    return { info, clickDeal, handleCurrentChange }
   }
 }
 </script>

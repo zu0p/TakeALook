@@ -92,6 +92,7 @@ export default {
         reserveTime: '',
         description: '',
         state: '',
+        isChanged: false
       },
       src: {
         imageUrl: '',
@@ -161,6 +162,7 @@ export default {
 
       const tmp = URL.createObjectURL(res.path[0].files[0])
       state.imgUrl = tmp
+      state.isChanged = true
     }
 
         // reserveTime 의 타입은 String이다.
@@ -199,7 +201,8 @@ export default {
       .then(res => {
         //console.log(res)
         alert('상품 수정이 완료되었습니다!')
-        router.push({name: 'home'})
+        // router.push({name: 'home'})
+        window.location = '/'
       })
       .catch(err=>{
         console.log(err)
@@ -226,7 +229,10 @@ export default {
            })
           .then(res=>{
             //console.log(res.data)
-            saveFile(props.productId)
+            if(state.isChanged)
+              saveFile(props.productId)
+            else
+              window.location = '/'
           }).then(()=>{
             state.loading = false
           })
