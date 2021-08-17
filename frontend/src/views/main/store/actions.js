@@ -225,6 +225,12 @@ export function requestUpdateMaxPrice({state}, payload){
   return instanceWithAuth.post(url, payload)
 }
 
+// 채팅 조회
+export function requestChatData({state}, payload){
+  const url = BASE_URL+`/chat/${payload}`
+  return instanceWithAuth.get(url)
+}
+
 // img 업로드 요청
 export function requestUploadImage({state}, payload){
   const url = BASE_URL+ `/image/upload/${payload.productId}`
