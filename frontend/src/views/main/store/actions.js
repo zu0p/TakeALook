@@ -226,9 +226,9 @@ export function requestUpdateMaxPrice({state}, payload){
 }
 
 // img 업로드 요청
-export function requestUploadImage({state}, formData){
-  const url = BASE_URL+'/image/upload'
-  return instanceWithAuth.post(url, formData,{
+export function requestUploadImage({state}, payload){
+  const url = BASE_URL+ `/image/upload/${payload.productId}`
+  return instanceWithAuth.post(url, payload.imageFile,{
     headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
