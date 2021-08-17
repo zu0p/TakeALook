@@ -99,7 +99,7 @@ export default {
       categories: '',
       description: '',
       reserveTime: '',
-      imageUrl: '',
+      imageUrl: '<%= BASE_URL %>',
       seller: '',
       recommend: '',
       registTime: '',
@@ -114,7 +114,7 @@ export default {
 
     onBeforeMount (() => {
       state.productId = route.params.productId
-      info.imageUrl = `../../../assets/pimages/${state.productId}.jpg`
+      info.imageUrl += `src/assets/pimages/${state.productId}.jpg`
       console.log(info.imageUrl)
       store.dispatch('root/requestDealDetail', state.productId)
         .then(res=>{
