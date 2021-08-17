@@ -17,7 +17,7 @@ public class ImageServiceImpl implements ImageService{
     public void saveImage(MultipartFile image, Long productId) throws IOException {
         String imageFileName = productId +".jpg";
         String absolutePath = new File("").getAbsolutePath();
-        String path = "\\src\\main\\resources\\images\\";
+        String path = "/src/main/resources/images/";
 
         log.info("file saved {} ", absolutePath+path+imageFileName);
 
