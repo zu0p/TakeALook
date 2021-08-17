@@ -163,18 +163,24 @@ export default {
       state.date1 = res1
     }
 
-    const saveFile = function () {
+    const saveFile = function (pid) {
       console.log("saveFile func")
       let img = document.getElementById('chooseFile')
 
       let fd = new FormData()
       fd.append('imageFile', img.files[0])
-      // console.log(img.files[0])
-      // console.log(fd.getAll)
 
-      store.dispatch('root/requestUploadImage', fd)
+      const req = {
+        imageFile: fd,
+        productId: pid
+      }
+      store.dispatch('root/requestUploadImage', req)
       .then(res => {
         //console.log(res)
+        router.push({name: 'home'})
+      })
+      .catch(err=>{
+        console.log(err)
       })
     }
 
@@ -200,13 +206,15 @@ export default {
               // state: state.form.state,
           }
 
-          saveFile()
 
           // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
           store.dispatch('root/createPost', body)
           .then(res=>{
-            //console.log(res)
-            router.push({name: 'home'})
+            console.log(res.data)
+            let pid = res.data.productId
+            console.log(pid)
+            saveFile(pid)
+            //router.push({name: 'home'})
           })
           .catch(err=>{
             state.loading = false

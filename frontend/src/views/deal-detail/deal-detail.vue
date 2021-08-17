@@ -99,7 +99,7 @@ export default {
       categories: '',
       description: '',
       reserveTime: '',
-      imageUrl: '',
+      imageUrl: '/home/ubuntu/ssafy-web-rtc/backend/src/main/resources/images/',
       seller: '',
       recommend: '',
       registTime: '',
@@ -114,6 +114,7 @@ export default {
 
     onBeforeMount (() => {
       state.productId = route.params.productId
+      info.imageUrl += state.productId + '.jpg'
       store.dispatch('root/requestDealDetail', state.productId)
         .then(res=>{
           if(res.data.statusCode == 404){
@@ -128,7 +129,6 @@ export default {
             info.description = res.data.description
             info.reserveTime = res.data.reserveTime
             info.seller = res.data.seller
-            info.imageUrl = res.data.imageUrl
             info.isSold = res.data.isSold
             info.registTime = res.data.registTime
 
