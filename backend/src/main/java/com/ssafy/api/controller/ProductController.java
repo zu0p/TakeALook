@@ -5,13 +5,11 @@ import com.ssafy.api.request.product.ProductRegisterPostReq;
 import com.ssafy.api.request.product.ProductSearchPostReq;
 import com.ssafy.api.request.product.ProductUpdatePatchReq;
 import com.ssafy.api.response.product.*;
-import com.ssafy.api.response.trade.TradeListGetRes;
 import com.ssafy.api.service.product.ProductService;
 import com.ssafy.api.service.user.UserService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Product;
-import com.ssafy.db.entity.User;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -92,7 +89,7 @@ public class ProductController {
             return ResponseEntity.status(200).body(BaseResponseBody.of(404, "Not found"));
 
         Product product = productService.createProduct(authId, productInfo);
-        return ResponseEntity.status(200).body(ProductRegistPostRes.of(product));
+        return ResponseEntity.status(200).body(ProductRegistPostRes.of(product.getId()));
     }
 
     @GetMapping("/{productId}")
@@ -102,7 +99,7 @@ public class ProductController {
             return ResponseEntity.status(200).body(BaseResponseBody.of(404,"Not found"));
 
         Product product = productService.getProductByProductId(productId);
-        return ResponseEntity.status(200).body(ProductRegistPostRes.of(product));
+        return ResponseEntity.status(200).body(ProductGetInfoRes.of(product));
 
     }
 

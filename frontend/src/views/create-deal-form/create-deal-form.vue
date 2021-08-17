@@ -68,7 +68,6 @@ import { onMounted, ref, reactive, } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
-
 export default {
   name: 'CreateDealForm',
 
@@ -164,6 +163,21 @@ export default {
       state.date1 = res1
     }
 
+    const saveFile = function () {
+      console.log("saveFile func")
+      let img = document.getElementById('chooseFile')
+
+      let fd = new FormData()
+      fd.append('imageFile', img.files[0])
+      // console.log(img.files[0])
+      // console.log(fd.getAll)
+
+      store.dispatch('root/requestUploadImage', fd)
+      .then(res => {
+        //console.log(res)
+      })
+    }
+
     const clickCreate = function () {
       // console.log(state.form.basePrice)
       // console.log(state.date1)
@@ -176,19 +190,22 @@ export default {
         if (valid) {
           const body ={
             imageUrl: state.src.imageUrl,
-              productName: state.form.productName,
-              categories: state.form.categories,
-              basePrice: parseInt(state.form.basePrice),
-              registTime: state.date1,
-              reserveTime: state.date,
-              description: state.form.description,
+            productName: state.form.productName,
+            categories: state.form.categories,
+            basePrice: parseInt(state.form.basePrice),
+            registTime: state.date1,
+            reserveTime: state.date,
+            description: state.form.description,
               // restrictTime: state.form.restrictTime,
               // state: state.form.state,
           }
+
+          saveFile()
+
           // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
           store.dispatch('root/createPost', body)
           .then(res=>{
-            console.log(res)
+            //console.log(res)
             router.push({name: 'home'})
           })
           .catch(err=>{
@@ -235,7 +252,7 @@ export default {
       window.location='/'
     }
 
-    return { createDealForm, state, clickCreate, clickCancel, loadFile, }
+    return { createDealForm, state, clickCreate, clickCancel, loadFile, saveFile }
   },
   // imageUrl, el-date-picker 관련 method
   methods: {
@@ -244,9 +261,9 @@ export default {
       // return time.getTime() < Date.now() - 8.64e7
     },
   },
-
 }
 </script>
+
 <style>
   .create-deal-form {
     justify-content: center;
