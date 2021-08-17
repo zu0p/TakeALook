@@ -138,7 +138,7 @@ export default {
           // console.log(res.data)
           // console.log(info.saveChatList)
           if(res.data.statusCode != 404) {
-            console.log('채팅 내용을 성공적으로 불러왔습니다.')
+            // console.log('채팅 내용을 성공적으로 불러왔습니다.')
             info.saveChatList = res.data
           }
           else{
@@ -153,34 +153,34 @@ export default {
     const serverURL = "https://i5d101.p.ssafy.io:8080/stomp/chat"
     var socket = new SockJS(serverURL)
     const stompClient = Stomp.over(socket)
-    console.log(`연결 시도, ${serverURL}`)
+    // console.log(`연결 시도, ${serverURL}`)
     stompClient.connect(
       {},
       frame => {
         info.connected = true
-        console.log("연결 성공", frame)
+        // console.log("연결 성공", frame)
         // console.log('방 제목 :'+info.roomId, '닉네임 :'+info.nickname)
 
         stompClient.subscribe("/sub/chat/room/"+info.roomId, res=>{
-          console.log("sub 성공", res.body)
-          if(!info.saveChatList) {
-            info.saveChatList = [{"writer":info.nickname,"message":info.nickname+"님이 채팅방에 참여하였습니다."}]
-          }
-          else{
-            info.saveChatList.push(JSON.parse(res.body))
-          }
+          // console.log("sub 성공", res.body)
+          // if(!info.saveChatList) {
+            // info.saveChatList = [{"writer":info.nickname,"message":info.nickname+"님이 채팅방에 참여하였습니다."}]
+          // }
+          // else{
+            // }
+          info.saveChatList.push(JSON.parse(res.body))
           info.data.chatList.push(JSON.parse(res.body))
         })
-        console.log(0)
-        console.log(info)
-        var Datenow = Date.now()
-        var message = {
-          roomId: info.roomId,
-          writer: info.nickname,
-          sendTime: Datenow.toString(),
-        }
+        // console.log(0)
+        // console.log(info)
+        // var Datenow = Date.now()
+        // var message = {
+        //   roomId: info.roomId,
+        //   writer: info.nickname,
+        //   sendTime: Datenow.toString(),
+        // }
         window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
-        stompClient.send("/pub/chat/enter", JSON.stringify(message), {})
+
       },
       err => {
         console.log("연결 실패", err)
@@ -202,8 +202,8 @@ export default {
           sendTime: Date.now()
         }
         stompClient.send('/pub/chat/message', JSON.stringify(message), {})
-        console.log(1)
-        console.log(JSON.stringify(message))
+        // console.log(1)
+        // console.log(JSON.stringify(message))
       }
       info.msg = ""
     }
@@ -212,8 +212,8 @@ export default {
     const save = function () {
     store.dispatch('root/requestSaveChatList', (info.data) )
       .then(res=> {
-        console.log('채팅이 성공적으로 저장되었습니다')
-        console.log(res)
+        // console.log('채팅이 성공적으로 저장되었습니다')
+        // console.log(res)
       })
       .catch(res=> {
         console.log('채팅내용저장에 실패했습니다.')
@@ -230,7 +230,7 @@ export default {
       let scroll = document.getElementById("chat-window-scroll")
       scroll.scrollTop = scroll.scrollHeight
     })
-    console.log(scroll)
+    // console.log(scroll)
 
     return {info, send, save, }
   },
