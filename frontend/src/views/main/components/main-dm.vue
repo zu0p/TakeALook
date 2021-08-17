@@ -1,7 +1,6 @@
 <template>
     <div
       class="chat-launcher"
-      :class="{opened: isOpen}"
       :style="{backgroundColor: colors.launcher.bg}"
       @click.prevent="isOpen()"
     >

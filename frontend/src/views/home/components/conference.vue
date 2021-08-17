@@ -2,7 +2,7 @@
   <!-- 로그인한 경우 -->
   <div v-if="info.isLogin" style="text-align:center">
       <!-- 거래가 끝난 경우 -->
-      <el-card :body-style="{ padding: '0px' }" v-if="info.isSold">
+      <el-card :body-style="{ padding: '0px' }" v-if="deal.isSold">
         <div class="image-wrapper enddeal">
             <!-- 내 거래인 경우 -->
             <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a>
@@ -109,7 +109,6 @@ export default {
       wishCount: 0,
       isLogin: false,
       mine: false,
-      isSold: false,
       wish: false
     })
 

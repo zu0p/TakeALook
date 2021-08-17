@@ -11,7 +11,7 @@
           :width="`240px`"/>
       </el-aside>
       <el-main>
-        <main-dm/>
+        <main-dm v-if="isLogin"/>
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -31,6 +31,8 @@
   @import './main.css';
   @import '../../common/css/common.css';
   @import '../../common/css/element-plus.css';
+
+/* 배경화면 */
 
   /* DM 아이콘 */
 .chat-launcher {
