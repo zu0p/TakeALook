@@ -2,7 +2,7 @@
   <el-container class="update-deal-form">
     <!-- 이미지 업로드 폼 -->
     <form class="image-upload-form" method="post" enctype="multipart/form-data">
-      <img class="wrapper" :src="state.src.imageUrl" alt="">
+      <img class="wrapper" :src="state.imgUrl" alt="">
       <div class="button">
           <label for="chooseFile">
               👉 이곳을 눌러 사진을 업로드 하세요 👈
@@ -58,7 +58,7 @@
   <!-- 작성, 취소버튼 -->
   <hr>
   <el-form-item>
-    <el-button type="primary" @click="clickUpdate">작성</el-button>
+    <el-button type="primary" @click="clickUpdate">수정</el-button>
     <el-button type="danger" @click="clickCancel">취소</el-button>
   </el-form-item>
 </template>
@@ -82,8 +82,9 @@ export default {
     const router = useRouter()
     // 독립적인 반응형 값 생성 ref()
     const updateDealForm = ref(null)
-
+    // let imgUrl = require(`@/assets/pimages/${props.productId}.jpg`)
     const state = reactive({
+      imgUrl : require(`@/assets/pimages/${props.productId}.jpg`),
       form: {
         productName: '',
         categories: '',
@@ -151,9 +152,15 @@ export default {
 
         // 이미지 파일 처리
     const loadFile = function (res) {
-      const imgUrl = URL.createObjectURL(res.path[0].files[0])
+      //const tmp = URL.createObjectURL(res.path[0].files[0])
       // console.log(imgUrl)
-      state.src.imageUrl = imgUrl
+      // state.src.imageUrl = imgUrl
+
+      // let img = document.getElementById('chooseFile')
+      // img.src = res.path[0].files[0] + new Date().getTime()
+
+      const tmp = URL.createObjectURL(res.path[0].files[0])
+      state.imgUrl = tmp
     }
 
         // reserveTime 의 타입은 String이다.
@@ -177,6 +184,27 @@ export default {
       state.date = res
     }
 
+    const saveFile = function (pid) {
+      //console.log("saveFile func")
+      let img = document.getElementById('chooseFile')
+
+      let fd = new FormData()
+      fd.append('imageFile', img.files[0])
+
+      const req = {
+        imageFile: fd,
+        productId: pid
+      }
+      store.dispatch('root/requestUploadImage', req)
+      .then(res => {
+        //console.log(res)
+        alert('상품 수정이 완료되었습니다!')
+        router.push({name: 'home'})
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+    }
 
     const clickUpdate = function () {
       // console.log(state.form.categories)
@@ -196,17 +224,17 @@ export default {
             reserveTime: state.form.reserveTime,
             description: state.form.description,
            })
-            .then(res=>{
-              //console.log(res.data)
-              router.push({name:'home'})
-            }).then(()=>{
-              state.loading = false
-            })
-            .catch(err=>{
-              state.loading = false
-              alert("게시글 수정에 실패하였습니다.")
-              console.log(err)
-            })
+          .then(res=>{
+            //console.log(res.data)
+            saveFile(props.productId)
+          }).then(()=>{
+            state.loading = false
+          })
+          .catch(err=>{
+            state.loading = false
+            alert("게시글 수정에 실패하였습니다.")
+            console.log(err)
+          })
         } else if(!valid){
           state.loading = false
           alert('필수 항목을 입력하세요.')

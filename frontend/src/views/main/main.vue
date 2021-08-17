@@ -11,7 +11,7 @@
           :width="`240px`"/>
       </el-aside>
       <el-main>
-        <main-dm/>
+        <main-dm v-if="isLogin"/>
         <router-view></router-view>
       </el-main>
     </el-container>
