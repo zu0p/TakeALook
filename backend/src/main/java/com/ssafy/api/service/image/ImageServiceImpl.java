@@ -1,0 +1,25 @@
+package com.ssafy.api.service.image;
+
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+
+@Service
+public class ImageServiceImpl implements ImageService{
+    @Override
+    public void saveImage(MultipartFile image, Long productId) throws IOException {
+        String imageFileName = productId +".jpg";
+        String absolutePath = new File("").getAbsolutePath();
+        String path = "\\src\\main\\resources\\images\\";
+
+        File file = new File(absolutePath+path+imageFileName);
+
+        file.getParentFile().mkdirs();
+        image.transferTo(file);
+    }
+}
