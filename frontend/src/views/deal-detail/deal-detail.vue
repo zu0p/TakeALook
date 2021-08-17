@@ -114,7 +114,8 @@ export default {
 
     onBeforeMount (() => {
       state.productId = route.params.productId
-      info.imageUrl = `/home/ubuntu/ssafy-web-rtc/backend/src/main/resources/images/${state.productId}.jpg`
+      info.imageUrl = `@/assets/pimages/${state.productId}.jpg`
+      console.log(info.imageUrl)
       store.dispatch('root/requestDealDetail', state.productId)
         .then(res=>{
           if(res.data.statusCode == 404){
