@@ -9,16 +9,25 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 
+import static org.kurento.jsonrpc.client.JsonRpcClient.log;
+
 @Service
 public class ImageServiceImpl implements ImageService{
     @Override
     public void saveImage(MultipartFile image, Long productId) throws IOException {
         String imageFileName = productId +".jpg";
         String absolutePath = new File("").getAbsolutePath();
-        String path = "\\src\\main\\resources\\images\\";
+        String changePath = absolutePath.replace("backend","frontend");
+        String path = changePath + "/src/assets/pimages/";
+        log.info("file saved {} ", path+imageFileName);
 
-        File file = new File(absolutePath+path+imageFileName);
+        File file = new File(path+imageFileName);
+        if( file.exists() ){
+            file.delete();
+            file = new File(path+imageFileName);
+        }
 
+        log.info("file name {} ",file.toString());
         file.getParentFile().mkdirs();
         image.transferTo(file);
     }
