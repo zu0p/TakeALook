@@ -56,7 +56,7 @@ export function requestModifyUserInfo({state}, payload){
 // 게시글 작성 요청 보내기
 export function createPost({commit}, postData) {
   const url = BASE_URL+'/product'
-  console.log(url)
+  // console.log(url)
   let body = postData
   // const url = BASE_URL+`/create-deal-form/${userId}/${}`
   return instanceWithAuth.post(url, body)
@@ -223,4 +223,12 @@ export function requestTradeSectionInfo({state}, payload){
 export function requestUpdateMaxPrice({state}, payload){
   const url = BASE_URL+'/trade/section/updateMaxPrice'
   return instanceWithAuth.post(url, payload)
+}
+
+// img 업로드 요청
+export function requestUploadImage({state}, payload){
+  const url = BASE_URL+ `/image/upload/${payload.productId}`
+  return instanceWithAuth.post(url, payload.imageFile,{
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
 }
