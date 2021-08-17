@@ -20,12 +20,12 @@ export default {
   setup(props){
     const store = useStore()
     const info = reactive({
-      imageUrl: ''
+      imageUrl: `require('@/assets/pimages/${props.chat.productId}.jpg')`
     })
-    store.dispatch('root/requestDealDetail', props.chat.productId)
-    .then(res=> {
-      info.imageUrl = res.data.imageUrl
-    })
+    // store.dispatch('root/requestDealDetail', props.chat.productId)
+    // .then(res=> {
+    //   info.imageUrl = res.data.imageUrl
+    // })
     return {info}
   }
 }
