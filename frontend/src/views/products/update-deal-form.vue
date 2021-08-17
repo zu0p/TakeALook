@@ -58,7 +58,7 @@
   <!-- 작성, 취소버튼 -->
   <hr>
   <el-form-item>
-    <el-button type="primary" @click="clickUpdate">작성</el-button>
+    <el-button type="primary" @click="clickUpdate">수정</el-button>
     <el-button type="danger" @click="clickCancel">취소</el-button>
   </el-form-item>
 </template>
@@ -153,7 +153,10 @@ export default {
     const loadFile = function (res) {
       const imgUrl = URL.createObjectURL(res.path[0].files[0])
       // console.log(imgUrl)
-      state.src.imageUrl = imgUrl
+      // state.src.imageUrl = imgUrl
+
+      let img = document.getElementById('chooseFile')
+      img.src = imgUrl
     }
 
         // reserveTime 의 타입은 String이다.
@@ -178,7 +181,7 @@ export default {
     }
 
     const saveFile = function (pid) {
-      console.log("saveFile func")
+      //console.log("saveFile func")
       let img = document.getElementById('chooseFile')
 
       let fd = new FormData()
@@ -191,6 +194,7 @@ export default {
       store.dispatch('root/requestUploadImage', req)
       .then(res => {
         //console.log(res)
+        alert('상품 수정이 완료되었습니다!')
         router.push({name: 'home'})
       })
       .catch(err=>{
