@@ -109,30 +109,35 @@ export default {
       if(param.reserveTime>now){ // 입장 가능하면
         //호가 입력받기
         let priceGap = Number(prompt('가격 증감 단위를 입력하세요.(숫자)'))
-        if(priceGap == null) return
-
-        let room = ''
-        const req = {
-          seller: param.seller,
-          productId: param.productId,
-          priceGap: priceGap
+        console.log(priceGap)
+        if(priceGap == null){
+          console.log(priceGap)
+          return
         }
-        store.dispatch('root/requestCreateTradeSection', req)
-          .then(res =>{
-            room = res.data.room
-            // console.log(room)
+        else{
+          let room = ''
+          const req = {
+            seller: param.seller,
+            productId: param.productId,
+            priceGap: priceGap
+          }
+          store.dispatch('root/requestCreateTradeSection', req)
+            .then(res =>{
+              room = res.data.room
+              // console.log(room)
 
-            router.push({
-              name: 'meeting-detail',
-              params: {
-                meetingId: room,
-                userId: state.name,
-                // isSeller: 1,
-                // basePrice: param.basePrice,
-                // productId: param.productId
-              },
+              router.push({
+                name: 'meeting-detail',
+                params: {
+                  meetingId: room,
+                  userId: state.name,
+                  // isSeller: 1,
+                  // basePrice: param.basePrice,
+                  // productId: param.productId
+                },
+              })
             })
-          })
+        }
       }
       else{
         alert("예약시간을 넘어 거래를 시작할 수 없습니다.")

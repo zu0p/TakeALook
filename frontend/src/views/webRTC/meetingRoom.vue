@@ -223,7 +223,7 @@ export default {
         }
       }
       if(state.role=='seller')
-        constraints.video.mandatory.maxWidth = 720
+        constraints.video.mandatory.maxWidth = 500
       //console.log(state.name + " registered in room " + state.room)
       var participant = new Participant(state.name, state.role)
 
@@ -396,7 +396,7 @@ export default {
 .participant video {
   border-radius: 4px;
 }
-#seller>video{
+#seller video{
   width: 53vh;
   /* height: 400px; */
 }
