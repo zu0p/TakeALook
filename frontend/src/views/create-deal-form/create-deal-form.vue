@@ -187,6 +187,11 @@ export default {
     }
 
     const clickCreate = function () {
+      if(state.src.imageUrl==''){
+        console.log('이미지 없음')
+        alert('이미지는 필수 입니다')
+        return
+      }
       // console.log(state.form.basePrice)
       // console.log(state.date1)
       // backend에서 원하는 형식으로 주기 위해 현재시간과 예약시간의 형태를 변경하는 함수
