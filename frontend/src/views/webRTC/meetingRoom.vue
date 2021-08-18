@@ -337,12 +337,18 @@ export default {
         .then(res =>{
           console.log(res)
         })
-      store.dispatch('root/requestMatching', req)
-        .then(res=>{
-          console.log(res)
-          alert('거래 성공! DM에서 거래를 이어나가세요!')
-          router.push({name:'home'})
-        })
+      if(state.name == req.seller){
+        store.dispatch('root/requestMatching', req)
+          .then(res=>{
+            console.log(res)
+            alert('거래 성공! DM에서 거래를 이어나가세요!')
+            router.push({name:'home'})
+          })
+      }
+      else{
+        alert('거래 성공! DM에서 거래를 이어나가세요!')
+        router.push({name:'home'})
+      }
 
     }
 
