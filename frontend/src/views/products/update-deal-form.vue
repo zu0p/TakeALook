@@ -216,8 +216,7 @@ export default {
       console.log("9시간더하기 전: " + resTime)
       resTime.setHours(resTime.getHours()+9)
       console.log("9시간더하기 후: " + resTime)
-      state.date = resTime
-      cosnole.log(state.date)
+      state.form.reserveTime = resTime
 
       state.loading = true
 
