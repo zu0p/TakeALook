@@ -109,8 +109,8 @@ export default {
 
   setup(props){
 
-    console.log(props.userId)
-    console.log(props.productName)
+    // console.log(props.userId)
+    // console.log(props.productName)
     const store = useStore()
     const info = reactive({
       data: {
@@ -131,7 +131,7 @@ export default {
 
 
     onBeforeMount(()=>{
-      console.log(info.roomId)
+      // console.log(info.roomId)
       store.dispatch('root/requestChatData', info.roomId)
         .then(res=>{
           // info.saveChatList = res.data
@@ -200,7 +200,7 @@ export default {
     const send = function () {
       if (stompClient && stompClient.connected) {
         var Datenow = Date.now()
-        console.log('현재시간은' + Datenow)
+        // console.log('현재시간은' + Datenow)
         var message = {
           roomId: info.roomId,
           writer: info.nickname,

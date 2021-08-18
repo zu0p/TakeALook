@@ -114,7 +114,7 @@ export default {
     if(props.deal.reserveTime) {
       info.reserveTime = props.deal.reserveTime
     } if (props.deal.tradeDate) {
-      console.log(props.deal)
+      // console.log(props.deal)
       info.reserveTime = props.deal.tradeDate
     }
 
@@ -156,7 +156,7 @@ export default {
 
     const startDeal = function (e) {
       e.stopPropagation()
-      console.log("거래 시작")
+      // console.log("거래 시작")
       emit('startTrade', props.deal)
     }
 

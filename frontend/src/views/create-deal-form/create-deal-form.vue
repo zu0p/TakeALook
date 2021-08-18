@@ -188,7 +188,7 @@ export default {
 
     const clickCreate = function () {
       if(state.src.imageUrl==''){
-        console.log('이미지 없음')
+        // console.log('이미지 없음')
         alert('이미지는 필수 입니다')
         return
       }
@@ -263,7 +263,7 @@ export default {
     }
 
     const clickCancel = function () {
-      console.log('go home')
+      // console.log('go home')
       window.location='/'
     }
 

@@ -89,10 +89,10 @@ export default {
       // 로그인 클릭 시 validate 체크 후 그 결과 값에 따라, 로그인 API 호출 또는 경고창 표시
       loginForm.value.validate((valid) => {
         if (valid) {
-          console.log('submit')
+          // console.log('submit')
           store.dispatch('root/requestLogin', { userId: state.form.id, password: state.form.password })
             .then(res=>{
-              console.log(res.data)
+              // console.log(res.data)
               if(res.data.statusCode==200){
                 localStorage.setItem("accessToken", res.data.accessToken)
                 store.commit('root/SET_ACCESSTOKEN', res.data.accessToken)
