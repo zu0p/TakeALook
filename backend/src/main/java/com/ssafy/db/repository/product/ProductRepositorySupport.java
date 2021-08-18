@@ -35,7 +35,7 @@ public class ProductRepositorySupport {
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
                 .where(qProduct.user.userId.eq(userId))
-                .orderBy(qProduct.registTime.desc())
+                .orderBy(qProduct.isSold.asc(),qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -73,7 +73,7 @@ public class ProductRepositorySupport {
                         qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
-                .orderBy(qProduct.reserveTime.asc())
+                .orderBy(qProduct.isSold.asc(), qProduct.reserveTime.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

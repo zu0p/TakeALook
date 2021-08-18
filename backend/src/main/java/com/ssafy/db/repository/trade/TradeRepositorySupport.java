@@ -34,7 +34,7 @@ public class TradeRepositorySupport {
                 .join(qTradeHistory)
                 .on(qProduct.id.eq(qTradeHistory.productId))
                 .where(qTradeHistory.buyer.eq(buyer))
-                .orderBy(qProduct.registTime.desc())
+                .orderBy(qProduct.isSold.asc(), qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -51,7 +51,7 @@ public class TradeRepositorySupport {
                 .join(qTradeHistory)
                 .on(qProduct.id.eq(qTradeHistory.productId))
                 .where(qTradeHistory.seller.eq(seller))
-                .orderBy(qProduct.registTime.desc())
+                .orderBy(qProduct.isSold.asc(), qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
