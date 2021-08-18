@@ -214,8 +214,10 @@ export default {
       let time = resTime.split('T')[1]
       resTime = new Date(date+" "+time)
       console.log("9시간더하기 전: " + resTime)
-      state.date = resTime.setHours(resTime.getHours()+9)
+      resTime.setHours(resTime.getHours()+9)
       console.log("9시간더하기 후: " + resTime)
+      state.date = resTime
+      cosnole.log(state.date)
 
       state.loading = true
 
