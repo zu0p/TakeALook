@@ -133,6 +133,8 @@ export default {
     }
 
     const propose = function(){
+      if(state.curPrice>=state.proposePrice) return
+
       state.curPrice = state.proposePrice
       const req = {
         id: 'proposePrice',
