@@ -31,8 +31,8 @@ public class ProductRepositorySupport {
     public Page<ProductListGetRes> findByUserId(Pageable pageable, String userId) {
         QueryResults<ProductListGetRes> result = jpaQueryFactory
                 .select(Projections.constructor(ProductListGetRes.class,qProduct.id, qProduct.user.userId,
-                qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
-                qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
+                        qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
+                        qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
                 .where(qProduct.user.userId.eq(userId))
                 .orderBy(qProduct.registTime.desc())
@@ -40,7 +40,7 @@ public class ProductRepositorySupport {
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-         return new PageImpl<>(result.getResults(),pageable,result.getTotal());
+        return new PageImpl<>(result.getResults(),pageable,result.getTotal());
     }
 
     public List<ProductListGetRes> findAll(){
@@ -49,6 +49,7 @@ public class ProductRepositorySupport {
                         qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
+                .orderBy(qProduct.isSold.asc())
                 .fetch();
         return productList;
     }
@@ -59,7 +60,7 @@ public class ProductRepositorySupport {
                         qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
-                .orderBy(qProduct.registTime.desc())
+                .orderBy(qProduct.isSold.asc(),qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -85,7 +86,7 @@ public class ProductRepositorySupport {
                         qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
-                .orderBy(qProduct.basePrice.desc())
+                .orderBy(qProduct.isSold.asc(), qProduct.basePrice.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -98,7 +99,7 @@ public class ProductRepositorySupport {
                         qProduct.productName,qProduct.basePrice, qProduct.categories,qProduct.description,qProduct.state,
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
-                .orderBy(qProduct.basePrice.asc())
+                .orderBy(qProduct.isSold.asc(), qProduct.basePrice.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -112,7 +113,7 @@ public class ProductRepositorySupport {
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
                 .where(qProduct.categories.eq("digital"), qProduct.productName.contains(keyword))
-                .orderBy(qProduct.registTime.desc())
+                .orderBy(qProduct.isSold.asc(),qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -126,7 +127,7 @@ public class ProductRepositorySupport {
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
                 .where(qProduct.categories.eq("furniture"), qProduct.productName.contains(keyword))
-                .orderBy(qProduct.registTime.desc())
+                .orderBy(qProduct.isSold.asc(),qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
 
@@ -141,7 +142,7 @@ public class ProductRepositorySupport {
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
                 .where(qProduct.categories.eq("fashion"), qProduct.productName.contains(keyword))
-                .orderBy(qProduct.registTime.desc())
+                .orderBy(qProduct.isSold.asc(),qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -155,7 +156,7 @@ public class ProductRepositorySupport {
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
                 .where(qProduct.categories.eq("art"), qProduct.productName.contains(keyword))
-                .orderBy(qProduct.registTime.desc())
+                .orderBy(qProduct.isSold.asc(),qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
@@ -169,7 +170,7 @@ public class ProductRepositorySupport {
                         qProduct.imageUrl, qProduct.isSold,qProduct.registTime,qProduct.reserveTime,qProduct.restrictTime))
                 .from(qProduct)
                 .where(qProduct.productName.contains(keyword))
-                .orderBy(qProduct.registTime.desc())
+                .orderBy(qProduct.isSold.asc(),qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
