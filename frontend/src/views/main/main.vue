@@ -114,11 +114,8 @@ export default {
   created(){
     const userToken = localStorage.getItem('accessToken');
 
-    console.log("logined user: "+userToken)
-    console.log("1"+this.isLogin)
     if(userToken){//userToken이 있다면 == 로그인했었다면
       this.isLogin = true
-    console.log("2"+this.isLogin)
       // const userData = JSON.parse(userToken)
       // requestUserInfo()
     }

@@ -231,8 +231,10 @@ export default {
             //console.log(res.data)
             if(state.isChanged)
               saveFile(props.productId)
-            else
+            else{
+              alert('상품 수정이 완료되었습니다!')
               window.location = '/'
+            }
           }).then(()=>{
             state.loading = false
           })

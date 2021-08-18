@@ -129,10 +129,12 @@ export default {
     }
 
     onBeforeMount(()=>{
-      store.dispatch('root/requestUserInfo')
-        .then(res=>{
-          state.name = res.data.userId
-      })
+      if(localStorage.getItem('accessToken')){
+        store.dispatch('root/requestUserInfo')
+          .then(res=>{
+            state.name = res.data.userId
+        })
+      }
     })
 
     // state.isLoading = true
