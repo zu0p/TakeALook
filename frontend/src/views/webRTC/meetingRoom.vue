@@ -325,7 +325,8 @@ export default {
         seller: successTrade.sellerId,
         buyer: successTrade.buyerId,
         price: price,
-        productId: state.productId
+        productId: state.productId,
+        tradeDate: new Date.getTime()
       }
       // console.log(req)
       store.dispatch('root/requestProductSold', state.productId)
