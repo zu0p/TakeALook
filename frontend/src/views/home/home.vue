@@ -383,6 +383,8 @@ export default {
       console.log("생성: "+ startTime)
       startTime.setMinutes(startTime.getMinutes() - 20)
       console.log("빼기: "+ startTime)
+      startTime = dateTimeToString(startTime)
+      console.log("스트링으로: "+ startTime)
 
       now = dateTimeToString(now)
 
