@@ -10,11 +10,13 @@ import com.ssafy.api.service.user.UserService;
 import com.ssafy.api.service.wish.WishService;
 import com.ssafy.db.entity.Product;
 import com.ssafy.db.entity.TradeHistory;
+import com.ssafy.db.entity.TradeSection;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.chat.ChatRepository;
 import com.ssafy.db.repository.product.ProductRepository;
 import com.ssafy.db.repository.product.ProductRepositorySupport;
 import com.ssafy.db.repository.trade.TradeRepository;
+import com.ssafy.db.repository.trade.TradeSectionRepository;
 import com.ssafy.db.repository.wish.WishRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,6 +49,8 @@ public class ProductServiceImpl implements ProductService{
     TradeRepository tradeRepository;
     @Autowired
     ChatRepository chatRepository;
+    @Autowired
+    TradeSectionRepository tradeSectionRepository;
 
     @Override
     public List<ProductListGetRes> getAllProduct(){
@@ -176,6 +180,11 @@ public class ProductServiceImpl implements ProductService{
             TradeHistory tradeHistory = tradeRepository.findTradeHistoryByProductId(productId).get();
             chatRepository.deleteAllByRoomId(tradeHistory.getRoomId());
             tradeService.deleteTradeInfo(productId);
+        }
+
+        if(tradeSectionRepository.findTradeSectionByProductId(productId).isPresent()) {
+            TradeSection tradeSection= tradeSectionRepository.findTradeSectionByProductId(productId).get();
+            tradeSectionRepository.delete(tradeSection);
         }
 
         Product product = productRepositorySupport.findByProductId(productId).get();

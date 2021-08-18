@@ -104,7 +104,7 @@ public class TradeServiceImpl implements TradeService {
 
     @Override
     public TradeSection findTradeSection(TradeSectionEnterReq tradeSectionEnterReq) {
-        TradeSection tradeSection = tradeSectionRepository.findTradeSectionByProductId(tradeSectionEnterReq.getProductId());
+        TradeSection tradeSection = tradeSectionRepository.findTradeSectionByProductId(tradeSectionEnterReq.getProductId()).get();
         return tradeSection;
     }
 
@@ -128,6 +128,12 @@ public class TradeServiceImpl implements TradeService {
     public void deleteTradeInfo(Long productId) {
         TradeHistory tradeHistory = tradeRepository.findTradeHistoryByProductId(productId).get();
         tradeRepository.delete(tradeHistory);
+    }
+
+    @Override
+    public void deleteTradeSection(Long productId) {
+        TradeSection tradeSection = tradeSectionRepository.findTradeSectionByProductId(productId).get();
+        tradeSectionRepository.delete(tradeSection);
     }
 
     @Override
