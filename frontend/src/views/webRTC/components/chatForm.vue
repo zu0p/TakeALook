@@ -56,7 +56,7 @@ export default {
           me: state.curUserId==jsoned.name?true:false
         }
         state.chats.push(received)
-        console.log(state.chats)
+        // console.log(state.chats)
 
         emit('endReceiveMsg')
       }

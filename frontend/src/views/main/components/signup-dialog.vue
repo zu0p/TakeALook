@@ -152,10 +152,10 @@ export default {
 
     const changeForm = function(){
       signupForm.value.validate(v=>{
-      console.log(v)
+      // console.log(v)
         if(v && state.idValidate){
           state.disableButton = false
-          console.log(state.disableButton)
+          // console.log(state.disableButton)
         }
       })
     }

@@ -71,7 +71,7 @@ export default function Participant(name, role) {
 
 	this.offerToReceiveVideo = function(error, offerSdp, wp){
 		if (error) return console.error ("sdp offer error")
-		console.log('Invoking SDP offer callback function');
+		// console.log('Invoking SDP offer callback function');
 		var msg =  { id : "receiveVideoFrom",
 				sender : name,
 				sdpOffer : offerSdp
@@ -80,7 +80,7 @@ export default function Participant(name, role) {
 	}
 
 	this.onIceCandidate = function (candidate, wp) {
-		  console.log("Local candidate" + JSON.stringify(candidate));
+		  // console.log("Local candidate" + JSON.stringify(candidate));
 
 		  var message = {
 		    id: 'onIceCandidate',
@@ -91,15 +91,15 @@ export default function Participant(name, role) {
 	}
 
 	this.dispose = function() {
-		console.log('Disposing participant ' + this.name);
+		// console.log('Disposing participant ' + this.name);
 		this.rtcPeer.dispose();
 		container.parentNode.removeChild(container);
   };
 
   this.sendMessage = function(message) {
     var jsonMessage = JSON.stringify(message);
-    console.log('Sending message: ' + jsonMessage);
-      console.log("ws: "+ws.readyState)
+    // console.log('Sending message: ' + jsonMessage);
+      // console.log("ws: "+ws.readyState)
       ws.send(jsonMessage);
       if (typeof callback !== 'undefined') {
         callback();

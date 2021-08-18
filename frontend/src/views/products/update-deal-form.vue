@@ -77,7 +77,7 @@ export default {
   },
   // props를 통해 productId값이 담겨온다.
   setup (props) {
-    console.log(props.productId)
+    // console.log(props.productId)
     const store = useStore()
     const router = useRouter()
     // 독립적인 반응형 값 생성 ref()
@@ -136,7 +136,7 @@ export default {
         let time = resTime.split('T')[1]
         resTime = new Date(date+" "+time)
         state.form.reserveTime = resTime
-        console.log(state.form.reserveTime)
+        // console.log(state.form.reserveTime)
       })
     })
     // 페이지 진입시 불리는 훅
@@ -213,19 +213,19 @@ export default {
       let date = resTime.split('T')[0].split('-')
       let time = resTime.split('T')[1]
       resTime = new Date(date+" "+time)
-      console.log("9시간더하기 전: " + resTime)
+      // console.log("9시간더하기 전: " + resTime)
       resTime.setHours(resTime.getHours()+9)
-      console.log("9시간더하기 후: " + resTime)
+      // console.log("9시간더하기 후: " + resTime)
       state.form.reserveTime = resTime
 
       state.loading = true
 
       dateTimeToString()
-      alert(state.date)
+      // alert(state.date)
       // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
       updateDealForm.value.validate((valid) => {
         if (valid) {
-          console.log('submit')
+          // console.log('submit')
           store.dispatch('root/updatePost', {
             productId: props.productId,
             imageUrl: state.src.imageUrl,
@@ -259,7 +259,7 @@ export default {
     }
 
     const clickCancel = function () {
-      console.log('go home')
+      // console.log('go home')
       window.location='/'
     }
 

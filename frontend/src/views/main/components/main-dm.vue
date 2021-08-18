@@ -57,7 +57,7 @@ export default {
     },
   },
   setup(props){
-    console.log(props)
+    // console.log(props)
     const info = reactive({
       isOpen: false,
       close: false,
