@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface TradeSectionRepository extends JpaRepository<TradeSection, String> {
-    Optional<TradeSection> findTradeSectionByProductId(Long productId);
+    Long countByProductId(Long productId);
+    TradeSection findTradeSectionByProductId(Long productId);
     TradeSection findTradeSectionByUrl(String url);
 }

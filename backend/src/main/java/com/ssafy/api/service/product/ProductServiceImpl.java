@@ -181,9 +181,8 @@ public class ProductServiceImpl implements ProductService{
             chatRepository.deleteAllByRoomId(tradeHistory.getRoomId());
             tradeService.deleteTradeInfo(productId);
         }
-
-        if(tradeSectionRepository.findTradeSectionByProductId(productId).isPresent()) {
-            TradeSection tradeSection= tradeSectionRepository.findTradeSectionByProductId(productId).get();
+        if(tradeSectionRepository.countByProductId(productId)==1L) {
+            TradeSection tradeSection= tradeSectionRepository.findTradeSectionByProductId(productId);
             tradeSectionRepository.delete(tradeSection);
         }
 
