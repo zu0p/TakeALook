@@ -269,7 +269,7 @@ export default {
 </script>
 <style>
   .update-deal-form {
-    /* justify-content: center; */
+    justify-content: center;
   }
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
