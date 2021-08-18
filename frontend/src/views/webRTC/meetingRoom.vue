@@ -396,8 +396,9 @@ export default {
 .participant video {
   border-radius: 4px;
 }
-#seller.participant video{
-  height: 400px;
+#seller>video{
+  width: 53vh;
+  /* height: 400px; */
 }
 .el-aside{
   overflow: hidden;
