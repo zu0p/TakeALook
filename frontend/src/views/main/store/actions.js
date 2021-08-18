@@ -252,3 +252,9 @@ export function requestUploadImage({state}, payload){
     headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
+
+// trade section 삭제 요청 - seller
+export function requestDeleteTrade({state}, payload){
+  const url = BASE_URL+`/trade/section/${payload}`
+  return instanceWithAuth.delete(url)
+}
