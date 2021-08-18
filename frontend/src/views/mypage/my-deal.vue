@@ -110,7 +110,7 @@ export default {
         //호가 입력받기
         let priceGap = Number(prompt('가격 증감 단위를 입력하세요.(숫자)'))
         console.log(priceGap)
-        if(priceGap == null){
+        if(priceGap == 0){
           console.log(priceGap)
           return
         }
