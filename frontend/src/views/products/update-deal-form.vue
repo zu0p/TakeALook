@@ -207,6 +207,7 @@ export default {
     const clickUpdate = function () {
       // console.log(state.form.categories)
       // console.log(state.form.reserveTime)
+      state.date.setHours(state.date.getHours+9)
       dateTimeToString()
       state.loading = true
 
@@ -257,7 +258,7 @@ export default {
   // imageUrl, el-date-picker 관련 method
   methods: {
     disabledDate(time) {
-      return time && time.valueOf() < Date.now();
+      return time && time.valueOf() < Date.now() - 8.64e7;
       // return time.getTime() < Date.now() - 8.64e7
     },
   },
