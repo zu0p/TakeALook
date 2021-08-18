@@ -121,22 +121,6 @@ export default {
     })
     //  페이지 진입 전 불리는 훅
     onBeforeMount(()=>{
-      // console.log('before mount')
-      // // axios처리로 data불러오기
-      // axios({
-      //   url: `/product/${props.productId}`
-      // })
-      // .then(res=>{
-      //   console.log(1111111111)
-      //   console.log(res)
-      //   state.form.productName = res.data.productName
-      //   state.form.categories = res.data.categories
-      //   state.form.basePrice = res.data.basePrice
-      //   state.form.reserveTime = res.data.reserveTime
-      //   state.form.description = res.data.description
-      //   state.src.imageUrl = res.data.imageUrl
-      // })
-
       store.dispatch('root/requestDealDetail', props.productId)
       .then(res=>{
         // console.log(res.data.reserveTime)
@@ -154,13 +138,6 @@ export default {
         state.form.reserveTime = resTime
         console.log(state.form.reserveTime)
       })
-      // 게시글 정보 받아와서 폼의 prop로 보여주기
-      // dispatch method로 requestProductInfo action 호출
-      // props.productID가 payload에 담긴다.
-      // store.dispatch('root/requestProductInfo', props.productId)
-      //   .then(data=> {
-      //     console.log(data)
-      //   })
     })
     // 페이지 진입시 불리는 훅
     onMounted (() => {
@@ -232,6 +209,8 @@ export default {
       // console.log(state.form.reserveTime)
       dateTimeToString()
       state.loading = true
+
+      alert(state.date)
       // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
       updateDealForm.value.validate((valid) => {
         if (valid) {
