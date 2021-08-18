@@ -109,8 +109,8 @@ export default {
       if(param.reserveTime>now){ // 입장 가능하면
         //호가 입력받기
         let priceGap = Number(prompt('가격 증감 단위를 입력하세요.(숫자)', '-1'))
-        alert(priceGap)
-        console.log(priceGap)
+        // alert(priceGap)
+        // console.log(priceGap)
         if(priceGap == -1 || priceGap == null){
           console.log(priceGap)
           return
