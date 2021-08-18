@@ -99,7 +99,7 @@ const router = createRouter({
 })
 
 router.afterEach((to) => {
-  console.log(to)
+  // console.log(to)
 })
 
 export default router

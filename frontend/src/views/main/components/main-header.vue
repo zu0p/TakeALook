@@ -91,7 +91,7 @@ export default {
   },
 
   setup(props, { emit }) {
-    console.log(props)
+    // console.log(props)
     const store = useStore()
     const router = useRouter()
     const state = reactive({
