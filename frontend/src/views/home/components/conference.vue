@@ -4,25 +4,21 @@
       <!-- 거래가 끝난 경우 -->
       <el-card :body-style="{ padding: '0px' }" v-if="deal.isSold">
         <div class="image-wrapper enddeal">
-            <!-- 내 거래인 경우 -->
-            <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a>
-            <!-- 찜한 거래인 경우 -->
-            <a class="custom-icon2" v-else style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
-            <img :src="imgUrl" alt="" style="width: 100%; display: block;">
+          <!-- 내 거래인 경우 -->
+          <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a>
+          <!-- 찜한 거래인 경우 -->
+          <a class="custom-icon2" v-else style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
+          <img :src="imgUrl" alt="" style="width: 100%; display: block;">
         </div>
       <div style="text-align:left; padding: 14px;">
         <span class="title enddeal">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
         <div class="loginbottom">
-          <p style="margin-bottom:0;">{{ deal.basePrice }}원⠀|⠀
-              {{ deal.reserveTime.slice(5, 7) }}월 {{ deal.reserveTime.slice(8, 10) }}일
-              {{ deal.reserveTime.slice(11, 13) }}시 {{ deal.reserveTime.slice(14, 16) }}분 </p>
+          <p style="margin-bottom:0; color:lightgray;">{{ deal.basePrice }}원⠀|⠀
+              {{ info.reserveTime.slice(5, 7) }}월 {{ info.reserveTime.slice(8, 10) }}일
+              {{ info.reserveTime.slice(11, 13) }}시 {{ info.reserveTime.slice(14, 16) }}분 </p>
           <div>
             <!-- 내가 생성한 거래인 경우 -->
             <div style="text-align:center" v-if="info.mine">
-              <el-button class="buyer" type="info" plain disabled style="margin-top:20px; text-align:center;" @click="deleteDeal">구매자: {{ deal.buyer }}</el-button>
-            </div>
-            <!-- 찜한 거래인 경우 -->
-            <div style="text-align:center" v-else>
               <el-button class="buyer" type="info" plain disabled style="margin-top:20px; text-align:center;">거래가 완료된 상품입니다</el-button>
             </div>
           </div>
@@ -109,8 +105,15 @@ export default {
       wishCount: 0,
       isLogin: false,
       mine: false,
-      wish: false
+      wish: false,
+      reserveTime: ''
     })
+
+    if(props.deal.reserveTime) {
+      info.reserveTime = props.deal.reserveTime
+    } if (props.deal.tradeDate) {
+      info.reserveTime = props.deal.tradeDate
+    }
 
     if(localStorage.accessToken){
       store.dispatch('root/requestUserInfo')
