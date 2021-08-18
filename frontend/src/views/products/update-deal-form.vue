@@ -121,20 +121,32 @@ export default {
     })
     //  페이지 진입 전 불리는 훅
     onBeforeMount(()=>{
-      console.log('before mount')
-      // axios처리로 data불러오기
-      axios({
-        url: `/product/${props.productId}`
-      })
+      // console.log('before mount')
+      // // axios처리로 data불러오기
+      // axios({
+      //   url: `/product/${props.productId}`
+      // })
+      // .then(res=>{
+      //   console.log(1111111111)
+      //   console.log(res)
+      //   state.form.productName = res.data.productName
+      //   state.form.categories = res.data.categories
+      //   state.form.basePrice = res.data.basePrice
+      //   state.form.reserveTime = res.data.reserveTime
+      //   state.form.description = res.data.description
+      //   state.src.imageUrl = res.data.imageUrl
+      // })
+
+      store.dispatch('root/requestDealDetail', props.productId)
       .then(res=>{
-        console.log(1111111111)
-        console.log(res)
+        // console.log(res.data.reserveTime)
         state.form.productName = res.data.productName
         state.form.categories = res.data.categories
         state.form.basePrice = res.data.basePrice
         state.form.reserveTime = res.data.reserveTime
         state.form.description = res.data.description
         state.src.imageUrl = res.data.imageUrl
+        // console.log( state.form.reserveTime)
       })
       // 게시글 정보 받아와서 폼의 prop로 보여주기
       // dispatch method로 requestProductInfo action 호출
@@ -269,7 +281,7 @@ export default {
 </script>
 <style>
   .update-deal-form {
-    /* justify-content: center; */
+    justify-content: center;
   }
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;

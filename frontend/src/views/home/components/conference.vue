@@ -190,7 +190,8 @@ export default {
       store.dispatch('root/requestDeleteDeal', props.deal.productId)
         .then(res=>{
           alert("거래가 삭제되었습니다")
-          router.push({name: 'order-deal'})
+          //router.push({name: 'order-deal'})
+          window.location.reload()
           store.commit('root/setMenuActiveMenuName', 'home')
         })
     }
