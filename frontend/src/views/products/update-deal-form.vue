@@ -139,14 +139,14 @@ export default {
 
       store.dispatch('root/requestDealDetail', props.productId)
       .then(res=>{
-        console.log(res.data.reserveTime)
+        // console.log(res.data.reserveTime)
         state.form.productName = res.data.productName
         state.form.categories = res.data.categories
         state.form.basePrice = res.data.basePrice
         state.form.reserveTime = res.data.reserveTime
         state.form.description = res.data.description
         state.src.imageUrl = res.data.imageUrl
-        console.log( state.form.reserveTime)
+        // console.log( state.form.reserveTime)
       })
       // 게시글 정보 받아와서 폼의 prop로 보여주기
       // dispatch method로 requestProductInfo action 호출

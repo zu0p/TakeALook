@@ -257,6 +257,10 @@ export default {
       }
       ws.close()
 
+      // 셀러가 룸 나가면 trade section 삭제
+      if(state.sellerName == state.name){
+        store.dispatch('root/requestDeleteTrade', state.productId)
+      }
       router.push({name:'home'})
     }
 
