@@ -143,10 +143,16 @@ export default {
         state.form.productName = res.data.productName
         state.form.categories = res.data.categories
         state.form.basePrice = res.data.basePrice
-        state.form.reserveTime = res.data.reserveTime
+        // state.form.reserveTime = res.data.reserveTime
         state.form.description = res.data.description
         state.src.imageUrl = res.data.imageUrl
-        // console.log( state.form.reserveTime)
+
+        let resTime = res.data.reserveTime.split('.')[0]
+        let date = resTime.split('T')[0].split('-')
+        let time = resTime.split('T')[1]
+        resTime = new Date(date+" "+time)
+        state.form.reserveTime = resTime
+        console.log(state.form.reserveTime)
       })
       // 게시글 정보 받아와서 폼의 prop로 보여주기
       // dispatch method로 requestProductInfo action 호출
