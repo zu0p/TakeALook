@@ -326,7 +326,7 @@ export default {
         buyer: successTrade.buyerId,
         price: price,
         productId: state.productId,
-        tradeDate: new Date.getTime()
+        tradeDate: new Date().getTime()
       }
       // console.log(req)
       store.dispatch('root/requestProductSold', state.productId)
@@ -397,7 +397,7 @@ export default {
   border-radius: 4px;
 }
 #seller.participant video{
-  height: 500px;
+  height: 400px;
 }
 .el-aside{
   overflow: hidden;
