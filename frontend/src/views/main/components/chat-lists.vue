@@ -25,10 +25,10 @@ export default {
       last: '',
     })
 
-    store.dispatch('root/requestDealDetail', props.chat.productId)
-    .then(res=> {
-      info.imageUrl = res.data.imageUrl
-    })
+    // store.dispatch('root/requestDealDetail', props.chat.productId)
+    // .then(res=> {
+    //   info.imageUrl = res.data.imageUrl
+    // })
 
     store.dispatch('root/requestChatData', props.chat.roomId)
     .then(res=>{
