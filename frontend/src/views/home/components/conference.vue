@@ -8,7 +8,7 @@
             <!-- 내 거래인 경우 -->
             <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a>
             <!-- 찜한 거래인 경우 -->
-            <a class="custom-icon2" v-else style="color:red;"  @click="deletelikeDeal"><i class="el-icon-delete-solid"></i></a>
+            <a class="custom-icon2" v-if="info.wish" style="color:red;"  @click="deletelikeDeal"><i class="el-icon-delete-solid"></i></a>
           </div>
           <img :src="imgUrl" alt="" style="width: 100%; display: block;">
         </div>
@@ -98,7 +98,6 @@ export default {
   props: ["deal"],
 
   setup (props,{emit}) {
-    // console.log(props)
     const store = useStore()
     const router = useRouter()
 
