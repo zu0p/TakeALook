@@ -207,10 +207,19 @@ export default {
     const clickUpdate = function () {
       // console.log(state.form.categories)
       // console.log(state.form.reserveTime)
-      state.date.setHours(state.date.getHours+9)
       dateTimeToString()
+
+      let resTime = state.date.split('.')[0]
+      let date = resTime.split('T')[0].split('-')
+      let time = resTime.split('T')[1]
+      resTime = new Date(date+" "+time)
+      console.log("9시간더하기 전: " + resTime)
+      state.data = resTime.setHours(resTime.getHours+9)
+      console.log("9시간더하기 후: " + resTime)
+
       state.loading = true
 
+      dateTimeToString()
       alert(state.date)
       // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
       updateDealForm.value.validate((valid) => {
