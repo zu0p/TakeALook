@@ -168,7 +168,13 @@ export default {
           // }
           // else{
             // }
-          info.saveChatList.push(JSON.parse(res.body))
+          if(info.saveChatList) {
+            info.saveChatList.push(JSON.parse(res.body))
+          }
+          else{
+            info.saveChatList = []
+            info.saveChatList.push(JSON.parse(res.body))
+          }
           info.data.chatList.push(JSON.parse(res.body))
         })
         // console.log(0)

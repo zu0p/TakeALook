@@ -25,6 +25,7 @@ module.exports = {
     ca: fs.readFileSync('/etc/letsencrypt/live/i5d101.p.ssafy.io/chain.pem'),
     port: 8083,
     open: true,
+    public: 'https://i5d101.p.ssafy.io',
     proxy: {
        '/api/v1': {
          target: 'https://i5d101.p.ssafy.io:8080/',
