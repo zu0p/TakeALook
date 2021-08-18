@@ -2,27 +2,25 @@
   <!-- 로그인한 경우 -->
   <div v-if="info.isLogin" style="text-align:center">
       <!-- 거래가 끝난 경우 -->
-      <el-card :body-style="{ padding: '0px' }" v-if="info.isSold">
+      <el-card :body-style="{ padding: '0px' }" v-if="deal.isSold">
         <div class="image-wrapper enddeal">
+          <div v-if="!deal.tradeDate">
             <!-- 내 거래인 경우 -->
             <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a>
             <!-- 찜한 거래인 경우 -->
-            <a class="custom-icon2" v-else style="color:red;"  @click="deleteLike"><i class="el-icon-delete-solid"></i></a>
-            <img :src="imgUrl" alt="" style="width: 100%; display: block;">
+            <a class="custom-icon2" v-else style="color:red;"  @click="deletelikeDeal"><i class="el-icon-delete-solid"></i></a>
+          </div>
+          <img :src="imgUrl" alt="" style="width: 100%; display: block;">
         </div>
       <div style="text-align:left; padding: 14px;">
         <span class="title enddeal">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
         <div class="loginbottom">
-          <p style="margin-bottom:0;">{{ deal.basePrice }}원⠀|⠀
-              {{ deal.reserveTime.slice(5, 7) }}월 {{ deal.reserveTime.slice(8, 10) }}일
-              {{ deal.reserveTime.slice(11, 13) }}시 {{ deal.reserveTime.slice(14, 16) }}분 </p>
+          <p style="margin-bottom:0; color:lightgray;">{{ info.basePrice }}원⠀|⠀
+              {{ info.reserveTime.slice(5, 7) }}월 {{ info.reserveTime.slice(8, 10) }}일
+              {{ info.reserveTime.slice(11, 13) }}시 {{ info.reserveTime.slice(14, 16) }}분 </p>
           <div>
             <!-- 내가 생성한 거래인 경우 -->
-            <div style="text-align:center" v-if="info.mine">
-              <el-button class="buyer" type="info" plain disabled style="margin-top:20px; text-align:center;" @click="deleteDeal">구매자: {{ deal.buyer }}</el-button>
-            </div>
-            <!-- 찜한 거래인 경우 -->
-            <div style="text-align:center" v-else>
+            <div style="text-align:center">
               <el-button class="buyer" type="info" plain disabled style="margin-top:20px; text-align:center;">거래가 완료된 상품입니다</el-button>
             </div>
           </div>
@@ -39,7 +37,7 @@
       <div style="text-align:left; padding: 14px;" @click="dealDetail">
         <span class="title">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
         <div class="loginbottom">
-          <p style="margin-bottom:0;">{{ deal.basePrice }}원⠀|⠀
+          <p style="margin-bottom:0;">{{ info.basePrice }}원⠀|⠀
               {{ deal.reserveTime.slice(5, 7) }}월 {{ deal.reserveTime.slice(8, 10) }}일
               {{ deal.reserveTime.slice(11, 13) }}시 {{ deal.reserveTime.slice(14, 16) }}분 </p>
             <!-- 내가 생성한 거래인 경우 -->
@@ -80,9 +78,9 @@
       <div style="text-align: left; padding: 14px;">
         <span class="title">{{ deal.productName }}<span style="color:lightgray; font-size:11px; margin-left:5px;">{{ deal.categories }}</span></span>
         <div class="bottom" style="margin-top:10px;">
-          <p style="margin-bottom:0;">{{ deal.basePrice }}원⠀|⠀
-              {{ deal.reserveTime.slice(5, 7) }}월 {{ deal.reserveTime.slice(8, 10) }}일
-              {{ deal.reserveTime.slice(11, 13) }}시 {{ deal.reserveTime.slice(14, 16) }}분 </p>
+          <p style="margin-bottom:0;">{{ info.basePrice }}원⠀|⠀
+              {{ info.reserveTime.slice(5, 7) }}월 {{ info.reserveTime.slice(8, 10) }}일
+              {{ info.reserveTime.slice(11, 13) }}시 {{ info.reserveTime.slice(14, 16) }}분 </p>
         </div>
       </div>
     </el-card>
@@ -109,9 +107,23 @@ export default {
       wishCount: 0,
       isLogin: false,
       mine: false,
-      isSold: false,
-      wish: false
+      wish: false,
+      reserveTime: '',
+      basePrice: ''
     })
+
+    if(props.deal.reserveTime) {
+      info.reserveTime = props.deal.reserveTime
+    } if (props.deal.tradeDate) {
+      console.log(props.deal)
+      info.reserveTime = props.deal.tradeDate
+    }
+
+    if (props.deal.basePrice) {
+      info.basePrice = props.deal.basePrice
+    } if (props.deal.price) {
+      info.basePrice = props.deal.price
+    }
 
     if(localStorage.accessToken){
       store.dispatch('root/requestUserInfo')
@@ -174,12 +186,22 @@ export default {
       })
     }
 
+    const deleteDeal = function (e) {
+      e.stopPropagation()
+      store.dispatch('root/requestDeleteDeal', props.deal.productId)
+        .then(res=>{
+          alert("거래가 삭제되었습니다")
+          router.push({name: 'order-deal'})
+          store.commit('root/setMenuActiveMenuName', 'home')
+        })
+    }
+
     const joinTrade = function(e){
       e.stopPropagation()
       emit('buyerJoin', props.deal.productId, props.deal.basePrice)
     }
 
-  return { imgUrl, info, updateDeal, startDeal, deletelikeDeal, likeDeal, joinTrade }
+  return {  imgUrl, info, updateDeal, startDeal, deletelikeDeal, likeDeal, deleteDeal, joinTrade }
   }
 }
 </script>
@@ -224,8 +246,8 @@ export default {
 .custom-icon2 {
   font-size: 30px;
   position: absolute;
-  margin-left:65%;
-  margin-top:15px;
+  margin-left:35%;
+  margin-top:10px;
 }
 
 .image-wrapper {

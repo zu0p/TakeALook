@@ -11,7 +11,7 @@
           :width="`240px`"/>
       </el-aside>
       <el-main>
-        <main-dm/>
+        <main-dm v-if="isLogin"/>
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -31,6 +31,8 @@
   @import './main.css';
   @import '../../common/css/common.css';
   @import '../../common/css/element-plus.css';
+
+/* 배경화면 */
 
   /* DM 아이콘 */
 .chat-launcher {
@@ -112,11 +114,8 @@ export default {
   created(){
     const userToken = localStorage.getItem('accessToken');
 
-    console.log("logined user: "+userToken)
-    console.log("1"+this.isLogin)
     if(userToken){//userToken이 있다면 == 로그인했었다면
       this.isLogin = true
-    console.log("2"+this.isLogin)
       // const userData = JSON.parse(userToken)
       // requestUserInfo()
     }

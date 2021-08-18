@@ -6,18 +6,20 @@
         <h1 style="margin-top:0; margin-bottom:0;">채팅</h1>
       </div>
       <div class="chat-list-header-close-button">
-        <!-- <el-button @click="$emit('close')" style="border:none;"></el-button> -->
         <i class="el-icon-close" @click="$emit('close')" style="font-weight:bold;"></i>
       </div>
     </div>
-    <div class="chat-list-body scrollable" style="margin-top:5px;">
+    <div v-if="info.chatList" class="chat-list-body scrollable" style="margin-top:5px;">
     <!-- <tr v-for="가장 최근 메세지 in 메세지 방 리스트" :key="메세지 방.id"> -->
-      <div v-for="chat in info.chatList[0]" :key="chat.roomId" @click="chatWindow(chat.roomId)">
+      <div v-for="chat in info.chatList[0]" :key="chat.roomId" @click="chatWindow({roomId:chat.roomId, productName: chat.productName})">
         <chat-lists :chat="chat"/>
       </div>
     </div>
+    <div v-else class="chat-list-body" style="margin-top:50px;">
+      <h1>생성된 대화방이 없습니다</h1>
+    </div>
   </div>
-  <chat-window v-if="info.chatWindow" @back="chatWindow()" @close="$emit('close')" :roomId="info.roomId"/>
+  <chat-window v-if="info.chatWindow" @close="$emit('close')" @back="chatWindow()" :roomId="info.roomId" :userId="info.userId" :productName="info.productName" />
 </template>
 
 <script>
@@ -40,21 +42,33 @@ export default {
     const info = reactive({
       chatWindow: false,
       chatList: [],
-      roomId: ''
+      roomId: '',
+      userId: '',
+      productName: '',
     })
+
+    store.dispatch('root/requestUserInfo')
+      .then(res=> {
+        // console.log(res.data)
+        info.userId = res.data.userId
+      })
 
     store.dispatch('root/requestChatList')
       .then(res=> {
-        console.log(res.data)
-        info.chatList.push(res.data)
-        console.log(info.chatList[0])
+        if (res.data.statusCode != 404 ){
+          info.chatList.push(res.data)
+        } else {
+          info.chatList = false
+        }
       })
 
     const chatWindow = function (e) {
-      info.roomId = e
-      if (info.chatWindow) {
+      console.log(e)
+      if (!e) {
         info.chatWindow = false
       } else {
+        info.roomId = e.roomId
+        info.productName = e.productName
         info.chatWindow = true
       }
     }

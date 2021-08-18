@@ -91,7 +91,7 @@ export default {
   },
 
   setup(props, { emit }) {
-    console.log(props)
+    // console.log(props)
     const store = useStore()
     const router = useRouter()
     const state = reactive({
@@ -183,6 +183,7 @@ export default {
   }
 
   .main-header .hide-on-big .logo-wrapper {
+    cursor: pointer;
     display: inline-block;
     margin: 0 calc(50% - 51px)
   }

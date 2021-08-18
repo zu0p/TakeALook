@@ -56,7 +56,8 @@ export default {
       participants:{},
       isStart: false,
       productId: '',
-      priceGap: 0
+      priceGap: 0,
+      sellerName : ''
     })
     const receiveMsg = reactive({
       flag: false,
@@ -130,6 +131,7 @@ export default {
       //console.log(req)
       store.dispatch('root/requestTradeSectionInfo', req)
         .then(res=>{
+          state.sellerName = res.data.sellerId
           if(res.data.sellerId == state.name)state.role = 'seller'
           else state.role = 'buyer'
           // console.log(state.role)
@@ -169,7 +171,10 @@ export default {
 
     const receiveVideo = function(sender) {
       // console.log("sender: "+sender)
-      var participant = new Participant(sender)
+      let tmpRole = 'buyer'
+      if(sender == state.sellerName)
+        tmpRole = 'seller'
+      var participant = new Participant(sender, tmpRole)
       // state.participants[sender] = participant
       var video = participant.getVideoElement()
 
@@ -218,7 +223,7 @@ export default {
         }
       }
       if(state.role=='seller')
-        constraints.video.mandatory.maxWidth = 720
+        constraints.video.mandatory.maxWidth = 500
       //console.log(state.name + " registered in room " + state.room)
       var participant = new Participant(state.name, state.role)
 
@@ -320,7 +325,8 @@ export default {
         seller: successTrade.sellerId,
         buyer: successTrade.buyerId,
         price: price,
-        productId: state.productId
+        productId: state.productId,
+        tradeDate: new Date().getTime()
       }
       // console.log(req)
       store.dispatch('root/requestProductSold', state.productId)
@@ -390,8 +396,9 @@ export default {
 .participant video {
   border-radius: 4px;
 }
-#seller.participant video{
-  height: 500px;
+#seller video{
+  width: 53vh;
+  /* height: 400px; */
 }
 .el-aside{
   overflow: hidden;
