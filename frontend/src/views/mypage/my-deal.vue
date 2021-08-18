@@ -104,8 +104,19 @@ export default {
 
     const startTrade = function(param){
       let now = new Date()
-      let startTime = Date.parse(param.reserveTime)
+      // console.log(param.reserveTime)
+      //2021-08-25T02:00:00.000+00:00
+      let startTime = param.reserveTime.split('.')[0]
+      let date = startTime.split('T')[0].split('-')
+      let time = startTime.split('T')[1]
+      // console.log(date+" "+time)
+      startTime = new Date(date+" "+time)
+
+      // console.log("생성: "+ startTime)
       startTime.setMinutes(startTime.getMinutes() - 20)
+      // console.log("빼기: "+ startTime)
+      startTime = dateTimeToString(startTime)
+      // console.log("스트링으로: "+ startTime)
 
       now = dateTimeToString(now)
 
