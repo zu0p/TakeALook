@@ -372,7 +372,7 @@ export default {
 
     const startTrade = function(param){
       let now = new Date()
-      let startTime = Date.parse(param.reserveTime)
+      console.log(param.reserveTime)
       console.log(startTime)
       startTime.setMinutes(startTime.getMinutes() - 20)
       console.log(startTime)
