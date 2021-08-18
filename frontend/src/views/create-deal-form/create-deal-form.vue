@@ -267,7 +267,7 @@ export default {
   // imageUrl, el-date-picker 관련 method
   methods: {
     disabledDate(time) {
-      return time && time.valueOf() < Date.now();
+      return time && time.valueOf() <= Date.now();
       // return time.getTime() < Date.now() - 8.64e7
     },
   },
