@@ -101,8 +101,7 @@ export default {
     const store = useStore()
     const router = useRouter()
 
-    // const imgUrl = require(`@/assets/pimages/${props.deal.productId}.jpg`)
-    const imgUrl = require(`@/assets/pimages/131.jpg`)
+    const imgUrl = require(`@/assets/pimages/${props.deal.productId}.jpg`)
     const info = reactive({
       wishCount: 0,
       isLogin: false,
