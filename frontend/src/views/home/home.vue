@@ -372,37 +372,56 @@ export default {
 
     const startTrade = function(param){
       let now = new Date()
+      // console.log(param.reserveTime)
+      //2021-08-25T02:00:00.000+00:00
+      let startTime = param.reserveTime.split('.')[0]
+      let date = startTime.split('T')[0].split('-')
+      let time = startTime.split('T')[1]
+      // console.log(date+" "+time)
+      startTime = new Date(date+" "+time)
+
+      // console.log("생성: "+ startTime)
+      startTime.setMinutes(startTime.getMinutes() - 20)
+      // console.log("빼기: "+ startTime)
+      startTime = dateTimeToString(startTime)
+      // console.log("스트링으로: "+ startTime)
+
       now = dateTimeToString(now)
 
       if(param.reserveTime>now){
-        //호가 입력받기
-        let priceGap = Number(prompt('가격 증감 단위를 입력하세요.(숫자)'))
-        // alert(priceGap)
-        // console.log(priceGap)
-        if(priceGap == 0 || priceGap == null){
-          //console.log(priceGap)
-          return
-        }
+        if(now>=startTime){
+          //호가 입력받기
+          let priceGap = Number(prompt('가격 증감 단위를 입력하세요.(숫자)'))
+          // alert(priceGap)
+          // console.log(priceGap)
+          if(priceGap == 0 || priceGap == null){
+            //console.log(priceGap)
+            return
+          }
 
-        let room = ''
-        const req = {
-          seller: param.seller,
-          productId: param.productId,
-          priceGap: priceGap
-        }
-        store.dispatch('root/requestCreateTradeSection', req)
-          .then(res =>{
-            room = res.data.room
-            // console.log(room)
+          let room = ''
+          const req = {
+            seller: param.seller,
+            productId: param.productId,
+            priceGap: priceGap
+          }
+          store.dispatch('root/requestCreateTradeSection', req)
+            .then(res =>{
+              room = res.data.room
+              // console.log(room)
 
-            router.push({
-              name: 'meeting-detail',
-              params: {
-                meetingId: room,
-                userId: state.name
-              },
+              router.push({
+                name: 'meeting-detail',
+                params: {
+                  meetingId: room,
+                  userId: state.name
+                },
+              })
             })
-          })
+        }
+        else{
+          alert("예약시간 20분 전부터 거래를 시작 할 수 있습니다.")
+        }
       }
       else{
         alert("예약시간을 넘어 거래를 시작할 수 없습니다.")

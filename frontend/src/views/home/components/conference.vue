@@ -8,7 +8,7 @@
             <!-- 내 거래인 경우 -->
             <a class="custom-icon2" v-if="info.mine" style="color:red;"  @click="deleteDeal"><i class="el-icon-delete-solid"></i></a>
             <!-- 찜한 거래인 경우 -->
-            <a class="custom-icon2" v-else style="color:red;"  @click="deletelikeDeal"><i class="el-icon-delete-solid"></i></a>
+            <a class="custom-icon2" v-if="info.wish" style="color:red;"  @click="deletelikeDeal"><i class="el-icon-delete-solid"></i></a>
           </div>
           <img :src="imgUrl" alt="" style="width: 100%; display: block;">
         </div>
@@ -98,7 +98,6 @@ export default {
   props: ["deal"],
 
   setup (props,{emit}) {
-    // console.log(props)
     const store = useStore()
     const router = useRouter()
 
@@ -115,7 +114,7 @@ export default {
     if(props.deal.reserveTime) {
       info.reserveTime = props.deal.reserveTime
     } if (props.deal.tradeDate) {
-      console.log(props.deal)
+      // console.log(props.deal)
       info.reserveTime = props.deal.tradeDate
     }
 
@@ -157,7 +156,7 @@ export default {
 
     const startDeal = function (e) {
       e.stopPropagation()
-      console.log("거래 시작")
+      // console.log("거래 시작")
       emit('startTrade', props.deal)
     }
 
@@ -191,7 +190,8 @@ export default {
       store.dispatch('root/requestDeleteDeal', props.deal.productId)
         .then(res=>{
           alert("거래가 삭제되었습니다")
-          router.push({name: 'order-deal'})
+          //router.push({name: 'order-deal'})
+          window.location.reload()
           store.commit('root/setMenuActiveMenuName', 'home')
         })
     }

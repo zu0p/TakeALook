@@ -97,6 +97,13 @@ public class TradeController {
         return ResponseEntity.status(200).body(TradeRes.of(productId));
     }
 
+    @DeleteMapping("/section/{productId}")
+    @ApiOperation(value = "거래 방 삭제", notes = "거래 방을 삭제한다.")
+    public ResponseEntity<?> deleteTradeSection(@PathVariable Long productId) {
+        tradeService.deleteTradeSection(productId);
+        return ResponseEntity.status(200).body(TradeRes.of(productId));
+    }
+
     @PostMapping("/section/create")
     @ApiOperation(value = "거래 방 생성", notes = "거래 방을 생성한다.")
     public ResponseEntity<?> tradeSectionCreate(@RequestBody @ApiParam(value="거래 상품 정보", required = true) TradeSectionCreateReq tradeSectionCreateReq) {

@@ -131,6 +131,12 @@ public class TradeServiceImpl implements TradeService {
     }
 
     @Override
+    public void deleteTradeSection(Long productId) {
+        TradeSection tradeSection = tradeSectionRepository.findTradeSectionByProductId(productId);
+        tradeSectionRepository.delete(tradeSection);
+    }
+
+    @Override
     public Boolean checkTradeHistory(Long productId){
         if(tradeRepository.findTradeHistoryByProductId(productId).isPresent()) return true;
         else return false;
