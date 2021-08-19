@@ -334,7 +334,11 @@ export default {
       }
 
       if(successTrade.buyerId == '' || successTrade.buyerId == null){
-        console.log('거래 실패. 거래종료합니다.')
+        if(state.sellerName == state.name){
+          store.dispatch('root/requestDeleteTrade', state.productId)
+        }
+        alert('거래 실패. 거래종료합니다.')
+        window.location = '/'
         return
       }
       // console.log(req)
