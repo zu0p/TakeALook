@@ -30,7 +30,7 @@ public class WishRepositorySupport {
                 .join(qProduct)
                 .on(qWishProduct.productId.eq(qProduct.id))
                 .where(qWishProduct.user.userId.eq(userId))
-                .orderBy(qProduct.registTime.desc())
+                .orderBy(qProduct.isSold.asc(),qProduct.registTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();

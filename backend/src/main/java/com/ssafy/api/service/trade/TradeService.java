@@ -26,5 +26,8 @@ public interface TradeService {
     TradeSection findTradeSectionByRoomUrl(String url);
     TradeSection findTradeSectionAndStartByRoomUrl(String url);
     void deleteTradeInfo(Long buyProductId);
+
+    void deleteTradeSection(Long productId);
+
     Boolean checkTradeHistory(Long productId);
 }
