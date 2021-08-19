@@ -77,7 +77,7 @@ export default {
   },
   // props를 통해 productId값이 담겨온다.
   setup (props) {
-    console.log(props.productId)
+    // console.log(props.productId)
     const store = useStore()
     const router = useRouter()
     // 독립적인 반응형 값 생성 ref()
@@ -121,40 +121,23 @@ export default {
     })
     //  페이지 진입 전 불리는 훅
     onBeforeMount(()=>{
-      // console.log('before mount')
-      // // axios처리로 data불러오기
-      // axios({
-      //   url: `/product/${props.productId}`
-      // })
-      // .then(res=>{
-      //   console.log(1111111111)
-      //   console.log(res)
-      //   state.form.productName = res.data.productName
-      //   state.form.categories = res.data.categories
-      //   state.form.basePrice = res.data.basePrice
-      //   state.form.reserveTime = res.data.reserveTime
-      //   state.form.description = res.data.description
-      //   state.src.imageUrl = res.data.imageUrl
-      // })
-
       store.dispatch('root/requestDealDetail', props.productId)
       .then(res=>{
         // console.log(res.data.reserveTime)
         state.form.productName = res.data.productName
         state.form.categories = res.data.categories
         state.form.basePrice = res.data.basePrice
-        state.form.reserveTime = res.data.reserveTime
+        // state.form.reserveTime = res.data.reserveTime
         state.form.description = res.data.description
         state.src.imageUrl = res.data.imageUrl
-        // console.log( state.form.reserveTime)
+
+        let resTime = res.data.reserveTime.split('.')[0]
+        let date = resTime.split('T')[0].split('-')
+        let time = resTime.split('T')[1]
+        resTime = new Date(date+" "+time)
+        state.form.reserveTime = resTime
+        // console.log(state.form.reserveTime)
       })
-      // 게시글 정보 받아와서 폼의 prop로 보여주기
-      // dispatch method로 requestProductInfo action 호출
-      // props.productID가 payload에 담긴다.
-      // store.dispatch('root/requestProductInfo', props.productId)
-      //   .then(data=> {
-      //     console.log(data)
-      //   })
     })
     // 페이지 진입시 불리는 훅
     onMounted (() => {
@@ -225,11 +208,24 @@ export default {
       // console.log(state.form.categories)
       // console.log(state.form.reserveTime)
       dateTimeToString()
+
+      let resTime = state.date.split('.')[0]
+      let date = resTime.split('T')[0].split('-')
+      let time = resTime.split('T')[1]
+      resTime = new Date(date+" "+time)
+      // console.log("9시간더하기 전: " + resTime)
+      resTime.setHours(resTime.getHours()+9)
+      // console.log("9시간더하기 후: " + resTime)
+      state.form.reserveTime = resTime
+
       state.loading = true
+
+      dateTimeToString()
+      // alert(state.date)
       // 작성 클릭 시 validate 체크 후 그 결과 값에 따라, 게시글 작성 API 호출 또는 경고창 표시
       updateDealForm.value.validate((valid) => {
         if (valid) {
-          console.log('submit')
+          // console.log('submit')
           store.dispatch('root/updatePost', {
             productId: props.productId,
             imageUrl: state.src.imageUrl,
@@ -263,7 +259,7 @@ export default {
     }
 
     const clickCancel = function () {
-      console.log('go home')
+      // console.log('go home')
       window.location='/'
     }
 
@@ -272,7 +268,7 @@ export default {
   // imageUrl, el-date-picker 관련 method
   methods: {
     disabledDate(time) {
-      return time && time.valueOf() < Date.now();
+      return time && time.valueOf() < Date.now() - 8.64e7;
       // return time.getTime() < Date.now() - 8.64e7
     },
   },

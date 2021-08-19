@@ -63,7 +63,7 @@ export default {
       })
 
     const chatWindow = function (e) {
-      console.log(e)
+      // console.log(e)
       if (!e) {
         info.chatWindow = false
       } else {

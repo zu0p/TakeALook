@@ -77,7 +77,7 @@ export default {
       var parsedMessage = JSON.parse(message.data)
       //console.log(parsedMessage.name)
       //console.log(state.participants[parsedMessage.name])
-      console.info('Received message: ' + message.data)
+      // console.info('Received message: ' + message.data)
 
       switch (parsedMessage.id) {
       case 'existingParticipants':
@@ -202,7 +202,7 @@ export default {
 
     const callResponse = function(message){
       if (message.response != 'accepted') {
-        console.info('Call not accepted by peer. Closing call');
+        // console.info('Call not accepted by peer. Closing call');
         stop()
       } else {
         webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
@@ -265,7 +265,7 @@ export default {
     }
 
     const onParticipantLeft = function(request) {
-      console.log('Participant ' + request.name + ' left')
+      // console.log('Participant ' + request.name + ' left')
       var participant = state.participants[request.name]
       participant.dispose()
       delete state.participants[request.name]
@@ -273,7 +273,7 @@ export default {
 
     const sendMessage = function(message) {
       var jsonMessage = JSON.stringify(message)
-      console.log('Sending message: ' + jsonMessage)
+      // console.log('Sending message: ' + jsonMessage)
       waitForConnection(function(){
         ws.send(jsonMessage)
         if (typeof callback !== 'undefined') {
@@ -289,7 +289,7 @@ export default {
           var that = this;
           // optional: implement backoff for interval here
           setTimeout(function () {
-              console.log("websocket connecting...")
+              // console.log("websocket connecting...")
               waitForConnection(callback, interval);
           }, interval);
       }
@@ -302,7 +302,7 @@ export default {
     }
 
     const onReceiveMessageEnded = function(){
-      console.log("flag: true -> false")
+      // console.log("flag: true -> false")
       receiveMsg.flag = false
     }
 
@@ -315,7 +315,7 @@ export default {
     }
 
     const onSuccess = function(msg){
-      console.log(msg)
+      // console.log(msg)
       const jsoned = JSON.parse(msg)
       successTrade.flag = true
       successTrade.sellerId = jsoned.sellerId
@@ -324,7 +324,7 @@ export default {
 
     const matchingTrade = function(price){
       //DM으로 보내주기
-      console.log('매칭 성공')
+      // console.log('매칭 성공')
       const req = {
         seller: successTrade.sellerId,
         buyer: successTrade.buyerId,
@@ -332,35 +332,47 @@ export default {
         productId: state.productId,
         tradeDate: new Date().getTime()
       }
+
+      if(successTrade.buyerId == '' || successTrade.buyerId == null){
+        if(state.sellerName == state.name){
+          store.dispatch('root/requestDeleteTrade', state.productId)
+        }
+        alert('거래 실패. 거래종료합니다.')
+        window.location = '/'
+        return
+      }
       // console.log(req)
       store.dispatch('root/requestProductSold', state.productId)
         .then(res=>{
-          console.log(res)
+          // console.log(res)
         })
       store.dispatch('root/requestUpdateMaxPrice',{curPrice: updatePrice.curPrice, room: state.room})
         .then(res =>{
-          console.log(res)
+          // console.log(res)
         })
       if(state.name == req.seller){
         store.dispatch('root/requestMatching', req)
           .then(res=>{
-            console.log(res)
+            // console.log(res)
             alert('거래 성공! DM에서 거래를 이어나가세요!')
-            router.push({name:'home'})
+            window.location = '/'
+            // router.push({name:'home'})
           })
       }
       else{
         alert('거래 성공! DM에서 거래를 이어나가세요!')
-        router.push({name:'home'})
+        // router.push({name:'home'})
+        window.location = '/'
       }
 
     }
 
     const failTrade = function(){
       //낙찰 실패한 유저들
-      console.log('매칭 실패')
+      // console.log('매칭 실패')
       alert('거래가 종료되었습니다.')
-      router.push({name:'home'})
+      // router.push({name:'home'})
+      window.location = '/'
     }
 
     const onStartCount = function(){

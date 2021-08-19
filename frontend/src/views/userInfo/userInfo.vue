@@ -114,7 +114,7 @@ export default {
       // 회원 정보 받아와서 폼의 prop로 보여주기
       store.dispatch('root/requestUserInfo')
         .then(res=>{
-          console.log(res)
+          // console.log(res)
           info.form.id = res.data.userId
           info.form.name = res.data.name
           info.form.address = res.data.address
@@ -135,10 +135,10 @@ export default {
         email: `${info.form.email}@${info.form.emailUrl.fix}`,
         password: info.form.password
       }
-      console.log(user)
+      // console.log(user)
       store.dispatch('root/requestModifyUserInfo', user)
         .then(res=>{
-          console.log(res)
+          // console.log(res)
           alert("수정이 완료되었습니다.")
           //window.location = '/userInfo'
         })
@@ -150,7 +150,7 @@ export default {
         if(answer){
           store.dispatch('root/requestDropoutUser')
             .then(res=>{
-              console.log(res)
+              // console.log(res)
               alert('탈퇴되었습니다.')
               localStorage.removeItem('accessToken')
               window.location = '/'
