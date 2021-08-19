@@ -209,7 +209,7 @@ export function requestJoinTrade({state}, payload){
 
 // webRTC seller가 카운트 시작
 export function requestSetStarted({state}, roomNumber){
-  console.log("3. 카운트 시작 클릭 시 start 바꾸기 요청")
+  // console.log("3. 카운트 시작 클릭 시 start 바꾸기 요청")
   const url = BASE_URL+`/trade/section/started/${roomNumber}`
   return instanceWithAuth.get(url)
 }
@@ -251,4 +251,10 @@ export function requestUploadImage({state}, payload){
   return instanceWithAuth.post(url, payload.imageFile,{
     headers: { 'Content-Type': 'multipart/form-data' }
   })
+}
+
+// trade section 삭제 요청 - seller
+export function requestDeleteTrade({state}, payload){
+  const url = BASE_URL+`/trade/section/${payload}`
+  return instanceWithAuth.delete(url)
 }

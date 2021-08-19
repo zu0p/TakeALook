@@ -115,7 +115,7 @@ export default {
     if(props.deal.reserveTime) {
       info.reserveTime = props.deal.reserveTime
     } if (props.deal.tradeDate) {
-      console.log(props.deal)
+      // console.log(props.deal)
       info.reserveTime = props.deal.tradeDate
     }
 
@@ -157,7 +157,7 @@ export default {
 
     const startDeal = function (e) {
       e.stopPropagation()
-      console.log("거래 시작")
+      // console.log("거래 시작")
       emit('startTrade', props.deal)
     }
 
@@ -191,7 +191,8 @@ export default {
       store.dispatch('root/requestDeleteDeal', props.deal.productId)
         .then(res=>{
           alert("거래가 삭제되었습니다")
-          router.push({name: 'order-deal'})
+          //router.push({name: 'order-deal'})
+          window.location.reload()
           store.commit('root/setMenuActiveMenuName', 'home')
         })
     }

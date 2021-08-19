@@ -125,7 +125,7 @@ export default {
             router.push({name: 'home'})
             store.commit('root/setMenuActiveMenuName', 'home')
           } else{
-            console.log(res.data)
+            // console.log(res.data)
             info.productName = res.data.productName
             info.basePrice = res.data.basePrice
             info.categories = res.data.categories
@@ -150,7 +150,7 @@ export default {
                 // 이미 찜을 한 경우와 그렇지 않은 경우
                 store.dispatch('root/requestCheckWish', state.productId)
                 .then(res=>{
-                  console.log(res)
+                  // console.log(res)
                   if (res.data.statusCode == 200) {
                     info.like = true
                   }

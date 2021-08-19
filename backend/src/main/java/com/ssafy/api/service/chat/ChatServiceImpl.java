@@ -1,5 +1,6 @@
 package com.ssafy.api.service.chat;
 
+import com.ssafy.api.request.chat.ChatMessage;
 import com.ssafy.api.response.chat.ChatListGetRes;
 import com.ssafy.db.entity.Chat;
 import com.ssafy.db.repository.chat.ChatRepositorySupport;
@@ -51,6 +52,16 @@ public class ChatServiceImpl implements ChatService {
         } catch(ParseException e){
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void saveMessage(ChatMessage message)  {
+        Chat chat = new Chat();
+        chat.setMessage(message.getMessage());
+        chat.setRoomId(message.getRoomId());
+        chat.setSendTime(message.getSendTime());
+        chat.setWriter(message.getWriter());
+        chatRepository.save(chat);
     }
 
     @Override

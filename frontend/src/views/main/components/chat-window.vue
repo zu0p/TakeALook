@@ -109,8 +109,8 @@ export default {
 
   setup(props){
 
-    console.log(props.userId)
-    console.log(props.productName)
+    // console.log(props.userId)
+    // console.log(props.productName)
     const store = useStore()
     const info = reactive({
       saveChatList: [],
@@ -128,7 +128,7 @@ export default {
 
 
     onBeforeMount(()=>{
-      console.log(info.roomId)
+      // console.log(info.roomId)
       store.dispatch('root/requestChatData', info.roomId)
         .then(res=>{
           if(res.data.statusCode != 404) {
@@ -174,6 +174,11 @@ export default {
     // 전송 시 chatList에 추가
     const send = function () {
       if (stompClient && stompClient.connected) {
+<<<<<<< HEAD
+=======
+        var Datenow = Date.now()
+        // console.log('현재시간은' + Datenow)
+>>>>>>> 251bf8350351d6c42956d65111fddaeaedfea6ed
         var message = {
           roomId: info.roomId,
           writer: info.nickname,
