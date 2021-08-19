@@ -332,6 +332,11 @@ export default {
         productId: state.productId,
         tradeDate: new Date().getTime()
       }
+
+      if(successTrade.buyerId == '' || successTrade.buyerId == null){
+        console.log('거래 실패. 거래종료합니다.')
+        return
+      }
       // console.log(req)
       store.dispatch('root/requestProductSold', state.productId)
         .then(res=>{
@@ -346,12 +351,14 @@ export default {
           .then(res=>{
             // console.log(res)
             alert('거래 성공! DM에서 거래를 이어나가세요!')
-            router.push({name:'home'})
+            window.location = '/'
+            // router.push({name:'home'})
           })
       }
       else{
         alert('거래 성공! DM에서 거래를 이어나가세요!')
-        router.push({name:'home'})
+        // router.push({name:'home'})
+        window.location = '/'
       }
 
     }
@@ -360,7 +367,8 @@ export default {
       //낙찰 실패한 유저들
       // console.log('매칭 실패')
       alert('거래가 종료되었습니다.')
-      router.push({name:'home'})
+      // router.push({name:'home'})
+      window.location = '/'
     }
 
     const onStartCount = function(){
